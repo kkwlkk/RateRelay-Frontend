@@ -1,4 +1,5 @@
 import 'next-auth';
+import type { User } from './User';
 
 declare module 'next-auth' {
     /**
@@ -8,6 +9,7 @@ declare module 'next-auth' {
         accessToken?: string;
         refreshToken?: string;
         isNewUser?: boolean;
+        user?: User;
     }
 }
 
@@ -19,5 +21,6 @@ declare module 'next-auth/jwt' {
         accessToken?: string;
         refreshToken?: string;
         isNewUser?: boolean;
+        user: User;
     }
 }

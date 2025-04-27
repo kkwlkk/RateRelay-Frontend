@@ -5,49 +5,105 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
-    const { login, isAuthenticated, isLoading } = useAuth();
+    const { isAuthenticated, isLoading, user } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-        if (isAuthenticated && !isLoading) {
+        if (isLoading) return;
+        if (!isAuthenticated) return;
+
+        if (user && user.hasCompletedOnboarding) {
             router.push('/dashboard');
+        } else {
+            router.push('/onboarding');
         }
-    }, [isAuthenticated, isLoading, router]);
+    }, [isAuthenticated, isLoading, router, user]);
 
-    const handleLogin = async () => {
-        await login();
-    };
+    // const handleLogin = async () => {
+    //     await login();
+    // };
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-6 text-center text-gray-600">RateRelay</h1>
-                <p className="text-gray-600 mb-8 text-center">
-                    Sign in to manage your business reviews
-                </p>
-
-                <button
-                    onClick={handleLogin}
-                    disabled={isLoading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center"
-                >
-                    {isLoading ? (
-                        <span className="mr-2">Loading...</span>
-                    ) : (
-                        <>
-                            <svg
-                                className="w-5 h-5 mr-2"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                            >
-                                <path d="M12.545,10.239V13.75h5.687c-0.232,1.379-1.747,4.042-5.687,4.042c-3.427,0-6.227-2.838-6.227-6.338 c0-3.5,2.799-6.337,6.227-6.337c1.949,0,3.252,0.827,4,1.534l2.721-2.623c-1.747-1.638-4.215-2.634-6.719-2.634 c-5.547,0-10.03,4.502-10.03,10.061c0,5.56,4.484,10.061,10.03,10.061c5.796,0,9.65-4.073,9.65-9.804 c0-0.657-0.073-1.161-0.167-1.674L12.545,10.239z" />
-                            </svg>
-                            Sign in with Google
-                        </>
-                    )}
-                </button>
-            </div>
-        </div>
-    );
+    // return (
+    //     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-background-primary">
+    //         {/* Left side - Branding section (hidden on small screens) */}
+    //         <div className='relative w-full md:w-3/5 h-screen md:block hidden bg-zinc-100 dark:bg-zinc-800 p-8 shadow-md'>
+    //             <Image
+    //                 src="/assets/bg-blob-purple-no-vornoi.svg"
+    //                 alt="Background Blob"
+    //                 fill
+    //                 className="object-cover"
+    //             />
+    //             <div className="absolute top-30 left-32">
+    //                 <Image
+    //                     src="/assets/logo-white.png"
+    //                     alt="Logo"
+    //                     width={400}
+    //                     height={400}
+    //                 />
+    //                 <p className="font-medium text-3xl text-shadow mb-4">
+    //                     Platforma stworzona z myślą o Twoim biznesie.
+    //                 </p>
+    //                 <p className="text-md text-zinc-400 max-w-lg">
+    //                     Zarządzaj, organizuj i dziel się swoimi recenzjami w prosty sposób.<br /> Wszystko w jednym miejscu.
+    //                 </p>
+    //             </div>
+    //             <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center p-4">
+    //                 <p className="text-sm text-zinc-400">
+    //                     &copy; 2025 TrustRate. Wszelkie prawa zastrzeżone.
+    //                 </p>
+    //             </div>
+    //         </div>
+            
+    //         {/* Mobile header with logo (visible only on mobile) */}
+    //         <div className="flex flex-col items-center w-full px-6 pt-12 pb-6 md:hidden">
+    //             <Image
+    //                 src="/assets/logo-white.png"
+    //                 alt="Logo"
+    //                 width={200}
+    //                 height={200}
+    //             />
+    //             <p className="font-medium text-xl text-center mt-4 mb-2">
+    //                 Platforma stworzona z myślą o Twoim biznesie.
+    //             </p>
+    //         </div>
+            
+    //         {/* Right side - Login form */}
+    //         <div className='w-full md:w-2/5 px-6 md:px-24 py-8 md:py-24 flex flex-col items-center justify-center'>
+    //             <div className="w-full max-w-md flex flex-col items-center mb-6">
+    //                 <h1 className="text-3xl md:text-4xl font-medium text-center mb-3">
+    //                     Witaj ponownie
+    //                 </h1>
+    //                 <p className="text-md text-zinc-400 mb-6">
+    //                     Zaloguj się, aby kontynuować
+    //                 </p>
+    //                 <Button
+    //                     variant="outline"
+    //                     className="w-full rounded-3xl my-3 dark:bg-zinc-900/80 dark:hover:bg-zinc-900/90 dark:text-zinc-50"
+    //                     size="lg"
+    //                     icon={<FaGoogle />}
+    //                     onClick={handleLogin}
+    //                 >
+    //                     Zaloguj się z Google
+    //                 </Button>
+    //                 <p className="text-xs text-gray-500 mt-4 text-center">
+    //                     Kontynuując, akceptujesz nasze&nbsp;
+    //                     <Link href="/terms" className="text-blue-500 hover:underline">
+    //                         Warunki korzystania
+    //                     </Link>
+    //                     &nbsp;i&nbsp;
+    //                     <Link href="/privacy" className="text-blue-500 hover:underline">
+    //                         Politykę prywatności
+    //                     </Link>
+    //                 </p>
+    //             </div>
+                
+    //             {/* Mobile footer (visible only on mobile) */}
+    //             <div className="mt-8 md:hidden text-center">
+    //                 <p className="text-sm text-zinc-400">
+    //                     &copy; 2025 TrustRate. Wszelkie prawa zastrzeżone.
+    //                 </p>
+    //             </div>
+    //         </div>
+    //     </div>
+    // );
 }

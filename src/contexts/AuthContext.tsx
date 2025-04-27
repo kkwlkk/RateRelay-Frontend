@@ -39,8 +39,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const response = await apiService.getAccount();
         if (response.success) {
-            setUser(response.data);
-            return response.data;
+            const user = response.data as User;
+            setUser(user);
+            return user;
         } else {
             console.error('Failed to fetch user profile:', response.error);
             return Promise.reject('Failed to fetch user profile');

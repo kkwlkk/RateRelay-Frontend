@@ -29,7 +29,7 @@ export function SessionRefresher() {
 
         console.log('Setting up refresh for session');
 
-        const refreshInterval = 10 * 60 * 1000; // 10 minutes
+        const refreshInterval = 10 * 60 * 1000;
 
         console.log(`Will refresh token in ${Math.floor(refreshInterval / 60000)} minutes`);
 
