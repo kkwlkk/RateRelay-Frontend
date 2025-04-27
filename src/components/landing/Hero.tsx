@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function Hero() {
   return (
-    <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white overflow-hidden min-h-[70vh] flex items-center">
+    <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white overflow-hidden min-h-screen flex items-center">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
           <Image
@@ -20,7 +20,7 @@ export function Hero() {
         <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-primary-400/10 rounded-full filter blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-6 py-16 relative">
+      <div className="container mx-auto px-6 py-12 md:py-20 relative">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 text-center lg:text-left relative z-10">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
@@ -92,10 +92,9 @@ export function Hero() {
             </div>
           </div>
         </div>
-
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
-          <FaChevronDown className="text-white/50 text-2xl" />
-        </div>
+      </div>
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce z-10 mb-8">
+        <FaChevronDown className="text-white/50 text-2xl" />
       </div>
     </section>
   );
