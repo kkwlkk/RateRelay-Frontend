@@ -24,14 +24,14 @@ export function Hero() {
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 text-center lg:text-left relative z-10">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              Odkrywaj i dziel się <br />
+              Kształtuj reputację firm <br />
               <span className="text-primary-200 bg-clip-text text-primary bg-gradient-to-r from-primary-300 to-primary-500">
-                Opiniami o firmach
+                Opierając się na prawdziwych doświadczeniach
               </span> <br />
-              Które mają znaczenie
+              Wspieraj rozwój lokalnego biznesu
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-2xl text-gray-200 leading-relaxed">
-              Dołącz do tysięcy firm i klientów, którzy ufają TrustRate w kwestii autentycznych opinii i ocen.
+              TrustRate to przestrzeń, w której przedsiębiorcy dzielą się autentycznymi doświadczeniami, budując zaufanie i wspólnie kształtując pozytywny wizerunek firm. Dzięki prawdziwym historiom łatwiej jest nawiązać wartościowe relacje i wzmacniać reputację.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start mb-8">
               <Link href="/businesses">
