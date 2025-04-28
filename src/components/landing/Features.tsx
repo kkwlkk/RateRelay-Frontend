@@ -5,32 +5,32 @@ export function Features() {
   const features = [
     {
       icon: FaStar,
-      title: 'Prawdziwe opinie',
-      description: 'Miej dostęp do autentycznych opinii i ocen firm w Twojej okolicy.',
+      title: 'Zweryfikowane doświadczenia',
+      description: 'Uzyskuj dostęp do rzetelnych informacji i doświadczeń przedsiębiorców z Twojej branży.',
       features: [
-        'Zweryfikowane opinie klientów',
-        'Szczegółowy system ocen',
-        'Śledzenie ostatniej aktywności'
+        'Rzetelna weryfikacja użytkowników',
+        'Autentyczne doświadczenia biznesowe',
+        'Aktywność potwierdzona działaniami w czasie rzeczywistym'
       ]
     },
     {
       icon: FaUsers,
-      title: 'Społeczność',
-      description: 'Dołącz do prężnej społeczności firm i klientów dzielących się swoimi doświadczeniami.',
+      title: 'Społeczność zaufanych firm',
+      description: 'TrustRate to platforma skupiająca wyłącznie firmy o zweryfikowanej aktywności i wysokich standardach.',
       features: [
-        'Aktywna społeczność użytkowników',
-        'Aktualizacje w czasie rzeczywistym',
-        'Funkcje udostępniania społecznościowego'
+        'Zamknięty dostęp dla zweryfikowanych firm',
+        'Bezpieczna wymiana wiedzy i doświadczeń',
+        'Wzajemne wsparcie w rozwoju biznesu'
       ]
     },
     {
       icon: FaLock,
-      title: 'Bezpieczna platforma',
+      title: 'Prywatność i ochrona danych',
       description: 'Twoje dane i prywatność są naszym priorytetem dzięki zabezpieczeniom na poziomie korporacyjnym.',
       features: [
-        'Szyfrowanie end-to-end',
+        'Szyfrowanie end-to-end na każdym etapie',
         'Regularne audyty bezpieczeństwa',
-        'Kontrola prywatności'
+        'Pełna kontrola nad Twoją prywatnością'
       ]
     }
   ];
@@ -40,7 +40,7 @@ export function Features() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">Dlaczego TrustRate?</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">Odkryj moc autentycznych opinii i zaufanych ocen firm</p>
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg">Poznaj zamkniętą społeczność zweryfikowanych firm i odkrywaj prawdziwe opinie, którym możesz zaufać.          </p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (

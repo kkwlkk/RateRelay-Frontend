@@ -1,4 +1,6 @@
-import { FaArrowRight, FaStar, FaUsers, FaLock, FaChevronDown } from 'react-icons/fa';
+import { FaArrowRight, FaChevronDown } from 'react-icons/fa'; // ikonki które chyba uzywane sa
+import { HiShieldCheck, HiChatBubbleBottomCenterText, HiBriefcase } from 'react-icons/hi2'; // nowe ikonki HI
+import { LuBadgeCheck } from 'react-icons/lu'; // nowe ikionki Lu
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
@@ -24,14 +26,14 @@ export function Hero() {
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 text-center lg:text-left relative z-10">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              Odkrywaj i dziel się <br />
+              Wspieraj lokalne firmy <br />
               <span className="text-primary-200 bg-clip-text text-primary bg-gradient-to-r from-primary-300 to-primary-500">
-                Opiniami o firmach
+              kształtuj ich wizerunek
               </span> <br />
-              Które mają znaczenie
+              buduj zaufanie
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-2xl text-gray-200 leading-relaxed">
-              Dołącz do tysięcy firm i klientów, którzy ufają TrustRate w kwestii autentycznych opinii i ocen.
+            TrustRate – Wymieniaj wartościowy feedback, który kształtuje wizerunek Twojego biznesu.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start mb-8">
               <Link href="/businesses">
@@ -50,7 +52,7 @@ export function Hero() {
                 ))}
               </div>
               <div className="text-sm text-gray-200">
-                <span className="font-semibold">1000+</span> firm nam ufa
+                <span className="font-semibold">100+</span> firm buduje reputację z TrustRate
               </div>
             </div>
           </div>
@@ -62,29 +64,38 @@ export function Hero() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
                     <div className="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center">
-                      <FaStar className="text-white text-xl" />
+                      <HiBriefcase className="text-white text-xl" />
                     </div>
                     <div>
-                      <div className="font-semibold">Niesamowite usługi!</div>
-                      <div className="text-sm text-gray-200">&ldquo;Najlepsze doświadczenie w życiu!&rdquo;</div>
+                      <div className="font-semibold">Elitarna przestrzeń biznesu</div>
+                      <div className="text-sm text-gray-200">Wyłącznie dla zweryfikowanych właścicieli firm.</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
                     <div className="w-12 h-12 rounded-full bg-primary-400 flex items-center justify-center">
-                      <FaUsers className="text-white text-xl" />
+                      <HiChatBubbleBottomCenterText className="text-white text-xl" />
                     </div>
                     <div>
-                      <div className="font-semibold">Wspaniała społeczność</div>
-                      <div className="text-sm text-gray-200">&ldquo;Bardzo pomocna platforma&rdquo;</div>
+                      <div className="font-semibold">Twoje słowo ma wartość</div>
+                      <div className="text-sm text-gray-200">Kształtuj wizerunek najlepszych marek.</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
                     <div className="w-12 h-12 rounded-full bg-primary-300 flex items-center justify-center">
-                      <FaLock className="text-white text-xl" />
+                      <LuBadgeCheck  className="text-white text-xl" />
                     </div>
                     <div>
-                      <div className="font-semibold">Bezpieczne i zaufane</div>
-                      <div className="text-sm text-gray-200">&ldquo;Czuj się bezpiecznie korzystając z niej&rdquo;</div>
+                      <div className="font-semibold">Buduj reputację</div>
+                      <div className="text-sm text-gray-200">Dziel się doświadczeniem. Zmieniaj rynek.</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
+                    <div className="w-12 h-12 rounded-full bg-primary-300 flex items-center justify-center">
+                      <HiShieldCheck className="text-white text-xl" />
+                    </div>
+                    <div>
+                      <div className="font-semibold">Pełna anonimowość. Pełne bezpieczeństwo.</div>
+                      <div className="text-sm text-gray-200">Twoje dane są zawsze chronione.</div>
                     </div>
                   </div>
                 </div>

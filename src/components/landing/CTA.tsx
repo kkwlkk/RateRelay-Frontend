@@ -13,7 +13,7 @@ export function CTA() {
       <div className="container mx-auto px-6 text-center relative z-10">
         <h2 className="text-4xl font-bold mb-6 text-gray-800">Gotowy, aby zacząć?</h2>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Dołącz do tysięcy firm i klientów, którzy ufają TrustRate w kwestii opinii.
+        Dołącz do przedsiębiorców, którzy wymieniają doświadczenia, by budować autentyczny wizerunek swoich firm.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/businesses">
@@ -34,7 +34,7 @@ export function CTA() {
             ))}
           </div>
           <div className="text-gray-600">
-            <span className="font-semibold">1000+</span> firm już korzysta z TrustRate
+            <span className="font-semibold">100+</span> firm buduje reputację z TrustRate
           </div>
         </div>
       </div>
