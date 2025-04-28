@@ -65,8 +65,8 @@ export function Hero() {
                       <FaStar className="text-white text-xl" />
                     </div>
                     <div>
-                      <div className="font-semibold">Niesamowite usługi!</div>
-                      <div className="text-sm text-gray-200">&ldquo;Najlepsze doświadczenie w życiu!&rdquo;</div>
+                      <div className="font-semibold">Elitarna przestrzeń biznesu</div>
+                      <div className="text-sm text-gray-200">Wyłącznie dla zweryfikowanych właścicieli firm.</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
@@ -74,8 +74,8 @@ export function Hero() {
                       <FaUsers className="text-white text-xl" />
                     </div>
                     <div>
-                      <div className="font-semibold">Wspaniała społeczność</div>
-                      <div className="text-sm text-gray-200">&ldquo;Bardzo pomocna platforma&rdquo;</div>
+                      <div className="font-semibold">Twoje słowo ma wartość</div>
+                      <div className="text-sm text-gray-200">Kształtuj wizerunek najlepszych marek.</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
@@ -83,8 +83,17 @@ export function Hero() {
                       <FaLock className="text-white text-xl" />
                     </div>
                     <div>
-                      <div className="font-semibold">Bezpieczne i zaufane</div>
-                      <div className="text-sm text-gray-200">&ldquo;Czuj się bezpiecznie korzystając z niej&rdquo;</div>
+                      <div className="font-semibold">Buduj reputację</div>
+                      <div className="text-sm text-gray-200">Dziel się doświadczeniem. Zmieniaj rynek.</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
+                    <div className="w-12 h-12 rounded-full bg-primary-300 flex items-center justify-center">
+                      <FaLock className="text-white text-xl" />
+                    </div>
+                    <div>
+                      <div className="font-semibold">Pełna anonimowość. Pełne bezpieczeństwo.</div>
+                      <div className="text-sm text-gray-200">Twoje dane są zawsze chronione.</div>
                     </div>
                   </div>
                 </div>
