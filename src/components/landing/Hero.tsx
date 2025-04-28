@@ -52,7 +52,7 @@ export function Hero() {
                 ))}
               </div>
               <div className="text-sm text-gray-200">
-                <span className="font-semibold">1000+</span> firm nam ufa
+                <span className="font-semibold">100+</span> firm buduje reputację z TrustRate
               </div>
             </div>
           </div>
