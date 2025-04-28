@@ -34,18 +34,18 @@ export function HowItWorks() {
   const steps = [
     {
       icon: <FaSearch className="text-primary text-2xl" />,
-      title: "Znajdź firmy",
-      description: "Wyszukaj firmy w Twojej okolicy i odkryj ich oceny"
+      title: "Odkrywaj sprawdzone firmy",
+      description: "Wyszukuj i odkrywaj firmy w Twojej okolicy, które już zdobyły zaufanie społeczności TrustRate. Zobacz, jak są postrzegane przez innych przedsiębiorców i jak ich wizerunek kształtuje się w Internecie dzięki autentycznym rekomendacjom."
     },
     {
       icon: <FaCommentAlt className="text-primary text-2xl" />,
-      title: "Zostaw opinię",
-      description: "Podziel się swoim doświadczeniem i pomóż innym w podejmowaniu świadomych decyzji"
+      title: "Dziel się wiedzą i doświadczeniem",
+      description: "Twoje doświadczenia mają realny wpływ. Dzięki dzieleniu się swoimi spostrzeżeniami, pomagają one innym w podejmowaniu świadomych decyzji. Twój feedback kształtuje wizerunek firm, wpływając na jakość usług w Twojej społeczności."
     },
     {
       icon: <FaStar className="text-primary text-2xl" />,
-      title: "Oceń i połącz",
-      description: "Buduj zaufanie i łącz się z firmami w Twojej społeczności"
+      title: "Buduj zaufanie i wpływ",
+      description: "Twórz sieć wartościowych rekomendacji, które wspierają rozwój sprawdzonych firm w Twojej okolicy. Dzięki TrustRate masz realny wpływ na reputację przedsiębiorstw i możesz aktywnie kształtować rynek, tworząc przestrzeń pełną zaufania i transparentności."
     }
   ];
 
@@ -54,7 +54,7 @@ export function HowItWorks() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">Jak to działa?</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">Proste kroki, aby rozpocząć z TrustRate</p>
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg">W TrustRate łączymy przedsiębiorców w celu wymiany wartościowego feedbacku, który ma realny wpływ na rozwój firm. Każdy udział w tej społeczności pomaga budować zaufanie i pozytywny wizerunek lokalnych usług, wpływając na przyszłość rynku.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, index) => (
