@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useCallback } from 'react';
 import { apiService } from '@/services/api';
-import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
+import { AccountOnboardingStep, CompleteBusinessVerificationStepRequestDto } from '@/types/dtos/Onboarding';
 import { useAuth } from './AuthContext';
 import { useRouter } from 'next/navigation';
 import { getOnboardingStepPath } from '@/lib/onboarding';
@@ -21,7 +21,7 @@ type OnboardingContextType = {
     refreshStatus: () => Promise<void>;
     completeWelcomeStep: (acceptedTerms: boolean) => Promise<void>;
     completeProfileSetupStep: (displayName: string) => Promise<void>;
-    completeBusinessVerificationStep: (placeId?: string) => Promise<void>;
+    completeBusinessVerificationStep: (placeId: string) => Promise<void>;
     completeOnboarding: () => Promise<void>;
     isError?: boolean;
     currentStepUrl: string;
@@ -78,6 +78,8 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             completedSteps: [],
             remainingSteps: [],
         } : null,
+        staleTime: 0,
+        gcTime: 0,
     });
 
     const welcomeMutation = useMutation({
@@ -109,8 +111,8 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
 
     const businessVerificationMutation = useMutation({
-        mutationFn: (placeId?: string) =>
-            apiService.completeBusinessVerificationStep({ placeId }),
+        mutationFn: (data: CompleteBusinessVerificationStepRequestDto) =>
+            apiService.completeBusinessVerificationStep(data),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['onboardingStatus'] });
             if (data.success) {
@@ -147,8 +149,8 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         await profileSetupMutation.mutateAsync(displayName);
     };
 
-    const completeBusinessVerificationStep = async (placeId?: string) => {
-        await businessVerificationMutation.mutateAsync(placeId);
+    const completeBusinessVerificationStep = async (placeId: string) => {
+        await businessVerificationMutation.mutateAsync({ placeId: placeId });
     };
 
     const completeOnboarding = async () => {

@@ -25,7 +25,9 @@ export default function OnboardingRoute({ children, step }: OnboardingRouteProps
             return;
         }
 
-        if (user?.hasCompletedOnboarding) {
+        if (!user) return;
+
+        if (user.hasCompletedOnboarding && step !== AccountOnboardingStep.Completed) {
             router.push('/dashboard');
             return;
         }
@@ -35,6 +37,13 @@ export default function OnboardingRoute({ children, step }: OnboardingRouteProps
         if (step > status.currentStep) {
             const currentStepPath = getOnboardingStepPath(status.currentStep);
             router.push(currentStepPath);
+            return;
+        }
+
+        if (step < status.currentStep) {
+            const currentStepPath = getOnboardingStepPath(status.currentStep);
+            router.push(currentStepPath);
+            return;
         }
     }, [isAuthenticated, authLoading, user, status, onboardingLoading, step, router]);
 
@@ -46,16 +55,23 @@ export default function OnboardingRoute({ children, step }: OnboardingRouteProps
         );
     }
 
-    if (
-        !isAuthenticated ||
-        user?.hasCompletedOnboarding ||
-        (status && step > status.currentStep)
-    ) {
+    if (!isAuthenticated) {
         return null;
     }
 
-    if (status && step < status.currentStep) {
-        router.push(getOnboardingStepPath(status.currentStep));
+    if (!user) {
+        return null;
+    }
+
+    if (user.hasCompletedOnboarding && step !== AccountOnboardingStep.Completed) {
+        return null;
+    }
+
+    if (!status) {
+        return null;
+    }
+
+    if (step > status.currentStep || step < status.currentStep) {
         return null;
     }
 

@@ -2,7 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { FiLoader } from "react-icons/fi"
+import { Loader2 } from "lucide-react"
 
 const buttonVariants = cva(
     "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -59,7 +59,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 ref={ref}
                 {...props}
             >
-                {loading && <FiLoader className="animate-spin" />}
+                {loading && <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />}
                 {!loading && icon && iconPosition === 'start' && icon}
                 {children}
                 {!loading && icon && iconPosition === 'end' && icon}

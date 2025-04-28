@@ -4,198 +4,170 @@ import { useState, useEffect } from 'react';
 import OnboardingRoute from '@/components/auth/OnboardingRoute';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
+import { useRouter } from 'next/navigation';
 import { apiService } from '@/services/api';
-import { BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
+import { BusinessVerificationStatusResponseDto, BusinessVerificationChallengeResponseDto } from '@/types/dtos/BusinessVerificaton';
+import toast from 'react-hot-toast';
+import { BusinessSearch } from '@/components/onboarding/business-verification/BusinessSearch';
+import { VerificationStatus } from '@/components/onboarding/business-verification/VerificationStatus';
+import { VerificationChallenge } from '@/components/onboarding/business-verification/VerificationChallenge';
+import { InfoSections } from '@/components/onboarding/business-verification/InfoSections';
 
-export default function BusinessVerificationPage() {
+export default function BusinessVerification() {
+    const router = useRouter();
     const { completeBusinessVerificationStep } = useOnboarding();
-    const [placeId, setPlaceId] = useState('');
-    const [skipVerification, setSkipVerification] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [selectedBusiness, setSelectedBusiness] = useState<google.maps.places.PlaceResult | null>();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [verificationStatus, setVerificationStatus] = useState<BusinessVerificationStatusResponseDto | null>(null);
-    const [isStatusLoading, setIsStatusLoading] = useState(true);
+    const [verificationChallenge, setVerificationChallenge] = useState<BusinessVerificationChallengeResponseDto | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchVerificationStatus = async () => {
-            try {
-                const response = await apiService.getBusinessVerificationStatus();
-                if (response.success) {
-                    setVerificationStatus(response.data);
-                }
-            } catch (error) {
-                console.error('Error fetching verification status:', error);
-            } finally {
-                setIsStatusLoading(false);
-            }
-        };
-
-        fetchVerificationStatus();
-    }, []);
-
-    const handleContinue = async () => {
-        if (!skipVerification && !placeId.trim()) {
-            setError('Please enter a Google Place ID or skip this step');
-            return;
-        }
-
-        setIsLoading(true);
-        setError('');
-
+    const fetchVerificationStatus = async () => {
         try {
-            if (skipVerification) {
-                await completeBusinessVerificationStep();
-            } else {
-                // First initiate the verification if we have a place ID
-                await apiService.initiateBusinessVerification(placeId);
-                // Then complete the step in the onboarding process
-                await completeBusinessVerificationStep(placeId);
+            const statusResponse = await apiService.getBusinessVerificationStatus();
+            if (statusResponse.success) {
+                setVerificationStatus(statusResponse.data);
+                if (!statusResponse.data.isVerified) {
+                    const challengeResponse = await apiService.getBusinessVerificationChallenge();
+                    if (challengeResponse.success) {
+                        setVerificationChallenge(challengeResponse.data);
+                    }
+                }
             }
-        } catch (err) {
-            setError('Failed to process verification. Please try again.');
-            console.error('Verification error:', err);
+
+            if (statusResponse.error?.code === 'ERR_ALREADY_VERIFIED') {
+                const metadata = statusResponse.metadata as { businessId: number; placeId: string } | undefined;
+                if (metadata?.placeId) {
+                    setVerificationStatus({
+                        isVerified: true,
+                        status: 'VERIFIED',
+                        verificationId: ''
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Error checking verification status:', error);
+            toast.error('Wystąpił błąd podczas sprawdzania statusu weryfikacji');
         } finally {
             setIsLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchVerificationStatus();
+    }, [router]);
+
+    const handleBusinessSelect = (place: google.maps.places.PlaceResult) => {
+        setSelectedBusiness(place);
+    };
+
+    const handleVerificationError = (error: { code?: string; message?: string } | null | undefined | unknown) => {
+        const typedError = error as { code?: string; message?: string } | null | undefined;
+        if (typedError?.code === 'ERR_ALREADY_VERIFIED') {
+            handleCompleteVerification();
+        } else if (typedError?.code === 'ERR_BUSINESS_NOT_FOUND') {
+            toast.error('Firma nie została znaleziona. Upewnij się, że podałeś poprawną firmę.');
+        } else {
+            toast.error(typedError?.message || 'Wystąpił nieoczekiwany błąd podczas weryfikacji');
+        }
+    };
+
+    const handleSubmit = async () => {
+        if (!selectedBusiness?.place_id) return;
+
+        setIsSubmitting(true);
+        try {
+            const verificationResponse = await apiService.initiateBusinessVerification(selectedBusiness.place_id);
+            if (verificationResponse.success) {
+                const challengeResponse = await apiService.getBusinessVerificationChallenge();
+                if (challengeResponse.success) {
+                    setVerificationChallenge(challengeResponse.data);
+                    setVerificationStatus({
+                        verificationId: verificationResponse.data.verificationId,
+                        isVerified: false,
+                        status: 'PENDING'
+                    });
+                }
+            }
+
+            if (verificationResponse.error) {
+                handleVerificationError(verificationResponse.error);
+            }
+        } catch (error) {
+            console.error('Error during business verification:', error);
+            handleVerificationError(error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleProcessVerification = async () => {
+        try {
+            const response = await apiService.processBusinessVerificationChallenge();
+            if (response.success) {
+                if (response.data.isVerified) {
+                    handleCompleteVerification();
+                } else {
+                    toast.error('Weryfikacja nie powiodła się. Upewnij się, że godziny otwarcia zostały ustawione zgodnie z wymaganiami.');
+                }
+            } else {
+                handleVerificationError(response.error);
+            }
+        } catch (error) {
+            console.error('Error processing verification:', error);
+            handleVerificationError(error);
+        }
+    };
+
+    const handleCompleteVerification = async () => {
+        try {
+            const statusResponse = await apiService.getBusinessVerificationStatus();
+            const metadata = statusResponse.metadata as { businessId: number; placeId: string } | undefined;
+            if (!metadata?.placeId) {
+                toast.error('Nie można zakończyć weryfikacji - brak danych firmy');
+                return;
+            }
+            await completeBusinessVerificationStep(metadata.placeId);
+            toast.success('Twoja firma została pomyślnie zweryfikowana!');
+        } catch (error) {
+            console.error('Error completing verification:', error);
+            toast.error('Wystąpił błąd podczas kończenia weryfikacji');
+        }
+    };
+
     return (
         <OnboardingRoute step={AccountOnboardingStep.BusinessVerification}>
-            <div className="space-y-6">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-gray-900">Business Verification</h2>
-                    <p className="mt-2 text-gray-600">
-                        Verify your business to collect and manage reviews.
-                    </p>
+            <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white">
+                <div className="max-w-3xl mx-auto">
+                    <div className="text-center mb-10">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-3">
+                            Weryfikacja Firmy
+                        </h1>
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                            Wybierz swoją firmę, aby zweryfikować konto i odblokować wszystkie funkcje platformy.
+                        </p>
+                    </div>
+
+                    {isLoading ? (
+                        <div className="text-center">Ładowanie...</div>
+                    ) : verificationStatus?.isVerified ? (
+                        <VerificationStatus onComplete={handleCompleteVerification} />
+                    ) : verificationChallenge ? (
+                        <VerificationChallenge
+                            challenge={verificationChallenge}
+                            onVerify={handleProcessVerification}
+                            isSubmitting={isSubmitting}
+                        />
+                    ) : (
+                        <BusinessSearch
+                            onBusinessSelect={handleBusinessSelect}
+                            onSubmit={handleSubmit}
+                            selectedBusiness={selectedBusiness}
+                            isSubmitting={isSubmitting}
+                        />
+                    )}
+                    {!verificationStatus?.isVerified && <InfoSections />}
                 </div>
-
-                {isStatusLoading ? (
-                    <div className="flex justify-center py-4">
-                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                    </div>
-                ) : verificationStatus?.isVerified ? (
-                    <div className="bg-green-50 p-4 rounded-lg text-center">
-                        <svg className="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <h3 className="mt-2 text-lg font-medium text-green-800">Your Business is Verified!</h3>
-                        <p className="mt-1 text-green-700">
-                            You&apos;re all set to collect and manage reviews for your business.
-                        </p>
-                        <button
-                            type="button"
-                            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                            onClick={handleContinue}
-                        >
-                            Continue to Next Step
-                        </button>
-                    </div>
-                ) : verificationStatus ? (
-                    <div className="bg-yellow-50 p-4 rounded-lg">
-                        <h3 className="text-lg font-medium text-yellow-800">Verification In Progress</h3>
-                        <p className="mt-1 text-yellow-700">
-                            Your business verification is already in progress. Status: {verificationStatus.status}
-                        </p>
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                type="button"
-                                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                onClick={handleContinue}
-                            >
-                                Continue to Next Step
-                            </button>
-                        </div>
-                    </div>
-                ) : (
-                    <>
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                            <h3 className="text-lg font-medium text-blue-800 mb-2">Why Verify Your Business?</h3>
-                            <ul className="list-disc pl-5 text-blue-700 space-y-1">
-                                <li>Collect authentic reviews from customers</li>
-                                <li>Respond to reviews and build your reputation</li>
-                                <li>Get insights on customer satisfaction</li>
-                                <li>Show up in business searches on TrustRate</li>
-                            </ul>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label htmlFor="placeId" className="block text-sm font-medium text-gray-700">
-                                    Google Place ID
-                                </label>
-                                <div className="mt-1">
-                                    <input
-                                        type="text"
-                                        id="placeId"
-                                        name="placeId"
-                                        value={placeId}
-                                        onChange={(e) => setPlaceId(e.target.value)}
-                                        disabled={skipVerification}
-                                        className={`
-                      block w-full rounded-md sm:text-sm focus:ring-blue-500 focus:border-blue-500
-                      ${error ? 'border-red-300' : 'border-gray-300'}
-                      ${skipVerification ? 'bg-gray-100' : ''}
-                    `}
-                                        placeholder="e.g. ChIJrTLr-GyuEmsRBfy61i59si0"
-                                    />
-                                    {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-                                </div>
-                                <p className="mt-2 text-sm text-gray-500">
-                                    <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500">
-                                        How to find your Google Place ID
-                                    </a>
-                                </p>
-                            </div>
-
-                            <div className="flex items-center">
-                                <input
-                                    id="skipVerification"
-                                    name="skipVerification"
-                                    type="checkbox"
-                                    checked={skipVerification}
-                                    onChange={(e) => {
-                                        setSkipVerification(e.target.checked);
-                                        if (e.target.checked) setError('');
-                                    }}
-                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                />
-                                <label htmlFor="skipVerification" className="ml-2 block text-sm text-gray-700">
-                                    I don&apos;t have a business to verify right now
-                                </label>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {!verificationStatus?.isVerified && (
-                    <div className="flex justify-between pt-6">
-                        <button
-                            type="button"
-                            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            onClick={() => window.history.back()}
-                        >
-                            Back
-                        </button>
-                        <button
-                            type="button"
-                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            disabled={isLoading || (!skipVerification && !placeId.trim())}
-                            onClick={handleContinue}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Processing...
-                                </>
-                            ) : (
-                                'Continue'
-                            )}
-                        </button>
-                    </div>
-                )}
             </div>
         </OnboardingRoute>
     );

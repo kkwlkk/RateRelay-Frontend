@@ -1,8 +1,8 @@
 enum AccountOnboardingStep {
+    BusinessVerification = 0,
     Welcome = 1,
     ProfileSetup = 2,
-    BusinessVerification = 3,
-    Completed = 4,
+    Completed = 3,
 }
 
 export type GetOnboardingStatusResponseDto = {
@@ -31,7 +31,7 @@ export type CompleteProfileSetupResponseDto = {
 };
 
 export type CompleteBusinessVerificationStepRequestDto = {
-    placeId?: string;
+    placeId: string;
 };
 
 export type CompleteBusinessVerificationStepResponseDto = {

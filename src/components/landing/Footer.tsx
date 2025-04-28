@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-6 py-12">
         <div className="grid md:grid-cols-4 gap-12">
           <div className="space-y-4">
-            <Image src="/assets/logo-white.png" alt="TrustRate Logo" width={150} height={150} className="mb-4" />
+            <Image src="/assets/logo-white.png" alt="TrustRate Logo" width={150} height={150} className="mb-4" priority />
             <p className="text-slate-300">Twoja zaufana platforma do opinii o firmach i informacji zwrotnych od klientów.</p>
           </div>
           <div>

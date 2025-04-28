@@ -14,6 +14,10 @@ export type BusinessVerificationStatusResponseDto = {
     verificationId: string;
     isVerified: boolean;
     status: string;
+    metadata?: {
+        businessId: number;
+        placeId: string;
+    };
 };
 
 export type BusinessVerificationChallengeResponseDto = {

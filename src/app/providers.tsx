@@ -8,6 +8,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/lib/react-query';
 import { isDev } from '@/utils/environmentUtils';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from 'react-hot-toast';
+import { toastOptions } from '@/lib/reactHotToastConfiguration';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
@@ -20,6 +22,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
                     </OnboardingProvider>
                 </AuthProvider>
             </SessionProvider>
+            <Toaster 
+                position="top-right"
+                toastOptions={toastOptions}
+            />
             {isDev && (
                 <>
                     <ReactQueryDevtools initialIsOpen={false} position="left" />

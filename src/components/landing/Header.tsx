@@ -8,7 +8,7 @@ export function Header() {
     <header className="bg-white/80 backdrop-blur-sm shadow-sm fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Image src="/assets/logo-dark.png" alt="TrustRate Logo" width={150} height={150} />
+          <Image src="/assets/logo-dark.png" alt="TrustRate Logo" width={150} height={150} priority />
           <nav className="hidden md:flex space-x-8">
             <Link href="/" className="text-gray-700 hover:text-primary transition-colors">Strona główna</Link>
             <Link href="/features" className="text-gray-700 hover:text-primary transition-colors">Funkcje</Link>
