@@ -1,4 +1,6 @@
-import { FaArrowRight, FaStar, FaUsers, FaLock, FaChevronDown } from 'react-icons/fa';
+import { FaArrowRight, FaChevronDown } from 'react-icons/fa'; // ikonki które chyba uzywane sa
+import { HiShieldCheck, HiChatBubbleBottomCenterText, HiBriefcase } from 'react-icons/hi2'; // nowe ikonki HI
+import { LuBadgeCheck } from 'react-icons/lu'; // nowe ikionki Lu
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
@@ -24,11 +26,11 @@ export function Hero() {
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 text-center lg:text-left relative z-10">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-            Oceniaj lokalne firmy <br />
+              Wspieraj lokalne firmy <br />
               <span className="text-primary-200 bg-clip-text text-primary bg-gradient-to-r from-primary-300 to-primary-500">
-              dziel się doświadczeniami
-              </span> <br />
               kształtuj ich wizerunek
+              </span> <br />
+              buduj zaufanie
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-2xl text-gray-200 leading-relaxed">
               TrustRate to przestrzeń, w której przedsiębiorcy dzielą się autentycznymi doświadczeniami, budując zaufanie i wspólnie kształtując pozytywny wizerunek firm. Dzięki prawdziwym historiom łatwiej jest nawiązać wartościowe relacje i wzmacniać reputację.
@@ -62,7 +64,7 @@ export function Hero() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
                     <div className="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center">
-                      <FaStar className="text-white text-xl" />
+                      <HiBriefcase className="text-white text-xl" />
                     </div>
                     <div>
                       <div className="font-semibold">Elitarna przestrzeń biznesu</div>
@@ -71,7 +73,7 @@ export function Hero() {
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
                     <div className="w-12 h-12 rounded-full bg-primary-400 flex items-center justify-center">
-                      <FaUsers className="text-white text-xl" />
+                      <HiChatBubbleBottomCenterText className="text-white text-xl" />
                     </div>
                     <div>
                       <div className="font-semibold">Twoje słowo ma wartość</div>
@@ -80,7 +82,7 @@ export function Hero() {
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
                     <div className="w-12 h-12 rounded-full bg-primary-300 flex items-center justify-center">
-                      <FaLock className="text-white text-xl" />
+                      <LuBadgeCheck  className="text-white text-xl" />
                     </div>
                     <div>
                       <div className="font-semibold">Buduj reputację</div>
@@ -89,7 +91,7 @@ export function Hero() {
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg border border-white/10 hover:bg-white/15 transition-colors duration-300">
                     <div className="w-12 h-12 rounded-full bg-primary-300 flex items-center justify-center">
-                      <FaLock className="text-white text-xl" />
+                      <HiShieldCheck className="text-white text-xl" />
                     </div>
                     <div>
                       <div className="font-semibold">Pełna anonimowość. Pełne bezpieczeństwo.</div>
