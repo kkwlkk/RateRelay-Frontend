@@ -33,7 +33,7 @@ export function Hero() {
               buduj zaufanie
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-2xl text-gray-200 leading-relaxed">
-              TrustRate to przestrzeń, w której przedsiębiorcy dzielą się autentycznymi doświadczeniami, budując zaufanie i wspólnie kształtując pozytywny wizerunek firm. Dzięki prawdziwym historiom łatwiej jest nawiązać wartościowe relacje i wzmacniać reputację.
+            TrustRate – Wymieniaj wartościowy feedback, który kształtuje wizerunek Twojego biznesu.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start mb-8">
               <Link href="/businesses">
