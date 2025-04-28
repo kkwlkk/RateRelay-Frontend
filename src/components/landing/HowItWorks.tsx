@@ -12,10 +12,13 @@ function StepCard({ icon, title, description }: StepCardProps) {
     <div className="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
       <div className="absolute inset-0 bg-gradient-to-br from-primary-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <div className="relative">
-        <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          {icon}
+        {/* Użyj Flexbox, aby ikona i tytuł były obok siebie */}
+        <div className="flex items-center mb-6">
+          <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+            {icon}
+          </div>
+          <h3 className="text-2xl font-semibold text-gray-800">{title}</h3>
         </div>
-        <h3 className="text-2xl font-semibold mb-4 text-gray-800">{title}</h3>
         <p className="text-gray-600 mb-6 text-lg">{description}</p>
         <div className="flex items-center justify-center">
           <Button 
@@ -30,21 +33,22 @@ function StepCard({ icon, title, description }: StepCardProps) {
   );
 }
 
+
 export function HowItWorks() {
   const steps = [
     {
       icon: <FaSearch className="text-primary text-2xl" />,
-      title: "Odkrywaj sprawdzone firmy",
+      title: "Odkrywaj zaufane firmy",
       description: "Wyszukuj i odkrywaj firmy w Twojej okolicy, które już zdobyły zaufanie społeczności TrustRate. Zobacz, jak są postrzegane przez innych przedsiębiorców i jak ich wizerunek kształtuje się w Internecie dzięki autentycznym rekomendacjom."
     },
     {
       icon: <FaCommentAlt className="text-primary text-2xl" />,
-      title: "Dziel się wiedzą i doświadczeniem",
+      title: "Dziel się doświadczeniem",
       description: "Twoje doświadczenia mają realny wpływ. Dzięki dzieleniu się swoimi spostrzeżeniami, pomagają one innym w podejmowaniu świadomych decyzji. Twój feedback kształtuje wizerunek firm, wpływając na jakość usług w Twojej społeczności."
     },
     {
       icon: <FaStar className="text-primary text-2xl" />,
-      title: "Buduj zaufanie i wpływ",
+      title: "Buduj reputację i zaufanie",
       description: "Twórz sieć wartościowych rekomendacji, które wspierają rozwój sprawdzonych firm w Twojej okolicy. Dzięki TrustRate masz realny wpływ na reputację przedsiębiorstw i możesz aktywnie kształtować rynek, tworząc przestrzeń pełną zaufania i transparentności."
     }
   ];
