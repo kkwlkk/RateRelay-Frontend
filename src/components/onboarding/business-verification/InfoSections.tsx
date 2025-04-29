@@ -10,6 +10,11 @@ export function InfoSections() {
                     <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                         Dlaczego należy zweryfikować firmę?
                     </h2>
+                    div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                        <p className="text-sm text-indigo-700">
+                        Podstawą naszej platformy jest zapewnienie, że każdy użytkownik jest rzeczywistym właścicielem firmy. To nie tylko gwarantuje bezpieczeństwo, ale również buduje solidny fundament do wymiany wiedzy, doświadczeń i rekomendacji, co w efekcie wpływa na rozwój i wiarygodność Twojej marki.
+                        </p>
+                    </div>
                     <Accordion type="single" collapsible className="w-full space-y-4">
                         {infoSections.map((section, index) => (
                             <AccordionItem
