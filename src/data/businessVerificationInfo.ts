@@ -35,5 +35,5 @@ export const infoSections = [
             "Większa jakość informacji: Gdy każda strona jest zweryfikowana, możesz mieć pewność, że wymieniane opinie są bardziej rzetelne, a nie przypadkowe lub zmanipulowane.",
             "Silniejsza społeczność: Im więcej firm się weryfikuje, tym bardziej wartościowa staje się cała platforma. To Ty zyskujesz na tym, że inni również grają fair."
         ]
-    }
+    },
 ]; 
