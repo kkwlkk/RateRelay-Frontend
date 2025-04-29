@@ -40,12 +40,11 @@ export function InfoSections() {
                         ))}
                     </Accordion>
 
-                    <div className="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm">
+                    <div className="my-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
                     <p className="text-sm text-blue-700">
                         Twoje dane firmowe są bezpieczne. Przechowujemy je zgodnie z najwyższymi standardami ochrony prywatności, dbając o ich bezpieczeństwo i wykorzystywanie wyłącznie w celu ulepszania Twojego doświadczenia na naszej platformie.
                     </p>
                     </div>
-
                 </CardContent>
             </Card>
         </div>
