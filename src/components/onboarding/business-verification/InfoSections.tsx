@@ -10,11 +10,12 @@ export function InfoSections() {
                     <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                         Dlaczego należy zweryfikować firmę?
                     </h2>
-                    <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                        <p className="text-sm text-indigo-700">
-                        Podstawą naszej platformy jest zapewnienie, że każdy użytkownik jest rzeczywistym właścicielem firmy. To nie tylko gwarantuje bezpieczeństwo, ale również buduje solidny fundament do wymiany wiedzy, doświadczeń i rekomendacji, co w efekcie wpływa na rozwój i wiarygodność Twojej marki.
-                        </p>
-                    </div>
+                    <div className="mt-8 p-4 bg-blue-50 rounded-xl border-2 border-blue-400">
+                    <p className="text-sm text-indigo-700">
+                        Potwierdzenie tożsamości to klucz do pełnej funkcjonalności naszej platformy. Zyskaj dostęp do wszystkich narzędzi i ciesz się pełną kontrolą nad swoim profilem – zweryfikowana firma to firma, której się ufa!
+                    </p>
+                   </div>
+
                    <br></br>
 
                     <Accordion type="single" collapsible className="w-full space-y-4">
@@ -41,11 +42,12 @@ export function InfoSections() {
                         ))}
                     </Accordion>
 
-                    <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                        <p className="text-sm text-blue-700">
-                            Twoje dane firmowe będą przechowywane bezpiecznie i wykorzystywane wyłącznie w celu poprawy Twojego doświadczenia na naszej platformie. Zobowiązujemy się do ochrony Twojej prywatności i zapewnienia bezpieczeństwa danych Twojej firmy.
-                        </p>
+                    <div className="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm">
+                    <p className="text-sm text-blue-700">
+                        Twoje dane firmowe są bezpieczne. Przechowujemy je zgodnie z najwyższymi standardami ochrony prywatności, dbając o ich bezpieczeństwo i wykorzystywanie wyłącznie w celu ulepszania Twojego doświadczenia na naszej platformie.
+                    </p>
                     </div>
+
                 </CardContent>
             </Card>
         </div>
