@@ -141,10 +141,10 @@ export default function BusinessVerification() {
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-10">
                         <h1 className="text-3xl font-bold text-gray-900 mb-3">
-                            Weryfikacja Firmy
+                        Potwierdzenie tożsamości firmy
                         </h1>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Wybierz swoją firmę, aby zweryfikować konto i odblokować wszystkie funkcje platformy.
+                        Zweryfikuj swoją firmę, aby zapewnić bezpieczeństwo, wiarygodność i pełną funkcjonalność TrustRate.
                         </p>
                     </div>
 
