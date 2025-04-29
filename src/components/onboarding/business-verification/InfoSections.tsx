@@ -13,7 +13,6 @@ export function InfoSections() {
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                         Potwierdzenie tożsamości to klucz do pełnej funkcjonalności naszej platformy. Zyskaj dostęp do wszystkich narzędzi i ciesz się pełną kontrolą nad swoim profilem – zweryfikowana firma to firma, której się ufa!
                     </p>
-                   </div>
 
                    <br></br>
 
