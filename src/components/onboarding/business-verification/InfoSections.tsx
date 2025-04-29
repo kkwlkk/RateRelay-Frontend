@@ -10,8 +10,7 @@ export function InfoSections() {
                     <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                         Dlaczego należy zweryfikować firmę?
                     </h2>
-                    <div className="mt-8 p-4 bg-blue-50 rounded-xl border-2 border-blue-400">
-                    <p className="text-sm text-indigo-700">
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                         Potwierdzenie tożsamości to klucz do pełnej funkcjonalności naszej platformy. Zyskaj dostęp do wszystkich narzędzi i ciesz się pełną kontrolą nad swoim profilem – zweryfikowana firma to firma, której się ufa!
                     </p>
                    </div>
