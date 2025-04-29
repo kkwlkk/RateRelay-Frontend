@@ -16,11 +16,12 @@ export function BusinessSearch({ onBusinessSelect, onSubmit, selectedBusiness, i
                 <h2 className="text-2xl font-semibold text-gray-900">
                     Znajdź swoją firmę
                 </h2>
-                <div className="my-4 p-4 bg-orange-50 rounded-xl border border-orange-100">
-                    <p className="text-sm text-orange-700">
-                        Nie znalazłeś swojej firmy? Sprawdź poprawność nazwy i upewnij się, że posiada ona przynajmniej 1 opinię w Google. W przeciwnym razie skontaktuj się z administratorem platformy.
-                    </p>
-                </div>
+                <div className="my-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                <p className="text-sm text-blue-700">
+                    Nie znalazłeś swojej firmy? Sprawdź poprawność nazwy i upewnij się, że posiada ona przynajmniej 1 opinię w Google. W przeciwnym razie skontaktuj się z administratorem platformy.
+                </p>
+                 </div>
+
                 <GooglePlacesAutocomplete
                     onPlaceSelected={onBusinessSelect}
                     placeholder="Wyszukaj swoją firmę..."
