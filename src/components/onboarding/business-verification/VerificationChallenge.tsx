@@ -10,7 +10,8 @@ const formatTime = (time: string) => {
 };
 
 const getWeekdayName = (day: number) => {
-    return dayjs(day).format('dddd');
+    const date = dayjs().day(day);
+    return date.format('dddd');
 };
 
 function IconContainer({ children, bgColor = "bg-blue-50" }: { children: React.ReactNode, bgColor?: string }) {
