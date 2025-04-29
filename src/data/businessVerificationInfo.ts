@@ -1,4 +1,4 @@
-import { MapPin, Shield, Users, Target, Clock, Star, ShieldCheck } from 'lucide-react';
+import { MapPin, Shield, Users, ShieldCheck } from 'lucide-react';
 
 export const infoSections = [
     {
@@ -26,7 +26,7 @@ export const infoSections = [
             "Twoja reputacja ma znaczenie: Punkty zdobywane na platformie mają realną wartość w oczach innych użytkowników. Dzięki weryfikacji możesz zbudować profil, który odzwierciedla rzeczywiste zaangażowanie i profesjonalizm.",
             "Większe zaufanie = większy wpływ: Zweryfikowane firmy są traktowane jako bardziej wiarygodne, co zwiększa wagę ich opinii i feedbacku. Im bardziej jesteś widoczny i wiarygodny, tym więcej korzyści możesz osiągnąć na platformie."
         ]
-    }
+    },
     {
         title: "Bezpieczne i wartościowe relacje między firmami",
         icon: Shield,
