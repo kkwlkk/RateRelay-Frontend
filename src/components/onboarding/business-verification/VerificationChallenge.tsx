@@ -2,10 +2,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
 import { Calendar, Clock } from 'lucide-react';
 import { BusinessVerificationChallengeResponseDto } from '@/types/dtos/BusinessVerificaton';
+import dayjs from '@/utils/dayjsConfig';
 
 const formatTime = (time: string) => {
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`;
+};
+
+const getWeekdayName = (day: number) => {
+    return dayjs(day).format('dddd');
 };
 
 function IconContainer({ children, bgColor = "bg-blue-50" }: { children: React.ReactNode, bgColor?: string }) {
@@ -68,7 +73,7 @@ function VerificationDetails({ challenge }: VerificationDetailsProps) {
                 <InfoItem
                     icon={<Calendar className="w-5 h-5 text-blue-600" />}
                     label="Dzień weryfikacji"
-                    value={new Date(challenge.verificationDay).toLocaleDateString('pl-PL', { weekday: 'long' })}
+                    value={getWeekdayName(challenge.verificationDay)}
                 />
                 <InfoItem
                     icon={<Clock className="w-5 h-5 text-blue-600" />}
@@ -97,7 +102,7 @@ function VerificationInstructions({ challenge }: VerificationInstructionsProps) 
             </h3>
             <div className="space-y-4">
                 <InstructionStep number={1}>
-                    <p>W dniu weryfikacji ({new Date(challenge.verificationDay).toLocaleDateString('pl-PL', { weekday: 'long' })}):</p>
+                    <p>W dniu weryfikacji ({getWeekdayName(challenge.verificationDay)}):</p>
                     <ul className="list-disc pl-5 mt-1 space-y-1">
                         <li>Ustaw godzinę otwarcia na dokładnie {formatTime(challenge.verificationOpeningTime)}</li>
                         <li>Ustaw godzinę zamknięcia na dokładnie {formatTime(challenge.verificationClosingTime)}</li>
