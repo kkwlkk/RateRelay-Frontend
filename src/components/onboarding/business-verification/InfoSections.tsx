@@ -15,16 +15,7 @@ export function InfoSections() {
                         Podstawą naszej platformy jest zapewnienie, że każdy użytkownik jest rzeczywistym właścicielem firmy. To nie tylko gwarantuje bezpieczeństwo, ale również buduje solidny fundament do wymiany wiedzy, doświadczeń i rekomendacji, co w efekcie wpływa na rozwój i wiarygodność Twojej marki.
                         </p>
                     </div>
-                    <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
-                     <h3 className="text-xl font-semibold text-indigo-900 mb-2">
-                      Dlaczego weryfikujemy właścicieli firm? 2 wersja
-                     </h3>
-                        <p className="text-sm text-indigo-700 leading-relaxed">
-                            Podstawą naszej platformy jest zapewnienie, że każdy użytkownik jest rzeczywistym właścicielem firmy. 
-                            To nie tylko gwarantuje bezpieczeństwo, ale również buduje solidny fundament do wymiany wiedzy, doświadczeń 
-                            i rekomendacji — co w efekcie wpływa na rozwój i wiarygodność Twojej marki.
-                        </p>
-                     </div>
+                   <br></br>
 
                     <Accordion type="single" collapsible className="w-full space-y-4">
                         {infoSections.map((section, index) => (
