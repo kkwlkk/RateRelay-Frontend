@@ -140,7 +140,7 @@ const GooglePlacesAutocomplete = ({
             try {
                 const request: google.maps.places.AutocompletionRequest = {
                     input: debouncedInputValue,
-                    types: ['geocode', 'establishment']
+                    types: ['establishment']
                 };
 
                 autocompleteService.current?.getPlacePredictions(
