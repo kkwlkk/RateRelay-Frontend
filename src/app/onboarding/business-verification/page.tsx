@@ -144,7 +144,7 @@ export default function BusinessVerification() {
                         Potwierdzenie tożsamości firmy
                         </h1>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Zweryfikuj swoją firmę, aby zapewnić bezpieczeństwo, wiarygodność i pełną funkcjonalność TrustRate.
+                        Potwierdzenie tożsamości to dowód na autentyczność Twojej firmy i gwarancja pełnego wykorzystania TrustRate.
                         </p>
                     </div>
 
