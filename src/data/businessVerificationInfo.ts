@@ -2,13 +2,12 @@ import { MapPin, Shield, Users, Target, Clock, Star } from 'lucide-react';
 
 export const infoSections = [
     {
-        title: "Dostępność firmy",
+        title: "Potwierdzona autentyczność",
         icon: MapPin,
         items: [
-            "Zapewnienie dokładnej dostawy usług w Twoim obszarze",
-            "Dostarczanie lokalnych analiz i informacji o rynku",
-            "Umożliwienie promocji i ofert lokalnych",
-            "Optymalizacja tras dostawy i świadczenia usług"
+            "Wyłącznie właściciele: Każde konto jest potwierdzane przez autentycznego właściciela wizytówki, co wyklucza podszywanie się.",
+            "Rzetelna weryfikacja: Nasz proces weryfikacji (w tym dynamiczna zmiana godziny na wizytówce) gwarantuje, że do platformy dołączają tylko uprawnione osoby.",
+            "Społeczność oparta na zaufaniu: Użytkownicy mogą być pewni, że informacje pochodzą od rzeczywistych przedsiębiorców, co tworzy solidną bazę do wymiany doświadczeń."
         ]
     },
     {
