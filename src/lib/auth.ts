@@ -18,6 +18,17 @@ export const { handlers, auth } = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
     ],
+    cookies: {
+        sessionToken: {
+            name: `__Secure-auth.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: true
+            }
+        }
+    },
     callbacks: {
         async jwt({ token, account, trigger, session }) {
             if (account && account.id_token) {
