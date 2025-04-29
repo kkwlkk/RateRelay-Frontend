@@ -31,20 +31,16 @@ export default function OnboardingLayout({
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
-            <main className="flex-grow">
-                <div className="h-full py-6">
-                    <div className="w-full border-b border-gray-200">
-                        <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-                            <Stepper
-                                steps={steps}
-                                currentStep={status?.currentStep || 0}
-                            />
-                        </div>
-                    </div>
-                    <div className="size-full">
-                        {children}
-                    </div>
+            <div className="w-full border-b border-gray-200 sticky top-0 bg-white z-10">
+                <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <Stepper
+                        steps={steps}
+                        currentStep={status?.currentStep || 0}
+                    />
                 </div>
+            </div>
+            <main className="flex-grow">
+                {children}
             </main>
         </div>
     );
