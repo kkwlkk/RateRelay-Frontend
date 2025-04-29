@@ -8,7 +8,7 @@ export function InfoSections() {
             <Card className="shadow-lg border border-gray-100">
                 <CardContent className="px-8 py-4">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                        Dlaczego należy zweryfikować firmę? 1 wersja
+                        Dlaczego należy zweryfikować firmę?
                     </h2>
                     <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
                         <p className="text-sm text-indigo-700">
