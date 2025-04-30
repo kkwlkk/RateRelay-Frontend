@@ -31,10 +31,10 @@ export default function WelcomePage() {
 
                     <div className="space-y-12">
                         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Czym jest TrustRate?</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Dołączenie do programu TrustRate</h2>
                             <p className="text-lg text-gray-600 leading-relaxed">
-                                TrustRate to platforma, która pomaga firmom zbierać autentyczne opinie,
-                                jednocześnie nagradzając recenzentów punktami, które można wymienić na korzyści.
+                                Zapoznaj się z naszymi zasadami bezpieczeństwa oraz zasadami działania naszego programu,
+                                aby w pełni świadomie korzystać z naszego serwisu.
                             </p>
                         </div>
 
