@@ -5,7 +5,8 @@ export default function WelcomeHeader() {
                 Witamy w TrustRate
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Dziękujemy za potwierdzenie autentyczności Twojej firmy! Ostatni krok to akceptacja regulaminu programu i dołączenie do niego.
+                Dziękujemy za potwierdzenie autentyczności Twojej firmy!
+                <br></br>Przeczytaj nasz regulamin i dołącz do programu TrustRate.
             </p>
         </div>
     );
