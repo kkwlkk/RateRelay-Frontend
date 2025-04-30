@@ -2,7 +2,7 @@ import { Input } from "./ui/Input"
 import { useLoadScript, Libraries } from '@react-google-maps/api';
 import { useRef, useState, useEffect } from 'react';
 import { Loader2, MapPin, Info } from 'lucide-react';
-import { useDebounce } from '@uidotdev/usehooks';
+import { useDebounceValue } from 'usehooks-ts';
 import { FaSearch } from 'react-icons/fa';
 
 interface GooglePlacesAutocompleteProps {
@@ -95,7 +95,7 @@ const GooglePlacesAutocomplete = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { isLoaded, loadError, autocompleteService, placesService } = useGooglePlacesServices();
-    const debouncedInputValue = useDebounce(inputValue, debounceTime);
+    const [debouncedInputValue] = useDebounceValue(inputValue, debounceTime);
 
     useEffect(() => {
         if (onSearchStatusChange) {

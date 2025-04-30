@@ -1,12 +1,12 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { refreshAccessToken } from '@/utils/refreshToken';
 import type { Session } from 'next-auth';
+import { useInterval } from 'usehooks-ts'
 
 export function SessionRefresher() {
     const { data: session, update } = useSession();
-    const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         if (session?.accessToken) {
@@ -17,49 +17,33 @@ export function SessionRefresher() {
         }
     }, [session?.accessToken]);
 
-    useEffect(() => {
-        if (refreshTimeoutRef.current) {
-            clearTimeout(refreshTimeoutRef.current);
-            refreshTimeoutRef.current = null;
-        }
+    const refreshInterval = 30 * 1000 * 60;
 
-        if (!session) {
-            return;
-        }
+    useInterval(async () => {
+        if (!session) return;
 
-        console.log('Setting up refresh for session');
+        try {
+            console.log('Attempting to refresh token...');
+            const result = await refreshAccessToken();
 
-        const refreshInterval = 10 * 60 * 1000;
+            if (result && update) {
+                console.log('Received new tokens, updating session...');
 
-        console.log(`Will refresh token in ${Math.floor(refreshInterval / 60000)} minutes`);
+                const updatedSession = {
+                    ...session,
+                    accessToken: result.accessToken,
+                    refreshToken: result.refreshToken,
+                } as Session;
 
-        refreshTimeoutRef.current = setTimeout(async () => {
-            try {
-                console.log('Attempting to refresh token...');
-                const result = await refreshAccessToken();
-
-                if (result && update) {
-                    console.log('Received new tokens, updating session...');
-                    await update({
-                        accessToken: result.accessToken,
-                        refreshToken: result.refreshToken,
-                    } as Session);
-                    console.log('Session updated with new tokens');
-                } else {
-                    console.warn('Token refresh returned no result');
-                }
-            } catch (error) {
-                console.error('Failed to refresh session:', error);
+                await update(updatedSession);
+                console.log('Session updated with new tokens');
+            } else {
+                console.warn('Token refresh returned no result');
             }
-        }, refreshInterval);
-
-        return () => {
-            if (refreshTimeoutRef.current) {
-                clearTimeout(refreshTimeoutRef.current);
-                refreshTimeoutRef.current = null;
-            }
-        };
-    }, [session, update]);
+        } catch (error) {
+            console.error('Failed to refresh session:', error);
+        }
+    }, session ? refreshInterval : null);
 
     return null;
 }
