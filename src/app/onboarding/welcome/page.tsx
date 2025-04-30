@@ -40,6 +40,14 @@ export default function WelcomePage() {
 
                         <HowItWorks />
 
+                        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Dołączenie do programu TrustRate</h2>
+                            <p className="text-lg text-gray-600 leading-relaxed">
+                                Zapoznaj się z naszymi zasadami bezpieczeństwa oraz zasadami działania naszego programu,
+                                aby w pełni świadomie korzystać z naszego serwisu.
+                            </p>
+                        </div>
+
                         <TermsAndConditions
                             acceptedTerms={acceptedTerms}
                             onTermsChange={setAcceptedTerms}
