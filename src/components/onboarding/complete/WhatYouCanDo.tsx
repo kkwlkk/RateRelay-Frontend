@@ -1,5 +1,5 @@
 import { CheckCircle, MessageSquare, ClipboardList } from 'lucide-react';
-import { onboardingText } from '@/data/onboardingText';
+import { onboardingText } from '@/data/onboarding/onboardingText';
 
 interface WhatYouCanDoProps {
     hasCompletedOnboarding: boolean;

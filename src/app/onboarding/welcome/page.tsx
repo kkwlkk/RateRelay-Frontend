@@ -4,7 +4,7 @@ import { useState } from 'react';
 import OnboardingRoute from '@/components/auth/OnboardingRoute';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import WelcomeHeader from '@/components/onboarding/welcome/WelcomeHeader';
 import HowItWorks from '@/components/onboarding/welcome/HowItWorks';
 import TermsAndConditions from '@/components/onboarding/welcome/TermsAndConditions';

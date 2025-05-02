@@ -2,7 +2,7 @@ import { FaArrowRight, FaChevronDown } from 'react-icons/fa'; // ikonki które c
 import { HiShieldCheck, HiChatBubbleBottomCenterText, HiBriefcase } from 'react-icons/hi2'; // nowe ikonki HI
 import { LuBadgeCheck } from 'react-icons/lu'; // nowe ikionki Lu
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
 export function Hero() {

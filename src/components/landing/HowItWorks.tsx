@@ -1,5 +1,5 @@
 import { FaSearch, FaCommentAlt, FaStar } from 'react-icons/fa';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface StepCardProps {
   icon: React.ReactNode;

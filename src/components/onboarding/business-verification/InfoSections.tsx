@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { infoSections } from '@/data/businessVerificationInfo';
+import { infoSections } from '@/data/onboarding/businessVerificationInfo';
 import { ShieldCheck } from 'lucide-react';
 
 export function InfoSections() {

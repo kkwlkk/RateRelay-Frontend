@@ -3,6 +3,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { User } from '@/types/User';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
+import { mapIntToPermissions } from '@/utils/permissionUtils';
 
 type AuthContextType = {
     user: User | null;
@@ -63,7 +64,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         if (userProfile) {
-            setUser(userProfile);
+            const permissions = mapIntToPermissions(userProfile.permissions);
+            setUser({
+                ...userProfile,
+                mappedPermissions: permissions
+            });
         }
     }, [userProfile]);
 

@@ -5,12 +5,12 @@ import OnboardingRoute from '@/components/auth/OnboardingRoute';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { CompleteHeader } from '@/components/onboarding/complete/CompleteHeader';
 import { WhatYouCanDo } from '@/components/onboarding/complete/WhatYouCanDo';
 import { PointsSystem } from '@/components/onboarding/complete/PointsSystem';
 import { PointsBalance } from '@/components/onboarding/complete/PointsBalance';
-import { onboardingText } from '@/data/onboardingText';
+import { onboardingText } from '@/data/onboarding/onboardingText';
 
 export default function OnboardingCompletePage() {
     const { user, fetchUserProfile } = useAuth();

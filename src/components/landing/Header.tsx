@@ -1,6 +1,6 @@
 import { FaUser } from 'react-icons/fa';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
 export function Header() {

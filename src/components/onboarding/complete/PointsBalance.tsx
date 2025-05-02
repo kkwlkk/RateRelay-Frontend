@@ -1,4 +1,4 @@
-import { onboardingText } from '@/data/onboardingText';
+import { onboardingText } from '@/data/onboarding/onboardingText';
 
 interface PointsBalanceProps {
     pointBalance: number;

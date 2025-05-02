@@ -1,5 +1,5 @@
 import { CheckCircle } from 'lucide-react';
-import { onboardingText } from '@/data/onboardingText';
+import { onboardingText } from '@/data/onboarding/onboardingText';
 
 interface CompleteHeaderProps {
     username: string;

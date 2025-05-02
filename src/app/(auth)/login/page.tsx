@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { FaGoogle } from 'react-icons/fa';
 import Link from 'next/link';
 

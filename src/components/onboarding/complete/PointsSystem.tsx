@@ -1,5 +1,5 @@
 import { Activity, Star, TrendingUp } from 'lucide-react';
-import { onboardingText } from '@/data/onboardingText';
+import { onboardingText } from '@/data/onboarding/onboardingText';
 
 export function PointsSystem() {
     return (

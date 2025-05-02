@@ -1,5 +1,5 @@
 import { IconType } from 'react-icons';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { FaCheckCircle } from 'react-icons/fa';
 
 interface FeatureCardProps {

@@ -1,4 +1,4 @@
-import { Input } from "./ui/Input"
+import { Input } from "./ui/input"
 import { useLoadScript, Libraries } from '@react-google-maps/api';
 import { useRef, useState, useEffect } from 'react';
 import { Loader2, MapPin, Info } from 'lucide-react';

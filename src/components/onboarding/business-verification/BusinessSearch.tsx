@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { GooglePlacesAutocomplete } from '@/components/GooglePlacesAutocomplete';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface BusinessSearchProps {
     onBusinessSelect: (place: google.maps.places.PlaceResult) => void;
