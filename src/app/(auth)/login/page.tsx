@@ -3,13 +3,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { FaGoogle } from 'react-icons/fa';
-import Link from 'next/link';
-
+import Image from 'next/image';
+import { LoginForm } from '@/components/login/loginForm';
+import { FeaturesCarousel } from '@/components/login/featuresCarousel';
 
 export default function LoginPage() {
-    const { login, isAuthenticated, isLoading, user } = useAuth();
+    const { isAuthenticated, isLoading, user } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
@@ -23,14 +22,10 @@ export default function LoginPage() {
         }
     }, [isAuthenticated, isLoading, router, user]);
 
-    const handleLogin = async () => {
-        await login();
-    };
-
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+                <div className="h-8 w-8 border-2 border-zinc-200 dark:border-zinc-800 border-t-zinc-900 dark:border-t-zinc-100 rounded-full animate-spin" />
             </div>
         );
     }
@@ -40,45 +35,33 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen bg-background-primary dark:bg-zinc-900">
-            <div className='size-full flex items-center justify-center p-8 lg:p-12 min-h-screen'>
-                <div className="w-full max-w-md space-y-8">
-                    <div className="text-center">
-                        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                            Witaj ponownie
-                        </h2>
-                        <p className="mt-2 text-gray-600 dark:text-gray-400">
-                            Zaloguj się, aby kontynuować
-                        </p>
-                    </div>
-
-                    <Button
-                        variant="outline"
-                        className="w-full h-12 rounded-lg bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-800 border border-gray-200 dark:border-zinc-800 !text-gray-900 dark:!text-white"
-                        size="lg"
-                        icon={<FaGoogle className="mr-3" />}
-                        onClick={handleLogin}
-                    >
-                        Zaloguj się z Google
-                    </Button>
-
-                    <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                        Kontynuując, akceptujesz nasze&nbsp;
-                        <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">
-                            Warunki korzystania
-                        </Link>
-                        &nbsp;i&nbsp;
-                        <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:underline">
-                            Politykę prywatności
-                        </Link>
-                    </p>
-
-                    <div className="lg:hidden text-center mt-4">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            &copy; 2025 TrustRate. Wszelkie prawa zastrzeżone.
-                        </p>
-                    </div>
+        <div className="min-h-screen flex bg-zinc-50 dark:bg-zinc-950">
+            <div className="hidden lg:flex lg:w-1/2 bg-zinc-900 dark:bg-black p-16 flex-col">
+                <div className="mb-2">
+                    <Image src="/assets/logo-white.png" alt="TrustRate Logo" width={250} height={250} />
                 </div>
+
+                <div className="flex-1 flex flex-col justify-center">
+                    <div className="max-w-xl mb-16">
+                        <h2 className="text-5xl font-medium text-white mb-8 leading-tight">
+                            Zbuduj zaufanie.<br />
+                            Dziel się opiniami.
+                        </h2>
+                        <p className="text-zinc-400 text-xl leading-relaxed">
+                            Platforma opinii, która przekształca zadowolenie klientów w realny wzrost Twojego biznesu.
+                        </p>
+                    </div>
+
+                    <FeaturesCarousel />
+                </div>
+
+                <div className="text-zinc-500 text-sm mt-8">
+                    © 2025 TrustRate. Wszelkie prawa zastrzeżone.
+                </div>
+            </div>
+
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16">
+                <LoginForm />
             </div>
         </div>
     );

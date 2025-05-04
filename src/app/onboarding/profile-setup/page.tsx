@@ -5,8 +5,8 @@ import OnboardingRoute from '@/components/auth/OnboardingRoute';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { useAuth } from '@/contexts/AuthContext';
-import { ProfileSetupHeader } from '../../../components/onboarding/profile-setup/ProfileSetupHeader';
-import { ProfileSetupForm } from '../../../components/onboarding/profile-setup/ProfileSetupForm';
+import { ProfileSetupHeader } from '../../../components/onboarding/profileSetup/ProfileSetupHeader';
+import { ProfileSetupForm } from '../../../components/onboarding/profileSetup/ProfileSetupForm';
 
 export default function ProfileSetupPage() {
   const { user } = useAuth();

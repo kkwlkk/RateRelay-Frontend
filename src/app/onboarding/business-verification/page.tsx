@@ -8,10 +8,10 @@ import { useRouter } from 'next/navigation';
 import { apiService } from '@/services/api';
 import { BusinessVerificationStatusResponseDto, BusinessVerificationChallengeResponseDto } from '@/types/dtos/BusinessVerificaton';
 import toast from 'react-hot-toast';
-import { BusinessSearch } from '@/components/onboarding/business-verification/BusinessSearch';
-import { VerificationStatus } from '@/components/onboarding/business-verification/VerificationStatus';
-import { VerificationChallenge } from '@/components/onboarding/business-verification/VerificationChallenge';
-import { InfoSections } from '@/components/onboarding/business-verification/InfoSections';
+import { BusinessSearch } from '@/components/onboarding/businessVerification/BusinessSearch';
+import { VerificationStatus } from '@/components/onboarding/businessVerification/VerificationStatus';
+import { VerificationChallenge } from '@/components/onboarding/businessVerification/VerificationChallenge';
+import { InfoSections } from '@/components/onboarding/businessVerification/InfoSections';
 
 export default function BusinessVerification() {
     const router = useRouter();

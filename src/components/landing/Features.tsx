@@ -36,11 +36,11 @@ export function Features() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">Dlaczego TrustRate?</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">Poznaj zamkniętą społeczność zweryfikowanych firm i odkrywaj prawdziwe opinie, którym możesz zaufać.          </p>
+          <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">Dlaczego TrustRate?</h2>
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">Poznaj zamkniętą społeczność zweryfikowanych firm i odkrywaj prawdziwe opinie, którym możesz zaufać.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
@@ -50,4 +50,4 @@ export function Features() {
       </div>
     </section>
   );
-} 
+}
