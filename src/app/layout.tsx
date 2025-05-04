@@ -3,12 +3,13 @@ import './globals.css';
 import { Providers } from './providers';
 import { cn } from '@/lib/utils';
 import '@/utils/dayjsConfig';
+import { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'TrustRate',
-  description: 'Business Review Platform',
+  description: 'Platforma wymiany informacji zwrotnych od klientów o Twojej firmie. Zbuduj zaufanie, zarówno wśród klientów, jak i wśród Twoich pracowników.'
 };
 
 export default function RootLayout({
@@ -22,7 +23,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/assets/logo-arrows.png" sizes="32x32" />
       </head>
-      <body className={cn('min-h-screen bg-white dark:bg-black text-slate-900 dark:text-slate-50 antialiased', inter.className)}>
+      <body className={cn(
+        'min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 antialiased',
+        inter.className
+      )}>
         <Providers>{children}</Providers>
       </body>
     </html>

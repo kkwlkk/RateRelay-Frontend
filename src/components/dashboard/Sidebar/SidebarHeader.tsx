@@ -7,16 +7,28 @@ interface SidebarHeaderProps {
 
 export function AppSidebarHeader({ isOpen }: SidebarHeaderProps) {
     return (
-        <SidebarHeader className="flex flex-col items-center justify-center py-4">
+        <SidebarHeader className="flex flex-col items-center justify-center py-4 pb-0 bg-white dark:bg-zinc-900">
             {isOpen ? (
-                <Image
-                    src="/assets/logo-dark.png"
-                    alt="TrustRate"
-                    width={150}
-                    height={40}
-                    priority
-                    fetchPriority='high'
-                />
+                <>
+                    <Image
+                        src="/assets/logo-dark.png"
+                        alt="TrustRate"
+                        width={150}
+                        height={40}
+                        priority
+                        fetchPriority='high'
+                        className="dark:hidden"
+                    />
+                    <Image
+                        src="/assets/logo-white.png"
+                        alt="TrustRate"
+                        width={150}
+                        height={40}
+                        priority
+                        fetchPriority='high'
+                        className="hidden dark:block"
+                    />
+                </>
             ) : (
                 <Image
                     src="/assets/logo-arrows.png"
@@ -27,7 +39,7 @@ export function AppSidebarHeader({ isOpen }: SidebarHeaderProps) {
                     fetchPriority='high'
                 />
             )}
-            <SidebarSeparator className="mt-4" />
+            <SidebarSeparator className="mt-4 bg-zinc-200 dark:bg-zinc-800" />
         </SidebarHeader>
     );
 } 

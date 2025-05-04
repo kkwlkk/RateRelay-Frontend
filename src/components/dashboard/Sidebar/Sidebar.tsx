@@ -5,9 +5,11 @@ import { dashboardRoutes, NavigationRoute } from '@/lib/navigationRoutes';
 import { AppSidebarHeader } from './SidebarHeader';
 import { AppSidebarContent } from './SidebarContent';
 import { AppSidebarFooter } from './SidebarFooter';
+import { useRouter } from 'next/navigation';
 
 export function AppSidebar() {
     const { user, logout } = useAuth();
+    const router = useRouter();
     const [expandedItems, setExpandedItems] = useLocalStorage<Record<string, boolean>>('sidebar-expanded-items', {});
     const { open } = useSidebar();
 
@@ -33,8 +35,20 @@ export function AppSidebar() {
         groupedRoutes: {} as Record<string, NavigationRoute[]>
     });
 
+    const handleSettings = () => {
+        router.push('/dashboard/settings');
+    };
+
+    const handleHelp = () => {
+        router.push('/dashboard/help');
+    };
+
     return (
-        <Sidebar variant="sidebar" collapsible="icon">
+        <Sidebar
+            variant="sidebar" 
+            collapsible="icon" 
+            className="!border-r !border-zinc-200 dark:!border-zinc-800 bg-white dark:bg-zinc-900"
+        >
             <AppSidebarHeader isOpen={open} />
             <AppSidebarContent
                 ungroupedRoutes={ungroupedRoutes}
@@ -47,6 +61,8 @@ export function AppSidebar() {
                 isOpen={open}
                 user={user}
                 onLogout={logout}
+                onSettings={handleSettings}
+                onHelp={handleHelp}
             />
         </Sidebar>
     );

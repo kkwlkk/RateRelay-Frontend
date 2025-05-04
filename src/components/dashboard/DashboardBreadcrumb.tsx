@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/breadcrumb";
 import React from "react";
+import { cn } from "@/lib/utils";
 
 interface BreadcrumbItem {
     href: string;
@@ -41,26 +42,38 @@ export const DashboardBreadcrumb = () => {
             <BreadcrumbList>
                 {visibleItems.map((item, index) => (
                     <React.Fragment key={item.href}>
-                        {item.href !== '/dashboard' && <BreadcrumbSeparator />}
+                        {item.href !== '/dashboard' && (
+                            <BreadcrumbSeparator className="opacity-60" />
+                        )}
                         {shouldShowEllipsis && index === 0 && (
                             <>
                                 <BreadcrumbItem>
-                                    <BreadcrumbLink asChild>
+                                    <BreadcrumbLink asChild className={cn(
+                                        "text-sm font-medium transition-colors duration-200",
+                                        "hover:text-primary"
+                                    )}>
                                         <Link href={item.href}>{item.label}</Link>
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
-                                <BreadcrumbSeparator />
+                                <BreadcrumbSeparator className="opacity-60" />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>...</BreadcrumbPage>
+                                    <BreadcrumbPage className="text-sm opacity-60">
+                                        ...
+                                    </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </>
                         )}
                         {(!shouldShowEllipsis || index === visibleItems.length - 1) && (
                             <BreadcrumbItem>
                                 {item.isLast ? (
-                                    <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                                    <BreadcrumbPage className="text-sm font-semibold">
+                                        {item.label}
+                                    </BreadcrumbPage>
                                 ) : (
-                                    <BreadcrumbLink asChild>
+                                    <BreadcrumbLink asChild className={cn(
+                                        "text-sm font-medium transition-colors duration-200",
+                                        "hover:text-primary"
+                                    )}>
                                         <Link href={item.href}>{item.label}</Link>
                                     </BreadcrumbLink>
                                 )}
