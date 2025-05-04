@@ -130,7 +130,11 @@ export function AppSidebarFooter({
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="w-full justify-start text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800/50 transition-colors"
+                                                    className={cn(
+                                                        "w-full justify-start text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100",
+                                                        "dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/50 transition-colors",
+                                                        "px-2 py-1",
+                                                    )}
                                                     onClick={() => {
                                                         onHelp();
                                                         document.body.click();
