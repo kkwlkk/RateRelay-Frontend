@@ -15,7 +15,7 @@ export default function TermsAndConditions({ acceptedTerms, onTermsChange }: Ter
                     onChange={(e) => onTermsChange(e.target.checked)}
                 />
                 <label htmlFor="terms" className="text-base text-gray-700">
-                    Akceptuję <a href="#" className="text-blue-600 hover:text-blue-500 font-medium underline">Regulamin serwisu</a> i{' '}
+                    Akceptuję <a href="#" className="text-blue-600 hover:text-blue-500 font-medium underline">Regulamin programu</a> i{' '}
                     <a href="#" className="text-blue-600 hover:text-blue-500 font-medium underline">Politykę Prywatności serwisu</a>
                 </label>
             </div>
