@@ -50,7 +50,7 @@ export const DashboardBreadcrumb = () => {
                                 <BreadcrumbItem>
                                     <BreadcrumbLink asChild className={cn(
                                         "text-sm font-medium transition-colors duration-200",
-                                        "hover:text-primary"
+                                        "hover:text-zinc-900 dark:hover:text-zinc-50"
                                     )}>
                                         <Link href={item.href}>{item.label}</Link>
                                     </BreadcrumbLink>
@@ -72,7 +72,7 @@ export const DashboardBreadcrumb = () => {
                                 ) : (
                                     <BreadcrumbLink asChild className={cn(
                                         "text-sm font-medium transition-colors duration-200",
-                                        "hover:text-primary"
+                                        "hover:text-zinc-900 dark:hover:text-zinc-50"
                                     )}>
                                         <Link href={item.href}>{item.label}</Link>
                                     </BreadcrumbLink>

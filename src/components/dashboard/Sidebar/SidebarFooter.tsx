@@ -61,8 +61,7 @@ export function AppSidebarFooter({
                     </div>
                 )}
                 <div className={cn(
-                    "flex items-center",
-                    isOpen ? "gap-3" : "justify-center"
+                    "flex items-center justify-center gap-1",
                 )}>
                     <Popover>
                         <PopoverTrigger asChild>
@@ -169,7 +168,7 @@ export function AppSidebarFooter({
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 transition-colors"
+                            className="w-8 h-max p-4 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 transition-colors"
                             onClick={onLogout}
                         >
                             <LogOut className="h-4 w-4" />
