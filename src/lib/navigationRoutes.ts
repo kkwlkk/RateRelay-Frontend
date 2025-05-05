@@ -1,4 +1,4 @@
-import { Bell, Building, HomeIcon, MessagesSquare, Settings, User } from 'lucide-react';
+import { HomeIcon, MessagesSquare } from 'lucide-react';
 import { IconType } from '@/types/IconType';
 import { UserPermission } from '@/enums/permissions';
 
