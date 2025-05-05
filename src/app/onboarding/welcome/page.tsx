@@ -41,10 +41,11 @@ export default function WelcomePage() {
                         <HowItWorks />
 
                         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Dołączenie do programu TrustRate</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Czym są punkty?</h2>
                             <p className="text-lg text-gray-600 leading-relaxed">
-                                Zapoznaj się z naszymi zasadami bezpieczeństwa oraz zasadami działania naszego programu,
-                                aby w pełni świadomie korzystać z naszego serwisu.
+                                Za każdy udzielony feedback zdobywasz punkt - za każdy otrzymany feedback tracisz go. 
+                                Dzięki temu systemowi firmy są zmotywowane, by nie tylko zbierać feedback/opinie, ale także aktywnie dzielić się swoimi doświadczeniami z innymi.
+                                Im więcej punktów zdobędziesz, tym większa Twoja widoczność w społeczności.
                             </p>
                         </div>
 

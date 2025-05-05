@@ -24,7 +24,7 @@ export const DisplayNameInput = ({ value, onChange, error }: DisplayNameInputPro
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
       <p className="text-sm text-gray-500">
-        Ta nazwa będzie lorem ipsum dolor sit amet consectetur.
+      Dowolna nazwa, której będziemy używać, aby się do Ciebie zwracać. Może to być imię, pseudonim lub cokolwiek chcesz. Nie będzie publicznie widoczna.
       </p>
     </div>
   );

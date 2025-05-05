@@ -13,11 +13,11 @@ export const howItWorksSteps: HowItWorksStep[] = [
     {
         number: 2,
         title: "Punkty za feedback",
-        description: "Każdorazowo pozostawiony feedback, który zostanie zaakceptowany przez drugą stronę wiąże się z otrzymaniem symbolicznego 0,5 punkta za przesłany feedback"
+        description: "Za każdy pozostawiony feedback, który zostanie zaakceptowany przez drugą stronę otrzymasz wirtualne 0,5 punkta za przesłany feedback oraz 0,5 punkta jeśli zdecydujesz się pozostawić opinię o firmie jeśli ją znasz"
     },
     {
         number: 3,
         title: "Wymiana punktów",
-        description: "Zdobyte punkty umożliwiają Tobie zobieranie feedbacku o swojej firmie."
+        description: "Zdobywaj punkty przez zostawianie feedbacków i ocen o innych firmach. Punkty pozwalają innym komentować Twoją firmę. To takie proste."
     }
 ]; 
