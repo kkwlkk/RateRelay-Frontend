@@ -19,7 +19,11 @@ export function AppSidebarContent({
     onToggle
 }: SidebarContentProps) {
     return (
-        <SidebarContent className="bg-white dark:bg-zinc-900">
+        <SidebarContent className={cn(
+            "bg-white dark:bg-zinc-900 my-2 gap-4",
+            !isOpen && "gap-1"
+        )}
+        >
             {ungroupedRoutes.length > 0 && (
                 <SidebarGroup>
                     <SidebarMenu>
@@ -40,7 +44,8 @@ export function AppSidebarContent({
                     <SidebarGroupLabel
                         className={cn(
                             "flex items-center justify-between px-3 py-2 text-sm font-medium",
-                            "text-zinc-500 dark:text-zinc-400"
+                            "text-zinc-500 dark:text-zinc-400 select-none",
+                            !isOpen && "hidden"
                         )}
                     >
                         <span>{group}</span>

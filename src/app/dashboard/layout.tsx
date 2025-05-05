@@ -30,7 +30,7 @@ export default function DashboardLayout({
                             <hr className="h-4 border-l border-zinc-200 dark:border-zinc-800 hidden sm:block" />
                             <DashboardBreadcrumb />
                         </header>
-                        <main className="flex-1 p-4 sm:p-6 lg:p-8 flex bg-zinc-50 dark:bg-zinc-900">
+                        <main className="flex-1 p-4 sm:p-6 lg:p-8 flex bg-zinc-50 dark:bg-zinc-900 overflow-y-auto overflow-x-hidden text-zinc-900 dark:text-zinc-50">
                             {children}
                         </main>
                     </div>
