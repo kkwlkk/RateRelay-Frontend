@@ -46,7 +46,7 @@ export const GoogleMapsReviewSection = ({
                 <div className="flex items-start gap-2 sm:gap-3">
                     <div className="flex items-center h-5 pt-1">
                         <Checkbox
-                            id="leftGoogleMapsReview"
+                            id="postedGoogleReview"
                             checked={field.value}
                             onCheckedChange={field.onChange}
                             className="h-4 w-4 sm:h-5 sm:w-5 rounded-md border-zinc-300 dark:border-zinc-600 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
@@ -55,7 +55,7 @@ export const GoogleMapsReviewSection = ({
 
                     <div className="flex-1 min-w-0 max-w-full">
                         <label
-                            htmlFor="leftGoogleMapsReview"
+                            htmlFor="postedGoogleReview"
                             className="text-sm font-medium cursor-pointer text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5"
                         >
                             <FaGoogle className="h-4 w-4 text-blue-500 flex-shrink-0" />
