@@ -119,6 +119,7 @@ const ExchangeFeedbackPage = () => {
                 key={business.businessId}
                 businessName={business.businessName}
                 mapUrl={business.mapUrl}
+                isFetching={isRefetching}
                 onFormSubmit={handleFormSubmit}
                 onSkipBusiness={handleSkipBusiness}
             />
