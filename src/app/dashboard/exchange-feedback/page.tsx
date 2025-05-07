@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useInterval } from "usehooks-ts";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { queryClient } from "@/lib/react-query";
 
 export interface ReviewSessionTimerState {
     remainingTime: number;
@@ -89,6 +90,17 @@ const ExchangeFeedbackPage = () => {
         }
     };
 
+    const handleSkipBusiness = async () => {
+        try {
+            await getNextBusinessToReview(true);
+            queryClient.invalidateQueries({ queryKey: ['businessQueue'] });
+            toast.success('Firma została pominięta');
+        } catch (error: unknown) {
+            console.error('Error skipping business:', error);
+            toast.error('Wystąpił błąd podczas pomijania firmy');
+        }
+    }
+
     if (isLoading) {
         return <GenericCenterLoader />
     }
@@ -107,6 +119,7 @@ const ExchangeFeedbackPage = () => {
                 businessName={business.businessName}
                 mapUrl={business.mapUrl}
                 onFormSubmit={handleFormSubmit}
+                onSkipBusiness={handleSkipBusiness}
             />
         </div>
     );
