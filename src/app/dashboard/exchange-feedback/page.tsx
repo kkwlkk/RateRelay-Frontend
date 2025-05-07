@@ -55,7 +55,6 @@ const ExchangeFeedbackPage = () => {
         
         if (reviewSessionTimer.remainingTime === 0) {
             toast.error('Czas na zrealizowanie oceny został przekroczony');
-            router.refresh();
             refetch();
         }
     }, business ? 1000 : null);
