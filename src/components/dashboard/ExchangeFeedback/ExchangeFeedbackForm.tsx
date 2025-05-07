@@ -6,7 +6,7 @@ import { CommentSection } from "./CommentSection";
 import { GoogleMapsReviewSection } from "./GoogleMapsReviewSection";
 import { SubmitSection } from "./SubmitSection";
 
-export const ExchangeFeedbackForm = ({ businessMapUrl, onSubmit }: ExchangeFeedbackFormProps) => {
+export const ExchangeFeedbackForm = ({ businessMapUrl, onSubmit, isFetching }: ExchangeFeedbackFormProps) => {
     const [selectedRating, setSelectedRating] = useState<RatingOption | undefined>(undefined);
     const [showFormSection, setShowFormSection] = useState(false);
 
@@ -56,7 +56,7 @@ export const ExchangeFeedbackForm = ({ businessMapUrl, onSubmit }: ExchangeFeedb
                             businessMapUrl={businessMapUrl}
                         />
 
-                        <SubmitSection watch={watch} />
+                        <SubmitSection watch={watch} isFetching={isFetching} />
                     </div>
                 </div>
             )}

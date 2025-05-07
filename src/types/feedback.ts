@@ -17,4 +17,5 @@ export type FeedbackFormData = {
 export type ExchangeFeedbackFormProps = {
     businessMapUrl: GetNextBusinessForReviewResponseDto['mapUrl'];
     onSubmit: (data: FeedbackFormData) => void;
+    isFetching: boolean;
 };
