@@ -52,6 +52,12 @@ const ExchangeFeedbackPage = () => {
             ...prev,
             remainingTime: Math.max(prev.remainingTime - 1, 0)
         }));
+        
+        if (reviewSessionTimer.remainingTime === 0) {
+            toast.error('Czas na zrealizowanie oceny został przekroczony');
+            router.refresh();
+            refetch();
+        }
     }, business ? 1000 : null);
 
     useInterval(() => {
