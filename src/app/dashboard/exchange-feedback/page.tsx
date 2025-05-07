@@ -116,6 +116,7 @@ const ExchangeFeedbackPage = () => {
                 initialTime={reviewSessionTimer.initialTime}
             />
             <ExchangeFeedbackContent
+                key={business.businessId}
                 businessName={business.businessName}
                 mapUrl={business.mapUrl}
                 onFormSubmit={handleFormSubmit}
