@@ -3,8 +3,9 @@ import { AuthResponseDto } from '@/types/dtos/Auth';
 import { AcceptPendingBusinessReviewResponseDto, GetAwaitingBusinessReviewsResponseDto, RejectPendingBusinessReviewResponseDto } from '@/types/dtos/BusinessReviews';
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
 import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
-import { GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
+import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
 import { getSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -34,6 +35,7 @@ class ApiService {
         endpoint: string,
         method: string = 'GET',
         data?: unknown,
+        params?: Record<string, string>,
         useAuth: boolean = true
     ): Promise<ApiResponse<T>> {
         const headers: Record<string, string> = {
@@ -61,27 +63,68 @@ class ApiService {
             body: data ? JSON.stringify(data) : undefined,
         };
 
-        const response = await fetch(`${API_URL}${endpoint}`, config);
-        const result = await response.json();
+        if (params) {
+            const queryParams = new URLSearchParams(params);
+            endpoint += `?${queryParams.toString()}`;
+        }
 
-        if (!response.ok) {
-            if (response.status === 401) {
-                console.error('Unauthorized access - token may be expired');
+        try {
+            const response = await fetch(`${API_URL}${endpoint}`, config);
+            const result = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 429) {
+                    const retryAfter = response.headers.get('X-RateLimit-Reset');
+                    const retryMessage = retryAfter
+                        ? `Przekroczono limit zapytań. Spróbuj ponownie za ${retryAfter} sekund.`
+                        : 'Przekroczono limit zapytań. Spróbuj ponownie za chwilę.';
+
+                    toast.error(retryMessage);
+                }
+
+                if (response.status === 401) {
+                    console.error('Unauthorized access - token may be expired');
+                    toast.error('Twoja sesja wygasła. Proszę się zalogować ponownie.');
+                }
+
+                if (response.status === 403) {
+                    toast.error('Nie posiadasz dostępu do tego zasobu. Jeśli uważasz, że jest to błąd, skontaktuj się z administratorem.');
+                }
+
+                return result;
             }
 
             return result;
-        }
+        } catch {
+            toast.error('Wystąpił problem z połączeniem z serwerem. Proszę spróbować ponownie później.');
 
-        return result;
+            return {
+                success: false,
+                data: null as unknown,
+                error: {
+                    message: 'Network error',
+                    code: 'NETWORK_ERROR',
+                },
+            } as ApiResponse<T>;
+        }
+    }
+
+    private dtoToQueryParams(dto: Record<string, unknown>): Record<string, string> {
+        return Object.entries(dto).reduce((acc, [key, value]) => {
+            if (value !== null && value !== undefined) {
+                acc[key] = String(value);
+            }
+            return acc;
+        }, {} as Record<string, string>);
     }
 
     // Auth endpoints
     async refreshToken(refreshToken: string): Promise<ApiResponse<{ accessToken: string; refreshToken: string }>> {
-        return this.request('/api/auth/refresh-token', 'POST', { refreshToken }, false);
+        return this.request('/api/auth/refresh-token', 'POST', { refreshToken }, undefined, false);
     }
 
     async googleAuth(oAuthIdToken: string): Promise<ApiResponse<AuthResponseDto>> {
-        return this.request('/api/auth/google', 'POST', { oAuthIdToken }, false);
+        return this.request('/api/auth/google', 'POST', { oAuthIdToken }, undefined, false);
     }
 
     // Account endpoints
@@ -120,16 +163,16 @@ class ApiService {
     }
 
     // Reviewable business endpoints
-    async getNextBusinessForReview(): Promise<ApiResponse<GetNextBusinessForReviewResponseDto>> {
-        return this.request('/api/reviewable-businesses/next');
+    async getNextBusinessForReview(dto: GetNextBusinessForReviewRequestDto = { skipBusiness: false }): Promise<ApiResponse<GetNextBusinessForReviewResponseDto>> {
+        return this.request('/api/reviewable-businesses/next', 'GET', undefined, this.dtoToQueryParams(dto));
     }
 
     async getTimeLeftForBusinessReview(): Promise<ApiResponse<GetTimeLeftForBusinessReviewResponseDto>> {
         return this.request('/api/reviewable-businesses/time-left');
     }
 
-    async submitBusinessReview(): Promise<ApiResponse<SubmitBusinessReviewResponseDto>> {
-        return this.request('/api/reviewable-businesses/submit', 'POST');
+    async submitBusinessReview(data: SubmitBusinessReviewRequestDto): Promise<ApiResponse<SubmitBusinessReviewResponseDto>> {
+        return this.request('/api/reviewable-businesses/submit', 'POST', data);
     }
 
     // Onboarding endpoints

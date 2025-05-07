@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Image from 'next/image';
 import { LoginForm } from '@/components/login/loginForm';
 import { FeaturesCarousel } from '@/components/login/featuresCarousel';
+import { GenericPageLoader } from '@/components/GenericPageLoader';
 
 export default function LoginPage() {
     const { isAuthenticated, isLoading, user } = useAuth();
@@ -23,15 +24,11 @@ export default function LoginPage() {
     }, [isAuthenticated, isLoading, router, user]);
 
     if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
-                <div className="h-8 w-8 border-2 border-zinc-200 dark:border-zinc-800 border-t-zinc-900 dark:border-t-zinc-100 rounded-full animate-spin" />
-            </div>
-        );
+        return <GenericPageLoader />;
     }
 
     if (isAuthenticated) {
-        return null;
+        return <GenericPageLoader />;
     }
 
     return (

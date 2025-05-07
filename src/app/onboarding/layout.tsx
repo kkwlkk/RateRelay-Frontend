@@ -1,11 +1,13 @@
 'use client';
 
 import { Stepper } from '@/components/ui/Stepper';
+import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { getOnboardingStepPath } from '@/lib/onboarding';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { GenericPageLoader } from '@/components/GenericPageLoader';
 
 const steps = [
     { id: AccountOnboardingStep.BusinessVerification.toString(), label: 'Weryfikacja firmy' },
@@ -20,14 +22,36 @@ export default function OnboardingLayout({
     children: React.ReactNode;
 }) {
     const { status, isLoading } = useOnboarding();
+    const { isAuthenticated, isLoading: authLoading, user } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
         if (isLoading) return;
         if (status?.currentStep === undefined) return;
-        const currentStepPath = getOnboardingStepPath(status.currentStep);
-        router.push(currentStepPath);
-    }, [status?.currentStep, router, isLoading]);
+        if (user?.hasCompletedOnboarding) return;
+        if (window.location.pathname === '/onboarding') {
+            const currentStepPath = getOnboardingStepPath(status.currentStep);
+            router.push(currentStepPath);
+        }
+    }, [status?.currentStep, router, isLoading, user?.hasCompletedOnboarding]);
+
+    useEffect(() => {
+        if (!authLoading && !isAuthenticated) {
+            router.push('/login');
+        }
+    }, [isAuthenticated, authLoading, router]);
+
+    useEffect(() => {
+        if (authLoading) return;
+        if (!user) return;
+        if (user.hasCompletedOnboarding) {
+            router.push('/dashboard');
+        }
+    }, [user, authLoading, router]);
+
+    if (authLoading) return <GenericPageLoader />;
+    if (!isAuthenticated) return <GenericPageLoader />;
+    if (user?.hasCompletedOnboarding) return <GenericPageLoader />;
 
     return (
         <div className="min-h-screen flex flex-col bg-white">

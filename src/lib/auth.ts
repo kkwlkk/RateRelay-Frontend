@@ -1,4 +1,4 @@
-import { isDev } from "@/utils/environmentUtils";
+// import { isDev } from "@/utils/environmentUtils";
 import NextAuth from "next-auth";
 import "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
@@ -21,7 +21,8 @@ export const { handlers, auth } = NextAuth({
     ],
     cookies: {
         sessionToken: {
-            name: isDev ? "auth.session-token" : `__Secure-auth.session-token`,
+            // name: isDev ? "auth.session-token" : `__Secure-auth.session-token`,
+            name: "auth.session-token",
             options: {
                 httpOnly: true,
                 sameSite: "lax",
