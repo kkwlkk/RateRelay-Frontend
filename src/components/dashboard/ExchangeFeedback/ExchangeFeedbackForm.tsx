@@ -16,6 +16,7 @@ export const ExchangeFeedbackForm = ({ businessMapUrl, onSubmit }: ExchangeFeedb
         handleSubmit,
         watch,
         setValue,
+        reset,
         formState: { errors }
     } = useForm<FeedbackFormData>({
         defaultValues: {
@@ -33,8 +34,19 @@ export const ExchangeFeedbackForm = ({ businessMapUrl, onSubmit }: ExchangeFeedb
         setValue('rating', option.value, { shouldValidate: true });
     };
 
+    const handleFormSubmit = async (data: FeedbackFormData) => {
+        try {
+            await onSubmit(data);
+            reset();
+            setSelectedRating(undefined);
+            setShowFormSection(false);
+        } catch {
+            // ignore
+        }
+    };
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
             <RatingSelectionSection
                 selectedRating={selectedRating}
                 handleRatingSelect={handleRatingSelect}
