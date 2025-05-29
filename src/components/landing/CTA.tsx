@@ -76,7 +76,7 @@ export function CTA() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/5 px-8 py-6 text-lg rounded-xl focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+                className="px-8 py-6 text-lg rounded-xl focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
               >
                 Zobacz, jak to działa
               </Button>
