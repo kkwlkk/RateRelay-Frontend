@@ -54,9 +54,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading: userProfileLoading,
         refetch
     } = useQuery({
-        queryKey: ['userProfile'],
+        queryKey: ['userProfile', session?.accessToken],
         queryFn: fetchAccountData,
-        enabled: !!session?.accessToken,
+        enabled: !!session?.accessToken && status === 'authenticated',
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
         retry: 1

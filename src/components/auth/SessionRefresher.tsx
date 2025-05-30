@@ -1,49 +1,66 @@
 'use client';
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { signOut, useSession } from 'next-auth/react';
+import { useEffect, useCallback } from 'react';
 import { refreshAccessToken } from '@/utils/refreshToken';
-import type { Session } from 'next-auth';
-import { useInterval } from 'usehooks-ts'
+import { useInterval } from 'usehooks-ts';
 
 export function SessionRefresher() {
-    const { data: session, update } = useSession();
+    const { data: session, update, status } = useSession();
 
-    useEffect(() => {
-        if (session?.accessToken) {
-            console.log(
-                'Session updated, current token:',
-                session.accessToken.substring(0, 10) + '...'
-            );
+    const refreshInterval = 30 * 60 * 1000;
+
+    const performTokenRefresh = useCallback(async () => {
+        if (!session?.refreshToken || status !== 'authenticated') {
+            console.log('Skipping refresh: no session or not authenticated');
+            return;
         }
-    }, [session?.accessToken]);
-
-    const refreshInterval = 30 * 1000 * 60;
-
-    useInterval(async () => {
-        if (!session) return;
 
         try {
-            console.log('Attempting to refresh token...');
+            console.log('Starting token refresh...');
             const result = await refreshAccessToken();
 
-            if (result && update) {
+            if (result?.accessToken && result?.refreshToken) {
                 console.log('Received new tokens, updating session...');
 
-                const updatedSession = {
-                    ...session,
+                const updateResult = await update({
                     accessToken: result.accessToken,
                     refreshToken: result.refreshToken,
-                } as Session;
+                });
 
-                await update(updatedSession);
-                console.log('Session updated with new tokens');
+                if (updateResult) {
+                    console.log('Session update completed successfully');
+                } else {
+                    console.error('Session update returned null/undefined');
+                }
             } else {
-                console.warn('Token refresh returned no result');
+                console.error('Token refresh returned incomplete data:', result);
             }
         } catch (error) {
             console.error('Failed to refresh session:', error);
+            await signOut({ redirect: false });
         }
-    }, session ? refreshInterval : null);
+    }, [session?.refreshToken, status, update]);
+
+    useInterval(
+        performTokenRefresh,
+        session && status === 'authenticated' ? refreshInterval : null
+    );
+
+    useEffect(() => {
+        if (!session || status !== 'authenticated') return;
+
+        const handleFocus = () => {
+            if (session.expires && new Date(session.expires) <= new Date()) {
+                console.log('Session expired, performing refresh...');
+                performTokenRefresh();
+            } else {
+                console.log('Session still valid, no refresh needed');
+            }
+        };
+
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
+    }, [session, status, performTokenRefresh]);
 
     return null;
 }

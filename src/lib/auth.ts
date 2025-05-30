@@ -1,4 +1,4 @@
-// import { isDev } from "@/utils/environmentUtils";
+import { isDev } from "@/utils/environmentUtils";
 import NextAuth from "next-auth";
 import "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
@@ -21,13 +21,12 @@ export const { handlers, auth } = NextAuth({
     ],
     cookies: {
         sessionToken: {
-            // name: isDev ? "auth.session-token" : `__Secure-auth.session-token`,
-            name: "auth.session-token",
+            name: isDev ? "auth.session-token" : `__Secure-auth.session-token`,
             options: {
                 httpOnly: true,
                 sameSite: "lax",
                 path: "/",
-                secure: true
+                secure: process.env.NODE_ENV === "production"
             }
         }
     },
@@ -57,21 +56,27 @@ export const { handlers, auth } = NextAuth({
                 } catch (error) {
                     console.error("Error exchanging Google token:", error);
                     token.googleToken = account.id_token;
+                    token.error = "BackendAuthError";
                 }
             }
 
             if (trigger === "update" && session) {
-                if (session.accessToken) token.accessToken = session.accessToken;
-                if (session.refreshToken) token.refreshToken = session.refreshToken;
+                return {
+                    ...token,
+                    accessToken: session.accessToken || token.accessToken,
+                    refreshToken: session.refreshToken || token.refreshToken,
+                };
             }
 
             return token;
         },
-        async session({ token }) {
+        async session({ session, token }) {
             return {
-                accessToken: token.accessToken,
-                refreshToken: token.refreshToken,
-                isNewUser: token.isNewUser,
+                ...session,
+                accessToken: token.accessToken as string,
+                refreshToken: token.refreshToken as string,
+                isNewUser: token.isNewUser as boolean,
+                error: token.error as string | undefined,
                 expires: getTokenExpiryIsoString(token.exp),
             };
         },
@@ -79,5 +84,12 @@ export const { handlers, auth } = NextAuth({
     pages: {
         signIn: '/login',
     },
-    secret: process.env.NEXTAUTH_SECRET
+    secret: process.env.NEXTAUTH_SECRET,
+    session: {
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+    },
+    jwt: {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+    }
 });
