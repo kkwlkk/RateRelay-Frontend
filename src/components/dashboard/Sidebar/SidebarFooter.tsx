@@ -1,4 +1,4 @@
-import { SidebarFooter, SidebarSeparator } from "@/components/ui/sidebar";
+import { SidebarFooter, SidebarSeparator, useSidebar } from "@/components/ui/sidebar";
 import { Button } from '../../ui/button';
 import { Avatar, AvatarFallback } from '../../ui/avatar';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
@@ -21,14 +21,18 @@ export function AppSidebarFooter({
     onSettings,
     onHelp
 }: SidebarFooterProps) {
+    const { isMobile } = useSidebar();
+
+    const showExpandedContent = isMobile || isOpen;
+
     return (
         <SidebarFooter className="mt-auto bg-white dark:bg-zinc-900 p-2">
             <SidebarSeparator className="bg-zinc-200 dark:bg-zinc-800 mx-0 mb-2" />
             <div className={cn(
-                "px-2 pb-2",
-                isOpen ? "space-y-2" : "flex flex-col items-center space-y-2"
+                "px-2 pb-2 transition-all duration-200",
+                showExpandedContent ? "space-y-2" : "flex flex-col items-center space-y-2"
             )}>
-                {isOpen && (onSettings || onHelp) && (
+                {showExpandedContent && (onSettings || onHelp) && (
                     <div className="flex gap-1">
                         {onSettings && (
                             <Button
@@ -36,7 +40,7 @@ export function AppSidebarFooter({
                                 size="sm"
                                 className={cn(
                                     "flex-1 justify-start h-8 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/50 transition-colors",
-                                    !isOpen && "rounded-full"
+                                    !showExpandedContent && "rounded-full"
                                 )}
                                 onClick={onSettings}
                             >
@@ -50,7 +54,7 @@ export function AppSidebarFooter({
                                 size="sm"
                                 className={cn(
                                     "flex-1 justify-start h-8 text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800/50 transition-colors",
-                                    !isOpen && "rounded-full"
+                                    !showExpandedContent && "rounded-full"
                                 )}
                                 onClick={onHelp}
                             >
@@ -69,8 +73,8 @@ export function AppSidebarFooter({
                                 variant="ghost"
                                 className={cn(
                                     "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/50 transition-colors",
-                                    isOpen ? "flex-1 justify-start h-auto p-1 px-2" : "h-8 w-8 p-0",
-                                    !isOpen && "rounded-full"
+                                    showExpandedContent ? "flex-1 justify-start h-auto p-1 px-2" : "h-8 w-8 p-0",
+                                    !showExpandedContent && "rounded-full"
                                 )}
                             >
                                 <Avatar className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800">
@@ -78,8 +82,11 @@ export function AppSidebarFooter({
                                         {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                                     </AvatarFallback>
                                 </Avatar>
-                                {isOpen && user && (
-                                    <div className="flex flex-col items-start text-left ml-2">
+                                {showExpandedContent && user && (
+                                    <div className={cn(
+                                        "flex flex-col items-start text-left ml-2 transition-all duration-200",
+                                        !showExpandedContent && "opacity-0 w-0 overflow-hidden ml-0"
+                                    )}>
                                         <span className="text-sm font-medium">
                                             {user.username}
                                         </span>
@@ -164,18 +171,22 @@ export function AppSidebarFooter({
                             </div>
                         </PopoverContent>
                     </Popover>
-                    {isOpen && (
+                    {showExpandedContent && (
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="w-8 h-max p-4 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 transition-colors"
+                            className={cn(
+                                "w-8 h-max p-4 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 transition-colors",
+                                "transition-all duration-200",
+                                !showExpandedContent && "opacity-0 w-0 overflow-hidden p-0"
+                            )}
                             onClick={onLogout}
                         >
                             <LogOut className="h-4 w-4" />
                         </Button>
                     )}
                 </div>
-                {!isOpen && (onSettings || onHelp) && (
+                {!showExpandedContent && (onSettings || onHelp) && (
                     <div className="flex flex-col gap-1">
                         {onSettings && (
                             <Button

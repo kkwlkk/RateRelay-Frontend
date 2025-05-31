@@ -6,12 +6,20 @@ import { AppSidebarHeader } from './SidebarHeader';
 import { AppSidebarContent } from './SidebarContent';
 import { AppSidebarFooter } from './SidebarFooter';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export function AppSidebar() {
     const { user, logout } = useAuth();
     const router = useRouter();
     const [expandedItems, setExpandedItems] = useLocalStorage<Record<string, boolean>>('sidebar-expanded-items', {});
-    const { open } = useSidebar();
+    const { open, isMobile } = useSidebar();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    const shouldShowContent = isClient && (open || isMobile);
 
     const toggleSubMenu = (path: string) => {
         setExpandedItems(prev => ({
@@ -45,20 +53,20 @@ export function AppSidebar() {
 
     return (
         <Sidebar
-            variant="sidebar" 
-            collapsible="icon" 
+            variant="sidebar"
+            collapsible="icon"
             className="!border-r !border-zinc-200 dark:!border-zinc-800 bg-white dark:bg-zinc-900"
         >
-            <AppSidebarHeader isOpen={open} />
+            <AppSidebarHeader isOpen={shouldShowContent} />
             <AppSidebarContent
                 ungroupedRoutes={ungroupedRoutes}
                 groupedRoutes={groupedRoutes}
-                isOpen={open}
+                isOpen={shouldShowContent}
                 expandedItems={expandedItems}
                 onToggle={toggleSubMenu}
             />
             <AppSidebarFooter
-                isOpen={open}
+                isOpen={shouldShowContent}
                 user={user}
                 onLogout={logout}
                 onSettings={handleSettings}

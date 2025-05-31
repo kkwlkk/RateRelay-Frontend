@@ -11,17 +11,41 @@ interface BreadcrumbItem {
     isLast: boolean;
 }
 
+const findRouteByPath = (path: string) => {
+    const mainRoute = dashboardRoutes.find(route => route.path === path);
+    if (mainRoute) return mainRoute;
+
+    for (const route of dashboardRoutes) {
+        if (route.subRoutes) {
+            const subRoute = route.subRoutes.find(subRoute => subRoute.path === path);
+            if (subRoute) return subRoute;
+        }
+    }
+    return null;
+};
+
 export const DashboardBreadcrumb = () => {
     const pathname = usePathname();
 
     const generateBreadcrumbItems = (): BreadcrumbItem[] => {
+        // If we're on the exact dashboard path, show only "Statystyki"
+        if (pathname === '/dashboard') {
+            return [{
+                href: '/dashboard',
+                label: 'Statystyki',
+                isLast: true
+            }];
+        }
+
+        // For other paths, skip the first 'dashboard' segment
         const pathSegments = pathname.split('/').filter(Boolean);
+        const segmentsWithoutDashboard = pathSegments.slice(1); // Remove 'dashboard' segment
 
-        return pathSegments.map((segment, index) => {
-            const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
-            const isLast = index === pathSegments.length - 1;
+        return segmentsWithoutDashboard.map((segment, index) => {
+            const href = `/dashboard/${segmentsWithoutDashboard.slice(0, index + 1).join('/')}`;
+            const isLast = index === segmentsWithoutDashboard.length - 1;
 
-            const route = dashboardRoutes.find(route => route.path === href);
+            const route = findRouteByPath(href);
             const label = route?.label || segment
                 .split('-')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -42,7 +66,7 @@ export const DashboardBreadcrumb = () => {
             <BreadcrumbList>
                 {visibleItems.map((item, index) => (
                     <React.Fragment key={item.href}>
-                        {item.href !== '/dashboard' && (
+                        {index > 0 && (
                             <BreadcrumbSeparator className="opacity-60" />
                         )}
                         {shouldShowEllipsis && index === 0 && (
