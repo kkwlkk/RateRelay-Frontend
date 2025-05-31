@@ -8,21 +8,25 @@ type RefreshTokenResponse = {
 
 let refreshPromise: Promise<RefreshTokenResponse | null> | null = null;
 
-export async function refreshAccessToken(): Promise<RefreshTokenResponse | null> {
+export async function refreshAccessToken(providedRefreshToken?: string): Promise<RefreshTokenResponse | null> {
     if (refreshPromise) {
         return refreshPromise;
     }
 
     refreshPromise = (async () => {
         try {
-            const session = await getSession();
+            let refreshToken = providedRefreshToken;
 
-            if (!session?.refreshToken) {
-                await signOut({ redirect: false });
-                return null;
+            if (!refreshToken) {
+                const session = await getSession();
+                if (!session?.refreshToken) {
+                    await signOut({ redirect: false });
+                    return null;
+                }
+                refreshToken = session.refreshToken;
             }
 
-            const response = await apiService.refreshToken(session.refreshToken);
+            const response = await apiService.refreshToken(refreshToken);
 
             if (!response.success) {
                 await signOut({ redirect: false });
