@@ -19,7 +19,8 @@ import {
   ChevronUp,
   ChevronsUpDown,
   Search,
-  Settings2} from 'lucide-react';
+  Settings2
+} from 'lucide-react';
 import {
   Table as TableComponent,
   TableBody,
@@ -105,10 +106,10 @@ export function DataTable<TData, TValue>({
   const error = isServerSide ? query.error : null;
 
   useEffect(() => {
-    if (isServerSide && query?.actions) {
+    if (isServerSide && query?.actions && debouncedSearchValue !== '') {
       query.actions.setSearch(debouncedSearchValue);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchValue, isServerSide]);
 
   const table = useReactTable({
