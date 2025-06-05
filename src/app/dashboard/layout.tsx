@@ -17,22 +17,24 @@ export default function DashboardLayout({
         <ProtectedRoute>
             <SidebarProvider defaultOpen>
                 <TooltipProvider>
-                    <AppSidebar />
-                    <div className="flex flex-col w-full min-h-screen">
-                        <header className={cn(
-                            "border-b border-zinc-200 dark:border-zinc-800",
-                            "sticky top-0 z-10 flex h-14 items-center gap-2",
-                            "bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xs px-4",
-                            "text-zinc-900 dark:text-zinc-50 min-h-fit"
-                        )}
-                        >
-                            <SidebarTrigger className='transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 rounded-md p-1' />
-                            <hr className="h-4 border-l border-zinc-200 dark:border-zinc-800 hidden sm:block" />
-                            <DashboardBreadcrumb />
-                        </header>
-                        <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 min-w-0">
-                            {children}
-                        </main>
+                    <div className="flex min-h-screen w-full">
+                        <AppSidebar />
+                        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                            <header className={cn(
+                                "border-b border-zinc-200 dark:border-zinc-800",
+                                "sticky top-0 z-10 flex h-14 items-center gap-2",
+                                "bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xs px-4",
+                                "text-zinc-900 dark:text-zinc-50 flex-shrink-0"
+                            )}
+                            >
+                                <SidebarTrigger className='transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 rounded-md p-1' />
+                                <hr className="h-4 border-l border-zinc-200 dark:border-zinc-800 hidden sm:block" />
+                                <DashboardBreadcrumb />
+                            </header>
+                            <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 min-w-0 overflow-auto">
+                                {children}
+                            </main>
+                        </div>
                     </div>
                 </TooltipProvider>
             </SidebarProvider>
