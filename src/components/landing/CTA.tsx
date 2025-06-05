@@ -66,7 +66,7 @@ export function CTA() {
             <Link href="/businesses" className="focus:outline-none" tabIndex={-1}>
               <Button
                 size="lg"
-                className="group bg-primary text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-6 text-lg rounded-xl focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+                className="group bg-primary/80 text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-6 text-lg rounded-xl focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
               >
                 Rozpocznij za darmo
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -76,7 +76,7 @@ export function CTA() {
               <Button
                 size="lg"
                 variant="outline"
-                className="px-8 py-6 text-lg rounded-xl focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+                className="px-8 py-6 text-lg rounded-xl focus:ring-2 focus:ring-secondary focus:ring-offset-2"
               >
                 Zobacz, jak to działa
               </Button>

@@ -78,6 +78,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [session]);
 
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            setUser(null);
+        }
+    }, [status]);
+
     const login = async () => {
         await signIn('google');
     };
@@ -92,12 +98,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await refetch();
     }
 
+    const isSessionLoading = status === 'loading';
+    const hasSession = status === 'authenticated' && !!session;
+    const shouldBeLoadingUser = hasSession && !user;
+    const isLoadingUser = hasSession && userProfileLoading;
+
+    const isLoading = isSessionLoading || shouldBeLoadingUser || isLoadingUser;
+    const isAuthenticated = hasSession && !!user;
+
     return (
         <AuthContext.Provider
             value={{
                 user,
-                isLoading: status === 'loading' || userProfileLoading,
-                isAuthenticated: !!user,
+                isLoading,
+                isAuthenticated,
                 isNewUser,
                 login,
                 logout,
