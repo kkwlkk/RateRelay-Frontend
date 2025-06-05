@@ -1,199 +1,212 @@
 'use client';
 
-import { DataTable, PaginationParams, PaginationResponse, ColumnDef } from '@/components/DataTable/DataTable';
+import { apiService } from "@/services/api";
+import { createPaginatedQueryFn, usePaginatedQuery } from "@/hooks/usePaginatedQuery";
+import { AccountReviewHistoryResponseDto } from "@/types/dtos/Account";
+import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
+import { cn } from '@/lib/utils';
+import { DataTable } from '@/components/DataTable/DataTable';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2 } from 'lucide-react';
+import { ExternalLink, Building2, Clock, CheckCircle, XCircle, Star } from 'lucide-react';
+import { ColumnDef } from "@tanstack/react-table";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import dayjs from '@/utils/dayjsConfig';
 
-// Example data type
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: 'active' | 'inactive';
-  createdAt: string;
+const StatusBadge = ({ status }: { status: BusinessReviewStatus }) => {
+  const statusConfig = {
+    [BusinessReviewStatus.Pending]: {
+      variant: 'secondary' as const,
+      text: 'Oczekujące',
+      icon: Clock,
+      className: 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-800'
+    },
+    [BusinessReviewStatus.Accepted]: {
+      variant: 'default' as const,
+      text: 'Zaakceptowane',
+      icon: CheckCircle,
+      className: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800'
+    },
+    [BusinessReviewStatus.Rejected]: {
+      variant: 'destructive' as const,
+      text: 'Odrzucone',
+      icon: XCircle,
+      className: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800'
+    },
+  };
+
+  const config = statusConfig[status];
+  const Icon = config.icon;
+
+  return (
+    <Badge variant={config.variant} className={cn('gap-1', config.className)}>
+      <Icon className="h-3 w-3" />
+      {config.text}
+    </Badge>
+  );
 };
 
-export default function UsersPage() {
-  // Example columns definition with various patterns
-  const columns: ColumnDef<User>[] = [
-    {
-      id: 'name',
-      header: 'Name',
-      accessorKey: 'name',
-      sortable: true,
-    },
-    {
-      id: 'email',
-      header: 'Email',
-      accessorKey: 'email',
-    },
-    {
-      id: 'role',
-      header: 'Role',
-      accessorKey: 'role',
-      sortable: true,
-      // Custom cell renderer for roles
-      cell: (row) => {
-        const roleColors = {
-          'Admin': 'bg-red-100 text-red-800 border-red-200',
-          'Editor': 'bg-blue-100 text-blue-800 border-blue-200',
-          'User': 'bg-green-100 text-green-800 border-green-200',
-        };
-        
-        // @ts-expect-error asdadasd
-        const colorClass = roleColors[row.role] || 'bg-gray-100 text-gray-800 border-gray-200';
-        
-        return (
-          <Badge className={colorClass}>
-            {row.role}
-          </Badge>
-        );
-      }
-    },
-    {
-      id: 'status',
-      header: 'Status',
-      accessorKey: 'status',
-      sortable: true,
-      cell: (row) => (
-        <Badge 
-          className={row.status === 'active' 
-            ? 'bg-emerald-100 text-emerald-800 border-emerald-200' 
-            : 'bg-gray-100 text-gray-800 border-gray-200'
-          }
-        >
-          {row.status}
-        </Badge>
-      )
-    },
-    {
-      id: 'createdAt',
-      header: 'Created At',
-      accessorKey: 'createdAt',
-      sortable: true,
-      cell: (row) => new Date(row.createdAt).toLocaleDateString(),
-    },
-    {
-      id: 'actions',
-      header: 'Actions',
-      // Custom cell renderer for actions column
-      cell: (row) => (
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log('Edit user:', row);
-            }}
-          >
-            <Edit className="w-4 h-4 mr-1" /> Edit
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log('Delete user:', row);
-            }}
-          >
-            <Trash2 className="w-4 h-4 mr-1" /> Delete
-          </Button>
+const columns: ColumnDef<AccountReviewHistoryResponseDto>[] = [
+  {
+    id: 'id',
+    accessorKey: 'id',
+    header: 'ID',
+    size: 80,
+    minSize: 60,
+    maxSize: 120,
+    cell: ({ row }) => (
+      <div className="font-mono text-sm text-zinc-600 dark:text-zinc-400">
+        #{row.getValue('id')}
+      </div>
+    )
+  },
+  {
+    id: 'businessName',
+    accessorKey: 'businessName',
+    header: 'Nazwa firmy',
+    enableResizing: true,
+    size: 200,
+    minSize: 180,
+    maxSize: 300,
+    cell: ({ row }) => (
+      <div className="font-medium text-zinc-900 dark:text-white">{row.getValue('businessName')}</div>
+    )
+  },
+  {
+    id: 'status',
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => (
+      <StatusBadge status={row.getValue('status')} />
+    )
+  },
+  {
+    id: 'rating',
+    accessorKey: 'rating',
+    header: 'Ocena',
+    enableSorting: false,
+    cell: ({ row }) => {
+      const rating = row.getValue('rating') as number;
+      return (
+        <div className="flex items-center gap-1">
+          <Star className="h-4 w-4 text-yellow-500" />
+          <span className="text-sm font-medium text-zinc-900 dark:text-white">{rating}</span>
         </div>
-      ),
-    },
-  ];
-  
-  // Example data fetching function that would call your API
-  const fetchUsers = async (params: PaginationParams): Promise<PaginationResponse<User>> => {
-    console.log('Fetching with params:', params);
-    
-    // In a real application, you would make a fetch request to your API
-    // For example:
-    // const response = await fetch(
-    //   `/api/users?page=${params.page}&pageSize=${params.pageSize}` +
-    //   `${params.sortBy ? `&sortBy=${params.sortBy}` : ''}` +
-    //   `${params.sortOrder ? `&sortOrder=${params.sortOrder}` : ''}` +
-    //   `${params.filters ? `&filters=${JSON.stringify(params.filters)}` : ''}`
-    // );
-    // return await response.json();
-    
-    // For this example, we'll just return mock data with a delay
-    return new Promise((resolve) => {
-      // Simulate API call delay
-      setTimeout(() => {
-        // Create mock users based on pagination params
-        const mockUsers: User[] = Array.from({ length: params.pageSize }, (_, i) => {
-          const index = (params.page - 1) * params.pageSize + i;
-          return {
-            id: index + 1,
-            name: `User ${index + 1}`,
-            email: `user${index + 1}@example.com`,
-            role: index % 3 === 0 ? 'Admin' : index % 3 === 1 ? 'Editor' : 'User',
-            status: index % 5 === 0 ? 'inactive' : 'active',
-            createdAt: new Date(Date.now() - index * 86400000).toISOString(),
-          };
-        });
-        
-        // Sort the data if required
-        if (params.sortBy) {
-          mockUsers.sort((a, b) => {
-            // @ts-expect-error asdadasd
-            const valueA = a[params.sortBy!];
-            // @ts-expect-error asdadasd
-            const valueB = b[params.sortBy!];
-            
-            if (typeof valueA === 'string' && typeof valueB === 'string') {
-              return params.sortOrder === 'desc' 
-                ? valueB.localeCompare(valueA) 
-                : valueA.localeCompare(valueB);
-            }
-            
-            return params.sortOrder === 'desc' 
-              ? (valueB > valueA ? 1 : -1) 
-              : (valueA > valueB ? 1 : -1);
-          });
-        }
-        
-        // Return paginated response
-        resolve({
-          data: mockUsers,
-          metadata: {
-            totalCount: 100, // Total number of records
-            pageSize: params.pageSize,
-            currentPage: params.page,
-            totalPages: Math.ceil(100 / params.pageSize),
-          }
-        });
-      }, 500); // Simulate network delay
-    });
-  };
-  
+      );
+    }
+  },
+  {
+    id: 'comment',
+    accessorKey: 'comment',
+    header: 'Komentarz',
+    size: 300,
+    enableResizing: true,
+    enableSorting: false,
+    cell: ({ row }) => (
+      <div className="text-sm text-zinc-600 dark:text-zinc-400 truncate">
+        {row.getValue('comment') || 'Brak komentarza'}
+      </div>
+    )
+  },
+  {
+    id: 'mapUrl',
+    accessorKey: 'mapUrl',
+    header: 'Lokalizacja',
+    enableSorting: false,
+    cell: ({ row }) => (
+      <Button
+        variant="outline"
+        size="sm"
+        className="h-6 text-xs border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200"
+        onClick={() => window.open(row.getValue('mapUrl'), '_blank', 'noopener,noreferrer')}
+      >
+        <ExternalLink className="h-3 w-3 mr-1" />
+        Mapa
+      </Button>
+    )
+  },
+  {
+    id: 'dateCreatedUtc',
+    accessorKey: 'dateCreatedUtc',
+    header: 'Data dodania',
+    size: 160,
+    minSize: 140,
+    maxSize: 200,
+    cell: ({ row }) => (
+      <div className="font-mono text-sm text-zinc-600 dark:text-zinc-400">
+        {dayjs(row.getValue('dateCreatedUtc')).format('YYYY-MM-DD HH:mm:ss')}
+      </div>
+    )
+  }
+];
+
+export default function UsersPage() {
+  const query = usePaginatedQuery<AccountReviewHistoryResponseDto[]>({
+    queryKey: ['reviewHistory'],
+    queryFn: createPaginatedQueryFn((params) => apiService.getAccountReviewHistory(params)),
+    initialPagination: {
+      page: 1,
+      pageSize: 20,
+      sortBy: 'id',
+      sortDirection: 'desc'
+    }
+  });
+
   return (
-    <div className="container">
-      <h1 className="text-2xl font-bold mb-6">Exchange Feedback History</h1>
-      <DataTable<User>
-        columns={columns}
-        fetchData={fetchUsers}
-        queryKey="users-table" // Unique key for React Query cache
-        defaultPageSize={10}
-        defaultSortBy="createdAt"
-        defaultSortOrder="desc"
-        onRowClick={(row) => {
-          console.log('Row clicked:', row);
-          // Navigate to user detail page or open modal
-        }}
-        // Optional: customize empty state message
-        noDataMessage={
-          <div className="text-center py-8">
-            <h3 className="text-lg font-semibold mb-2">No users found</h3>
-            <p className="text-gray-500 mb-4">Try adjusting your filters or adding new users.</p>
-            <Button>Add New User</Button>
+    <div className="space-y-8 max-w-none">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center justify-center size-10 sm:size-12 rounded-xl bg-primary/10 dark:bg-primary/10 shrink-0">
+          <Building2 className="size-5 sm:size-6 text-primary dark:text-primary-foreground" />
+        </div>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-3xl font-semibold text-zinc-900 dark:text-white tracking-tight leading-tight">
+            Historia wymiany doświadczeń
+          </h1>
+          <p className="text-zinc-600 dark:text-zinc-400 mt-0.5 sm:mt-1 text-sm sm:text-lg">
+            Przeglądaj historię wymiany doświadczeń z użytkownikami
+          </p>
+        </div>
+      </div>
+
+      <Alert
+        variant="default"
+        className="rounded-xl p-6 bg-primary/10 dark:bg-primary/7 border border-primary/20 dark:border-primary/30 grid-cols-none grid-rows-none flex"
+      >
+        <div className="flex items-start space-x-4 w-full">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg flex-shrink-0 bg-primary/20 dark:bg-primary/30">
+            <Star className="h-5 w-5 text-zinc-900 dark:text-white" />
           </div>
-        }
-      />
+          <div className="flex-1 space-y-2">
+            <AlertTitle className="font-semibold text-zinc-700 dark:text-zinc-300 w-full col-start-auto">
+              System nagród
+            </AlertTitle>
+            <AlertDescription className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed col-start-auto">
+              Otrzymasz punkt za napisanie recenzji tylko wtedy, gdy właściciel firmy ją zaakceptuje.
+              Recenzje oczekujące na akceptację lub odrzucone nie przynoszą punktów.
+            </AlertDescription>
+          </div>
+        </div>
+      </Alert>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-zinc-900 dark:text-white" />
+              Przegląd firm i recenzji
+            </h2>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+              Lista zawiera informacje o firmach, statusie recenzji oraz linki do lokalizacji na mapie
+            </p>
+          </div>
+        </div>
+
+        <DataTable
+          query={query}
+          columns={columns}
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }

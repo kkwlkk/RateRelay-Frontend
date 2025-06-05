@@ -1,15 +1,15 @@
-import { AccountDataResponseDto } from '@/types/dtos/Account';
+import { AccountDataResponseDto, AccountReviewHistoryResponseDto } from '@/types/dtos/Account';
 import { AuthResponseDto } from '@/types/dtos/Auth';
 import { AcceptPendingBusinessReviewResponseDto, GetAwaitingBusinessReviewsResponseDto, RejectPendingBusinessReviewResponseDto } from '@/types/dtos/BusinessReviews';
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
 import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
-import { getSession } from 'next-auth/react';
+import { getSession, signOut } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-type ApiResponse<T> = {
+export type ApiResponse<T, M = unknown, P = unknown> = {
     success: boolean;
     data: T;
     error?: {
@@ -21,23 +21,37 @@ type ApiResponse<T> = {
             code?: string;
         }>;
     };
-    metadata?: {
-        totalCount?: number;
-        pageSize?: number;
-        currentPage?: number;
-        totalPages?: number;
-        additionalInfo?: Record<string, unknown>;
-    };
+    metadata?: M;
+    pagination?: P;
 };
 
+export interface PaginationMeta {
+    totalCount: number;
+    pageSize: number;
+    currentPage: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+}
+
+export type PaginatedApiResponse<T, M = unknown> = ApiResponse<T, M, PaginationMeta>;
+
+interface PagedRequest {
+    page?: number;
+    pageSize?: number;
+    sortBy?: string;
+    sortDirection?: 'asc' | 'desc';
+    search?: string;
+}
+
 class ApiService {
-    private async request<T>(
+    private async request<T, TMeta = unknown, TPagination = unknown>(
         endpoint: string,
         method: string = 'GET',
         data?: unknown,
         params?: Record<string, string>,
         useAuth: boolean = true
-    ): Promise<ApiResponse<T>> {
+    ): Promise<ApiResponse<T, TMeta, TPagination>> {
         const headers: Record<string, string> = {
             'Content-Type': 'application/json',
         };
@@ -53,7 +67,7 @@ class ApiService {
                     error: {
                         message: 'No access token available',
                     },
-                } as ApiResponse<T>;
+                } as ApiResponse<T, TMeta, TPagination>;
             }
         }
 
@@ -70,7 +84,39 @@ class ApiService {
 
         try {
             const response = await fetch(`${API_URL}${endpoint}`, config);
-            const result = await response.json();
+            const contentType = response.headers.get('content-type');
+            let result;
+
+            if (response.status === 204 || !contentType) {
+                result = {};
+            } else if (contentType && contentType.includes('application/json')) {
+                try {
+                    const text = await response.text();
+                    result = text ? JSON.parse(text) : {};
+                } catch (parseError) {
+                    console.error('Error parsing JSON response:', parseError);
+                    return {
+                        success: false,
+                        data: null as unknown,
+                        error: {
+                            message: 'Invalid response format',
+                            code: 'INVALID_RESPONSE',
+                            details: parseError instanceof Error ? parseError.message : undefined
+                        },
+                    } as ApiResponse<T, TMeta, TPagination>;
+                }
+            } else {
+                const text = await response.text();
+                return {
+                    success: false,
+                    data: null as unknown,
+                    error: {
+                        message: 'Response is not in JSON format',
+                        code: 'INVALID_FORMAT',
+                        details: text.substring(0, 100)
+                    },
+                } as ApiResponse<T, TMeta, TPagination>;
+            }
 
             if (!response.ok) {
                 if (response.status === 429) {
@@ -85,6 +131,7 @@ class ApiService {
                 if (response.status === 401) {
                     console.error('Unauthorized access - token may be expired');
                     toast.error('Twoja sesja wygasła. Proszę się zalogować ponownie.');
+                    await signOut({ redirect: true, callbackUrl: '/login' });
                 }
 
                 if (response.status === 403) {
@@ -95,7 +142,8 @@ class ApiService {
             }
 
             return result;
-        } catch {
+        } catch (err) {
+            console.error('Error during API request:', err);
             toast.error('Wystąpił problem z połączeniem z serwerem. Proszę spróbować ponownie później.');
 
             return {
@@ -104,8 +152,9 @@ class ApiService {
                 error: {
                     message: 'Network error',
                     code: 'NETWORK_ERROR',
+                    details: err instanceof Error ? err.message : undefined
                 },
-            } as ApiResponse<T>;
+            } as ApiResponse<T, TMeta, TPagination>;
         }
     }
 
@@ -116,6 +165,18 @@ class ApiService {
             }
             return acc;
         }, {} as Record<string, string>);
+    }
+
+    private toQueryParams(request: PagedRequest): Record<string, string> {
+        const params: Record<string, string> = {};
+
+        if (request.page) params.page = String(request.page);
+        if (request.pageSize) params.pageSize = String(request.pageSize);
+        if (request.sortBy) params.sortBy = request.sortBy;
+        if (request.sortDirection) params.sortDirection = request.sortDirection;
+        if (request.search) params.search = request.search;
+
+        return params;
     }
 
     // Auth endpoints
@@ -130,6 +191,10 @@ class ApiService {
     // Account endpoints
     async getAccount(): Promise<ApiResponse<AccountDataResponseDto>> {
         return this.request('/api/account');
+    }
+
+    async getAccountReviewHistory(request: PagedRequest = {}): Promise<PaginatedApiResponse<AccountReviewHistoryResponseDto[]>> {
+        return this.request('/api/account/review-history', 'GET', undefined, this.toQueryParams(request));
     }
 
     // Business review endpoints

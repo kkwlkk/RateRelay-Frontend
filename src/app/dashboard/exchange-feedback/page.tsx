@@ -37,7 +37,6 @@ const ExchangeFeedbackPage = () => {
         initialTime: 0
     });
 
-    
     const { data: business, isRefetching, isLoading, refetch } = useQuery({
         queryKey: ['businessQueue'],
         queryFn: () => getNextBusinessToReview(),
@@ -115,7 +114,7 @@ const ExchangeFeedbackPage = () => {
     }
 
     return (
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-4">
+        <div>
             <ExchangeFeedbackHeader
                 remainingTime={reviewSessionTimer.remainingTime}
                 initialTime={reviewSessionTimer.initialTime}

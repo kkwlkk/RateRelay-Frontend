@@ -33,7 +33,6 @@ export const CommentSection = ({ register, watch, errors }: CommentSectionProps)
                     className={cn(
                         "resize-none w-full min-h-32 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700",
                         "text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500",
-                        "focus:border-blue-400 dark:focus:border-blue-500 focus:ring-blue-400 dark:focus:ring-blue-500 focus:outline-none focus:!ring-1",
                         "rounded-md"
                     )}
                 />

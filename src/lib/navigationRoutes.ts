@@ -1,4 +1,4 @@
-import { HomeIcon, MessagesSquare } from 'lucide-react';
+import { History, HomeIcon, MessagesSquare } from 'lucide-react';
 import { IconType } from '@/types/IconType';
 import { UserPermission } from '@/enums/permissions';
 
@@ -24,6 +24,13 @@ export const dashboardRoutes: NavigationRoute[] = [
         label: 'Wymiana doświadczeń',
         icon: MessagesSquare,
         section: 'Aktywność',
+        subRoutes: [
+            {
+                path: '/dashboard/exchange-feedback/history',
+                label: 'Historia wymian',
+                icon: History
+            }
+        ],
     },
     // // your business
     // {
