@@ -3,7 +3,7 @@ import LegalPageWrapper from '@/components/LegalPage/LegalPageWrapper';
 export default async function TermsPage() {
     return (
         <LegalPageWrapper
-            filePath="src/content/legal/terms-of-service.md"
+            filePath="terms-of-service"
             fallbackTitle="Regulamin Serwisu"
             fallbackType="Regulamin"
         />

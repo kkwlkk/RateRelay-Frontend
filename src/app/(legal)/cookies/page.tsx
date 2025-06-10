@@ -3,7 +3,7 @@ import LegalPageWrapper from '@/components/LegalPage/LegalPageWrapper';
 export default async function CookiesPage() {
     return (
         <LegalPageWrapper
-            filePath="src/content/legal/cookies-policy.md"
+            filePath="cookie-policy"
             fallbackTitle="Polityka Cookies"
             fallbackType="Polityka Cookies"
         />

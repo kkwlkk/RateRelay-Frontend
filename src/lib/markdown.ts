@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import yaml from 'yaml';
 
 interface MarkdownFrontmatter {
@@ -19,6 +17,12 @@ interface ParsedMarkdown {
   content: string;
   frontmatter: MarkdownFrontmatter;
 }
+
+const contentModules = {
+  'terms-of-service': () => import('../content/legal/terms-of-service.md'),
+  'privacy-policy': () => import('../content/legal/privacy-policy.md'),
+  'cookie-policy': () => import('../content/legal/cookie-policy.md'),
+} as const;
 
 export function parseMarkdownWithFrontmatter(markdownText: string): ParsedMarkdown {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
@@ -49,10 +53,13 @@ export function parseMarkdownWithFrontmatter(markdownText: string): ParsedMarkdo
   };
 }
 
-export async function getMarkdownFile(filePath: string): Promise<ParsedMarkdown> {
+export async function getMarkdownFile(slug: string): Promise<ParsedMarkdown> {
   try {
-    const fullPath = path.join(process.cwd(), filePath);
-    const markdownText = fs.readFileSync(fullPath, 'utf8');
+    const contentLoader = contentModules[slug as keyof typeof contentModules];
+    if (!contentLoader) throw new Error(`Content not found: ${slug}`);
+
+    const importedModule = await contentLoader();
+    const markdownText = importedModule.default as string;
     return parseMarkdownWithFrontmatter(markdownText);
   } catch (error) {
     console.error('Error loading markdown file:', error);
