@@ -11,13 +11,27 @@ import { useEffect, useState } from 'react';
 export function AppSidebar() {
     const { user, logout } = useAuth();
     const router = useRouter();
-    const [expandedItems, setExpandedItems] = useLocalStorage<Record<string, boolean>>('sidebar-expanded-items', {});
-    const { open, isMobile } = useSidebar();
     const [isClient, setIsClient] = useState(false);
+    const { open, isMobile } = useSidebar();
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    const getDefaultExpandedItems = () => {
+        const defaultExpanded: Record<string, boolean> = {};
+        dashboardRoutes.forEach(route => {
+            if (route.subRoutes) {
+                defaultExpanded[route.path] = true;
+            }
+        });
+        return defaultExpanded;
+    };
+
+    const [expandedItems, setExpandedItems] = useLocalStorage<Record<string, boolean>>(
+        'sidebar-expanded-items', 
+        getDefaultExpandedItems()
+    );
 
     const shouldShowContent = isClient && (open || isMobile);
 

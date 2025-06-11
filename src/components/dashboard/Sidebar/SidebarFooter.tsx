@@ -2,7 +2,10 @@ import { SidebarFooter, SidebarSeparator, useSidebar } from "@/components/ui/sid
 import { Button } from '../../ui/button';
 import { Avatar, AvatarFallback } from '../../ui/avatar';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import { LogOut, Settings, HelpCircle } from 'lucide-react';
+import {
+    LogOut,
+    // Settings, HelpCircle
+} from 'lucide-react';
 import { User } from '@/types/User';
 import { cn } from '@/lib/utils';
 
@@ -18,8 +21,8 @@ export function AppSidebarFooter({
     isOpen,
     user,
     onLogout,
-    onSettings,
-    onHelp
+    // onSettings,
+    // onHelp
 }: SidebarFooterProps) {
     const { isMobile } = useSidebar();
 
@@ -32,7 +35,7 @@ export function AppSidebarFooter({
                 "px-2 pb-2 transition-all duration-200",
                 showExpandedContent ? "space-y-2" : "flex flex-col items-center space-y-2"
             )}>
-                {showExpandedContent && (onSettings || onHelp) && (
+                {/* {showExpandedContent && (onSettings || onHelp) && (
                     <div className="flex gap-1">
                         {onSettings && (
                             <Button
@@ -63,7 +66,7 @@ export function AppSidebarFooter({
                             </Button>
                         )}
                     </div>
-                )}
+                )} */}
                 <div className={cn(
                     "flex items-center justify-center gap-1",
                 )}>
@@ -111,7 +114,7 @@ export function AppSidebarFooter({
                                     <span className="text-xs text-zinc-500 dark:text-zinc-400">{user?.email}</span>
                                 </div>
 
-                                {(onSettings || onHelp) && (
+                                {/* {(onSettings || onHelp) && (
                                     <>
                                         <div className="flex flex-col gap-1">
                                             {onSettings && (
@@ -152,7 +155,7 @@ export function AppSidebarFooter({
                                             )}
                                         </div>
                                     </>
-                                )}
+                                )} */}
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -186,7 +189,7 @@ export function AppSidebarFooter({
                         </Button>
                     )}
                 </div>
-                {!showExpandedContent && (onSettings || onHelp) && (
+                {/* {!showExpandedContent && (onSettings || onHelp) && (
                     <div className="flex flex-col gap-1">
                         {onSettings && (
                             <Button
@@ -209,7 +212,7 @@ export function AppSidebarFooter({
                             </Button>
                         )}
                     </div>
-                )}
+                )} */}
             </div>
         </SidebarFooter>
     );
