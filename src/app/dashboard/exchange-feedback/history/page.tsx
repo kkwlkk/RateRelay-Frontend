@@ -3,48 +3,13 @@
 import { apiService } from "@/services/api";
 import { createPaginatedQueryFn, usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import { AccountReviewHistoryResponseDto } from "@/types/dtos/Account";
-import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
-import { cn } from '@/lib/utils';
 import { DataTable } from '@/components/DataTable/DataTable';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Building2, Clock, CheckCircle, XCircle, Star } from 'lucide-react';
+import { ExternalLink, Building2, Star } from 'lucide-react';
 import { ColumnDef } from "@tanstack/react-table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import dayjs from '@/utils/dayjsConfig';
-
-const StatusBadge = ({ status }: { status: BusinessReviewStatus }) => {
-  const statusConfig = {
-    [BusinessReviewStatus.Pending]: {
-      variant: 'secondary' as const,
-      text: 'Oczekujące',
-      icon: Clock,
-      className: 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-800'
-    },
-    [BusinessReviewStatus.Accepted]: {
-      variant: 'default' as const,
-      text: 'Zaakceptowane',
-      icon: CheckCircle,
-      className: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800'
-    },
-    [BusinessReviewStatus.Rejected]: {
-      variant: 'destructive' as const,
-      text: 'Odrzucone',
-      icon: XCircle,
-      className: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800'
-    },
-  };
-
-  const config = statusConfig[status];
-  const Icon = config.icon;
-
-  return (
-    <Badge variant={config.variant} className={cn('gap-1', config.className)}>
-      <Icon className="h-3 w-3" />
-      {config.text}
-    </Badge>
-  );
-};
+import { StatusBadge } from "@/components/ReviewStatusBadge";
 
 const columns: ColumnDef<AccountReviewHistoryResponseDto>[] = [
   {

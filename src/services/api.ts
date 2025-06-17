@@ -1,6 +1,8 @@
+import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
 import { AccountDataResponseDto, AccountReviewHistoryResponseDto } from '@/types/dtos/Account';
 import { AuthResponseDto } from '@/types/dtos/Auth';
-import { AcceptPendingBusinessReviewResponseDto, GetAwaitingBusinessReviewsResponseDto, RejectPendingBusinessReviewResponseDto } from '@/types/dtos/BusinessReviews';
+import { GetBusinessesResponseDto } from '@/types/dtos/Business';
+import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto, RejectPendingBusinessReviewResponseDto } from '@/types/dtos/BusinessReviews';
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
 import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
@@ -198,9 +200,6 @@ class ApiService {
     }
 
     // Business review endpoints
-    async getAwaitingBusinessReviews(businessId: number): Promise<ApiResponse<GetAwaitingBusinessReviewsResponseDto[]>> {
-        return this.request(`/api/business/reviews/awaiting?businessId=${businessId}`);
-    }
 
     async acceptPendingBusinessReview(reviewId: number): Promise<ApiResponse<AcceptPendingBusinessReviewResponseDto>> {
         return this.request('/api/business/reviews/accept', 'POST', { reviewId });
@@ -259,6 +258,27 @@ class ApiService {
 
     async completeOnboardingStep(): Promise<ApiResponse<CompleteOnboardingStepResponseDto>> {
         return this.request('/api/onboarding/complete', 'POST');
+    }
+
+    // Business
+
+    async getAllUserBusinesses(request: PagedRequest = {}): Promise<PaginatedApiResponse<GetBusinessesResponseDto[]>> {
+        return this.request('/api/business', 'GET', undefined, this.toQueryParams(request));
+    }
+
+    async getBusinessById(businessId: number): Promise<ApiResponse<GetBusinessesResponseDto>> {
+        return this.request(`/api/business/${businessId}`);
+    }
+
+
+    async getBusinessReviewsByBusinessId(
+        businessId: number,
+        status: BusinessReviewStatus = BusinessReviewStatus.Pending,
+        request: PagedRequest = {}
+    ): Promise<PaginatedApiResponse<GetBusinessReviewsResponseDto[]>> {
+        const params = this.toQueryParams(request);
+        params.status = status.toString();
+        return this.request(`/api/business/${businessId}/reviews`, 'GET', undefined, params);
     }
 }
 

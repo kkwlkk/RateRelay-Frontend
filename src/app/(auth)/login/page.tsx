@@ -7,10 +7,20 @@ import Image from 'next/image';
 import { LoginForm } from '@/components/login/loginForm';
 import { FeaturesCarousel } from '@/components/login/featuresCarousel';
 import { GenericPageLoader } from '@/components/GenericPageLoader';
+import { signOut } from 'next-auth/react';
 
 export default function LoginPage() {
-    const { isAuthenticated, isLoading, user } = useAuth();
+    const { isAuthenticated, isLoading, user, error } = useAuth();
     const router = useRouter();
+
+    useEffect(() => {
+        if (!error) return;
+        if (error === "BackendAuthError") {
+            signOut({ callbackUrl: '/login' });
+        } else {
+            console.error('Unexpected error:', error);
+        }
+    }, [error]);
 
     useEffect(() => {
         if (isLoading) return;

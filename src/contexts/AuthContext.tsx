@@ -7,6 +7,7 @@ import { mapIntToPermissions } from '@/utils/permissionUtils';
 
 type AuthContextType = {
     user: User | null;
+    error?: string;
     isLoading: boolean;
     isAuthenticated: boolean;
     isNewUser: boolean;
@@ -17,6 +18,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
+    error: undefined,
     isLoading: true,
     isAuthenticated: false,
     isNewUser: false,
@@ -110,6 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         <AuthContext.Provider
             value={{
                 user,
+                error: session?.error,
                 isLoading,
                 isAuthenticated,
                 isNewUser,

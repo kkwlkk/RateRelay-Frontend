@@ -1,4 +1,4 @@
-import { History, HomeIcon, MessagesSquare } from 'lucide-react';
+import { Building, History, HomeIcon, MessagesSquare } from 'lucide-react';
 import { IconType } from '@/types/IconType';
 import { UserPermission } from '@/enums/permissions';
 
@@ -9,6 +9,16 @@ export type NavigationRoute = {
     requiredPermission?: UserPermission | UserPermission[];
     section?: string;
     subRoutes?: NavigationRoute[];
+};
+
+export const segmentRouteLabelMap: Record<string, string> = {
+    'reviews': 'Opinie',
+    'settings': 'Ustawienia',
+    'analytics': 'Analityka',
+    'profile': 'Profil',
+    'edit': 'Edytuj',
+    'create': 'Utwórz',
+    'history': 'Historia',
 };
 
 export const dashboardRoutes: NavigationRoute[] = [
@@ -33,13 +43,13 @@ export const dashboardRoutes: NavigationRoute[] = [
         ],
     },
     // // your business
-    // {
-    //     path: '/dashboard/manage-business',
-    //     label: 'Zarządzanie firmą',
-    //     icon: Building,
-    //     section: 'Twoja firma',
-    // },
-    // // settings
+    {
+        path: '/dashboard/businesses',
+        label: 'Zarządzanie firmą',
+        icon: Building,
+        section: 'Twoja firma',
+    },
+    // settings
     // {
     //     path: '/dashboard/settings',
     //     label: 'Ustawienia',

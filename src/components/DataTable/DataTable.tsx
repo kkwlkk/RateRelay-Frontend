@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -19,7 +19,8 @@ import {
   ChevronUp,
   ChevronsUpDown,
   Search,
-  Settings2
+  Settings2,
+  FileX
 } from 'lucide-react';
 import {
   Table as TableComponent,
@@ -54,8 +55,14 @@ interface DataTableProps<TData, TValue> {
   className?: string;
   onRowClick?: (row: TData) => void;
   emptyMessage?: string;
+  emptyIcon?: React.ReactNode;
+  emptyDescription?: string;
+  emptyAction?: React.ReactNode;
   enableColumnResizing?: boolean;
   columnResizeMode?: 'onChange' | 'onEnd';
+  customToolbar?: React.ReactNode;
+  toolbarPosition?: 'above' | 'below' | 'replace';
+  customFilters?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -70,20 +77,32 @@ export function DataTable<TData, TValue>({
   className,
   onRowClick,
   emptyMessage = "Brak wyników",
+  emptyIcon,
+  emptyDescription,
+  emptyAction,
   enableColumnResizing = false,
   columnResizeMode = 'onChange',
+  customToolbar,
+  toolbarPosition = 'above',
+  customFilters,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-  const hasResizableColumns = columns.some(col => col.enableResizing === true);
-  const shouldEnableResizing = enableColumnResizing || hasResizableColumns;
+  const processedColumns = useMemo(() => {
+    const hasResizableColumns = columns.some(col => col.enableResizing === true);
+    const shouldEnableResizing = enableColumnResizing || hasResizableColumns;
 
-  const processedColumns = shouldEnableResizing ? columns.map(col => ({
-    ...col,
-    enableResizing: col.enableResizing !== false && (enableColumnResizing || col.enableResizing === true)
-  })) : columns;
+    return shouldEnableResizing ? columns.map(col => ({
+      ...col,
+      enableResizing: col.enableResizing !== false && (enableColumnResizing || col.enableResizing === true)
+    })) : columns;
+  }, [columns, enableColumnResizing]);
+
+  const shouldEnableResizing = useMemo(() => {
+    return enableColumnResizing || columns.some(col => col.enableResizing === true);
+  }, [columns, enableColumnResizing]);
 
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() => {
     const initialSizing: ColumnSizingState = {};
@@ -96,6 +115,20 @@ export function DataTable<TData, TValue>({
     }
     return initialSizing;
   });
+
+  useEffect(() => {
+    const initialSizing: ColumnSizingState = {};
+    if (shouldEnableResizing) {
+      processedColumns.forEach((column) => {
+        if (column.id && column.size) {
+          initialSizing[column.id] = column.size;
+        }
+      });
+    }
+    setColumnSizing(initialSizing);
+    setColumnVisibility({});
+  }, [processedColumns, shouldEnableResizing, columns.length]);
+
   const [rowSelection, setRowSelection] = useState({});
   const [searchValue, setSearchValue] = useState('');
   const [debouncedSearchValue] = useDebounceValue(searchValue, 300);
@@ -109,8 +142,7 @@ export function DataTable<TData, TValue>({
     if (isServerSide && query?.actions && debouncedSearchValue !== '') {
       query.actions.setSearch(debouncedSearchValue);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchValue, isServerSide]);
+  }, [debouncedSearchValue, isServerSide, query]);
 
   const table = useReactTable({
     data: tableData,
@@ -203,6 +235,124 @@ export function DataTable<TData, TValue>({
     ));
   };
 
+  const renderEmptyState = () => {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-6 text-center min-h-[300px]">
+        <div className="mb-4 text-zinc-400 dark:text-zinc-500">
+          {emptyIcon || <FileX className="h-12 w-12" />}
+        </div>
+        <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-2">
+          {emptyMessage}
+        </h3>
+        {emptyDescription && (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4 max-w-md">
+            {emptyDescription}
+          </p>
+        )}
+        {emptyAction && (
+          <div className="mt-4">
+            {emptyAction}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const defaultToolbar = (showSearch || showViewOptions || customFilters) && (
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center flex-1">
+        {showSearch && (
+          <div className="flex-1 max-w-full sm:max-w-sm">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 pointer-events-none z-1" />
+              <Input
+                placeholder={searchPlaceholder}
+                value={searchValue}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-9 h-9 w-full bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      {customFilters && (
+        <div className="flex flex-wrap gap-2">
+          {customFilters}
+        </div>
+      )}
+      {showViewOptions && (
+        <div className="flex-shrink-0">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 flex items-center gap-2 w-full sm:w-auto justify-center"
+              >
+                <Settings2 className="h-4 w-4" />
+                <span>Kolumny</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) =>
+                    typeof column.accessorFn !== 'undefined' && column.getCanHide()
+                )
+                .map((column, index) => {
+                  const isFirstColumn = index === 0;
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      checked={column.getIsVisible()}
+                      disabled={isFirstColumn}
+                      onCheckedChange={(value) => {
+                        if (!isFirstColumn) {
+                          column.toggleVisibility(!!value);
+                        }
+                      }}
+                    >
+                      {column.columnDef.header as string}
+                      {isFirstColumn && (
+                        <span className="ml-2 text-xs text-zinc-400">(wymagane)</span>
+                      )}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderToolbar = () => {
+    if (toolbarPosition === 'replace' && customToolbar) {
+      return (
+        <div className="px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
+          {customToolbar}
+        </div>
+      )
+    }
+
+    return (
+      <>
+        {toolbarPosition === 'above' && customToolbar && (
+          <div className="px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
+            {customToolbar}
+          </div>
+        )}
+        {defaultToolbar}
+        {toolbarPosition === 'below' && customToolbar && (
+          <div className="px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
+            {customToolbar}
+          </div>
+        )}
+      </>
+    );
+  };
+
   if (error) {
     return (
       <div className="flex items-center justify-center h-64 text-zinc-500 dark:text-zinc-400 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
@@ -214,224 +364,175 @@ export function DataTable<TData, TValue>({
     );
   }
 
+  const hasNoData = !isLoading && table.getRowModel().rows?.length === 0;
+
   return (
     <div className={cn("space-y-0", className)}>
       <div className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden bg-white dark:bg-zinc-900 shadow-sm">
-        {(showSearch || showViewOptions) && (
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
-            {showSearch && (
-              <div className="flex-1 max-w-full sm:max-w-sm">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 pointer-events-none z-1" />
-                  <Input
-                    placeholder={searchPlaceholder}
-                    value={searchValue}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    className="pl-9 h-9 w-full bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-primary/20"
-                  />
-                </div>
-              </div>
-            )}
-            {showViewOptions && (
-              <div className="flex-shrink-0">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 flex items-center gap-2 w-full sm:w-auto justify-center"
-                    >
-                      <Settings2 className="h-4 w-4" />
-                      <span>Kolumny</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    {table
-                      .getAllColumns()
-                      .filter(
-                        (column) =>
-                          typeof column.accessorFn !== 'undefined' && column.getCanHide()
-                      )
-                      .map((column, index) => {
-                        const isFirstColumn = index === 0;
+        {renderToolbar()}
+
+        {hasNoData ? (
+          renderEmptyState()
+        ) : (
+          <>
+            <div className="w-full overflow-x-auto overscroll-x-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <TableComponent
+                className="w-full min-table-width"
+                style={shouldEnableResizing ? {
+                  width: table.getCenterTotalSize(),
+                  minWidth: '100%',
+                  tableLayout: 'fixed'
+                } : {
+                  width: '100%',
+                  tableLayout: 'auto'
+                }}
+              >
+                <TableHeader className="bg-zinc-50/50 dark:bg-zinc-800/30">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id} className="hover:bg-transparent border-b border-zinc-200 dark:border-zinc-700">
+                      {headerGroup.headers.map((header) => {
+                        const canSort = header.column.getCanSort();
+                        const canResize = header.column.getCanResize();
+
+                        const isSorted = isServerSide
+                          ? query.pagination.sortBy === header.column.id
+                          : header.column.getIsSorted();
+
+                        const sortDirection = isServerSide
+                          ? (isSorted ? query.pagination.sortDirection : false)
+                          : header.column.getIsSorted();
+
                         return (
-                          <DropdownMenuCheckboxItem
-                            key={column.id}
-                            checked={column.getIsVisible()}
-                            disabled={isFirstColumn}
-                            onCheckedChange={(value) => {
-                              if (!isFirstColumn) {
-                                column.toggleVisibility(!!value);
+                          <TableHead
+                            key={header.id}
+                            className={cn(
+                              "h-11 px-4 text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-50/50 dark:bg-zinc-800/30 whitespace-nowrap border-r border-zinc-200 dark:border-zinc-700 last:border-r-0 relative",
+                              canSort && "cursor-pointer select-none hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors",
+                              shouldEnableResizing && "overflow-hidden"
+                            )}
+                            style={shouldEnableResizing ? {
+                              width: header.getSize(),
+                              minWidth: header.getSize(),
+                              maxWidth: header.getSize()
+                            } : undefined}
+                            onClick={() => {
+                              if (canSort) {
+                                if (isServerSide) {
+                                  handleSort(header.column.id);
+                                } else {
+                                  header.column.toggleSorting();
+                                }
                               }
                             }}
                           >
-                            {column.columnDef.header as string}
-                            {isFirstColumn && (
-                              <span className="ml-2 text-xs text-zinc-400">(wymagane)</span>
-                            )}
-                          </DropdownMenuCheckboxItem>
-                        );
-                      })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            )}
-          </div>
-        )}
-        <div className="w-full overflow-x-auto overscroll-x-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
-          <TableComponent
-            className="w-full min-table-width"
-            style={shouldEnableResizing ? {
-              width: table.getCenterTotalSize(),
-              minWidth: '100%',
-              tableLayout: 'fixed'
-            } : {
-              width: '100%',
-              tableLayout: 'auto'
-            }}
-          >
-            <TableHeader className="bg-zinc-50/50 dark:bg-zinc-800/30">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="hover:bg-transparent border-b border-zinc-200 dark:border-zinc-700">
-                  {headerGroup.headers.map((header) => {
-                    const canSort = header.column.getCanSort();
-                    const canResize = header.column.getCanResize();
-
-                    const isSorted = isServerSide
-                      ? query.pagination.sortBy === header.column.id
-                      : header.column.getIsSorted();
-
-                    const sortDirection = isServerSide
-                      ? (isSorted ? query.pagination.sortDirection : false)
-                      : header.column.getIsSorted();
-
-                    return (
-                      <TableHead
-                        key={header.id}
-                        className={cn(
-                          "h-11 px-4 text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-50/50 dark:bg-zinc-800/30 whitespace-nowrap border-r border-zinc-200 dark:border-zinc-700 last:border-r-0 relative",
-                          canSort && "cursor-pointer select-none hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors",
-                          shouldEnableResizing && "overflow-hidden"
-                        )}
-                        style={shouldEnableResizing ? {
-                          width: header.getSize(),
-                          minWidth: header.getSize(),
-                          maxWidth: header.getSize()
-                        } : undefined}
-                        onClick={() => {
-                          if (canSort) {
-                            if (isServerSide) {
-                              handleSort(header.column.id);
-                            } else {
-                              header.column.toggleSorting();
-                            }
-                          }
-                        }}
-                      >
-                        {header.isPlaceholder ? null : (
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium first-letter:uppercase">
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                            </span>
-                            {canSort && (
-                              <div className="flex-shrink-0 ml-auto">
-                                {isSorted ? (
-                                  sortDirection === 'asc' || sortDirection === false ? (
-                                    <ChevronUp className="h-4 w-4" />
-                                  ) : (
-                                    <ChevronDown className="h-4 w-4" />
-                                  )
-                                ) : (
-                                  <ChevronsUpDown className="h-4 w-4 opacity-50" />
+                            {header.isPlaceholder ? null : (
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium first-letter:uppercase">
+                                  {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                                </span>
+                                {canSort && (
+                                  <div className="flex-shrink-0 ml-auto">
+                                    {isSorted ? (
+                                      sortDirection === 'asc' || sortDirection === false ? (
+                                        <ChevronUp className="h-4 w-4" />
+                                      ) : (
+                                        <ChevronDown className="h-4 w-4" />
+                                      )
+                                    ) : (
+                                      <ChevronsUpDown className="h-4 w-4 opacity-50" />
+                                    )}
+                                  </div>
                                 )}
                               </div>
                             )}
-                          </div>
-                        )}
-                        {canResize && shouldEnableResizing && (
-                          <div
-                            {...{
-                              onMouseDown: header.getResizeHandler(),
-                              onTouchStart: header.getResizeHandler(),
-                              className: cn(
-                                "absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none group",
-                                "hover:bg-blue-500/20 active:bg-blue-500/30",
-                                header.column.getIsResizing() && "bg-blue-500/30"
-                              ),
-                              style: {
-                                transform: columnResizeMode === 'onEnd' && header.column.getIsResizing()
-                                  ? `translateX(${table.getState().columnSizingInfo.deltaOffset}px)`
-                                  : '',
-                              },
-                            }}
-                          >
-                            <div className={cn(
-                              "absolute top-0 right-0 h-full w-0.5 bg-zinc-300 dark:bg-zinc-600",
-                              "group-hover:bg-blue-500 transition-colors",
-                              header.column.getIsResizing() && "bg-blue-500"
-                            )} />
-                          </div>
-                        )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                renderSkeletonRows()
-              ) : table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={() => onRowClick?.(row.original)}
-                    className={cn(
-                      "hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors border-b border-zinc-100 dark:border-zinc-800 last:border-b-0",
-                      onRowClick && "cursor-pointer active:bg-zinc-100 dark:active:bg-zinc-700"
-                    )}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
+                            {canResize && shouldEnableResizing && (
+                              <div
+                                {...{
+                                  onMouseDown: header.getResizeHandler(),
+                                  onTouchStart: header.getResizeHandler(),
+                                  className: cn(
+                                    "absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none group",
+                                    "hover:bg-blue-500/20 active:bg-blue-500/30",
+                                    header.column.getIsResizing() && "bg-blue-500/30"
+                                  ),
+                                  style: {
+                                    transform: columnResizeMode === 'onEnd' && header.column.getIsResizing()
+                                      ? `translateX(${table.getState().columnSizingInfo.deltaOffset}px)`
+                                      : '',
+                                  },
+                                }}
+                              >
+                                <div className={cn(
+                                  "absolute top-0 right-0 h-full w-0.5 bg-zinc-300 dark:bg-zinc-600",
+                                  "group-hover:bg-blue-500 transition-colors",
+                                  header.column.getIsResizing() && "bg-blue-500"
+                                )} />
+                              </div>
+                            )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                    renderSkeletonRows()
+                  ) : (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        onClick={() => onRowClick?.(row.original)}
                         className={cn(
-                          "mx-4 px-4 py-4 text-sm text-zinc-900 dark:text-zinc-100 align-middle border-r border-zinc-200 dark:border-zinc-700 last:border-r-0",
-                          shouldEnableResizing ? "overflow-hidden" : "whitespace-nowrap"
+                          "hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors border-b border-zinc-100 dark:border-zinc-800 last:border-b-0",
+                          onRowClick && "cursor-pointer active:bg-zinc-100 dark:active:bg-zinc-700"
                         )}
-                        style={{
-                          width: cell.column.getSize(),
-                          minWidth: cell.column.getSize(),
-                          maxWidth: cell.column.getSize()
-                        }}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-32 text-center text-zinc-500 dark:text-zinc-400 text-sm"
-                  >
-                    {emptyMessage}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </TableComponent>
-        </div>
+                        {row.getVisibleCells().map((cell) => {
+                          const cellMeta = cell.column.columnDef.meta as {
+                            className?: string;
+                            noTruncate?: boolean;
+                          } | undefined;
 
-        {showPagination && (
-          <DataTablePagination table={table} query={query} />
+                          const shouldTruncate = !cellMeta?.noTruncate;
+
+                          return (
+                            <TableCell
+                              key={cell.id}
+                              className={cn(
+                                "mx-4 px-4 py-4 text-sm text-zinc-900 dark:text-zinc-100 align-middle border-r border-zinc-200 dark:border-zinc-700 last:border-r-0",
+                                shouldTruncate && "truncate",
+                                shouldEnableResizing ? "overflow-hidden" : (shouldTruncate ? "whitespace-nowrap" : ""),
+                                cellMeta?.className
+                              )}
+                              style={{
+                                width: cell.column.getSize(),
+                                minWidth: cell.column.getSize(),
+                                maxWidth: cell.column.getSize()
+                              }}
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </TableComponent>
+            </div>
+
+            {showPagination && (
+              <DataTablePagination table={table} query={query} />
+            )}
+          </>
         )}
       </div>
     </div>
