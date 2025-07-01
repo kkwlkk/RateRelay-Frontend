@@ -10,19 +10,24 @@ import { isDev } from '@/utils/environmentUtils';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'react-hot-toast';
 import { toastOptions } from '@/lib/reactHotToastConfiguration';
+import ModalRenderer from '@/components/ModalRenderer';
+import { ModalProvider } from '@/contexts/ModalStoreContext';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
-            <SessionProvider refetchInterval={0} refetchOnWindowFocus={false}>
+            <SessionProvider refetchInterval={5 * 60000} refetchOnWindowFocus={true}>
                 <SessionRefresher />
                 <AuthProvider>
-                    <OnboardingProvider>
-                        {children}
-                    </OnboardingProvider>
+                    <ModalProvider>
+                        <ModalRenderer />
+                        <OnboardingProvider>
+                            {children}
+                        </OnboardingProvider>
+                    </ModalProvider>
                 </AuthProvider>
             </SessionProvider>
-            <Toaster 
+            <Toaster
                 position="top-right"
                 toastOptions={toastOptions}
             />

@@ -7,17 +7,18 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { createPaginatedQueryFn, usePaginatedQuery } from '@/hooks/usePaginatedQuery';
-import { cn, isError } from '@/lib/utils';
+import { isError } from '@/lib/utils';
 import { apiService } from '@/services/api';
 import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
 import { GetBusinessReviewsResponseDto } from '@/types/dtos/BusinessReviews';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
-import { Check, ExternalLink, Star, X, MessageSquare, Clock, Info, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Check, ExternalLink, Star, X, Clock, Info, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useMemo, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import { IconType } from '@/types/IconType';
+import { useModalStore } from '@/contexts/ModalStoreContext';
+import { ReportReviewModal } from '@/components/modals/ReportReviewModal';
 
 const LoadingSkeleton = () => (
     <div className="space-y-6">
@@ -96,50 +97,50 @@ const StatusFilter = ({
     </Select>
 );
 
-const StatsCard = ({
-    title,
-    value,
-    subtitle,
-    icon: Icon,
-    color = "zinc"
-}: {
-    title: string;
-    value: string | number;
-    subtitle?: string;
-    icon?: IconType;
-    color?: "zinc" | "amber" | "emerald" | "blue";
-}) => {
-    const colorClasses = {
-        zinc: "from-zinc-50 to-white dark:from-zinc-800 dark:to-zinc-900 border-zinc-200 dark:border-zinc-700",
-        amber: "from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-200 dark:border-amber-800",
-        emerald: "from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-200 dark:border-emerald-800",
-        blue: "from-blue-50 to-sky-50 dark:from-blue-900/20 dark:to-sky-900/20 border-blue-200 dark:border-blue-800"
-    };
+// const StatsCard = ({
+//     title,
+//     value,
+//     subtitle,
+//     icon: Icon,
+//     color = "zinc"
+// }: {
+//     title: string;
+//     value: string | number;
+//     subtitle?: string;
+//     icon?: IconType;
+//     color?: "zinc" | "amber" | "emerald" | "blue";
+// }) => {
+//     const colorClasses = {
+//         zinc: "from-zinc-50 to-white dark:from-zinc-800 dark:to-zinc-900 border-zinc-200 dark:border-zinc-700",
+//         amber: "from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-200 dark:border-amber-800",
+//         emerald: "from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-200 dark:border-emerald-800",
+//         blue: "from-blue-50 to-sky-50 dark:from-blue-900/20 dark:to-sky-900/20 border-blue-200 dark:border-blue-800"
+//     };
 
-    const iconColors = {
-        zinc: "text-zinc-600 dark:text-zinc-400",
-        amber: "text-amber-600 dark:text-amber-400",
-        emerald: "text-emerald-600 dark:text-emerald-400",
-        blue: "text-blue-600 dark:text-blue-400"
-    };
+//     const iconColors = {
+//         zinc: "text-zinc-600 dark:text-zinc-400",
+//         amber: "text-amber-600 dark:text-amber-400",
+//         emerald: "text-emerald-600 dark:text-emerald-400",
+//         blue: "text-blue-600 dark:text-blue-400"
+//     };
 
-    return (
-        <div className={`bg-gradient-to-br ${colorClasses[color]} border rounded-lg p-4 hover:shadow-md transition-all duration-200`}>
-            <div className="flex items-start justify-between">
-                <div>
-                    <div className="text-2xl font-semibold text-zinc-900 dark:text-white">{value}</div>
-                    <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{title}</div>
-                    {subtitle && (
-                        <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{subtitle}</div>
-                    )}
-                </div>
-                {Icon && (
-                    <Icon className={`min-h-5 min-w-5 ${iconColors[color]}`} />
-                )}
-            </div>
-        </div>
-    );
-};
+//     return (
+//         <div className={`bg-gradient-to-br ${colorClasses[color]} border rounded-lg p-4 hover:shadow-md transition-all duration-200`}>
+//             <div className="flex items-start justify-between">
+//                 <div>
+//                     <div className="text-2xl font-semibold text-zinc-900 dark:text-white">{value}</div>
+//                     <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{title}</div>
+//                     {subtitle && (
+//                         <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{subtitle}</div>
+//                     )}
+//                 </div>
+//                 {Icon && (
+//                     <Icon className={`min-h-5 min-w-5 ${iconColors[color]}`} />
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };
 
 const InfoBox = ({ children }: { children: React.ReactNode }) => (
     <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
@@ -277,12 +278,14 @@ const ReviewActions = ({
     reviewId,
     status,
     onAccept,
-    onReport
+    onReport,
+    loading = false
 }: {
     reviewId: number;
     status: BusinessReviewStatus;
     onAccept: (id: number) => Promise<void>;
     onReport: (id: number) => void;
+    loading?: boolean;
 }) => (
     <div className="flex items-center gap-1">
         {status === BusinessReviewStatus.Pending && (
@@ -292,6 +295,7 @@ const ReviewActions = ({
                     size="sm"
                     className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-900/20"
                     onClick={() => onAccept(reviewId)}
+                    loading={loading}
                     title="Zaakceptuj"
                 >
                     <Check className="h-4 w-4" />
@@ -299,9 +303,10 @@ const ReviewActions = ({
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-amber-600 hover:text-amber-700 hover:bg-rose-50 dark:text-amber-400 dark:hover:text-amber-300 dark:hover:bg-amber-900/20"
+                    className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20"
                     onClick={() => onReport(reviewId)}
                     title="Zgłoś nieprawidłowość"
+                    loading={loading}
                 >
                     <AlertTriangle className="h-4 w-4" />
                 </Button>
@@ -313,6 +318,7 @@ const ReviewActions = ({
 const BusinessReviewsPage = () => {
     const params = useParams();
     const router = useRouter();
+    const { openModal, closeModal } = useModalStore();
     const businessId = Number(params.businessId);
     const [reviewStatusFilter, setReviewStatusFilter] = useState<BusinessReviewStatus>(BusinessReviewStatus.Pending);
 
@@ -333,7 +339,7 @@ const BusinessReviewsPage = () => {
 
     const handleAcceptReview = useCallback(async (reviewId: number) => {
         try {
-            await apiService.acceptPendingBusinessReview(reviewId);
+            await apiService.acceptPendingBusinessReview(businessId, reviewId);
             toast.success("Recenzja została zaakceptowana");
             actions.invalidateAndRefetch();
         } catch (error: unknown) {
@@ -343,22 +349,33 @@ const BusinessReviewsPage = () => {
                 console.error("Unexpected error while accepting review:", error);
             }
         }
-    }, [actions]);
+    }, [actions, businessId]);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleReportReview = useCallback(async (reviewId: number) => {
-        try {
-            // await apiService.rejectPendingBusinessReview(reviewId);
-            toast.success("Recenzja została zgłoszona");
-            actions.invalidateAndRefetch();
-        } catch (error: unknown) {
-            if (isError(error)) {
-                toast.error(error.message || "Nie udało się zglosić recenzji");
-            } else {
-                console.error("Unexpected error while reporting review:", error);
+        openModal(ReportReviewModal, {
+            isLoading: false,
+            onSubmit: async (data) => {
+                const response = await apiService.reportBusinessReview(businessId, reviewId, data.reason, data.title, data.content);
+
+                if (response.success) {
+                    toast.success("Recenzja została zgłoszona do administratora");
+                    closeModal();
+                    actions.invalidateAndRefetch();
+                    return;
+                }
+
+                if (response.error?.code == "BusinessReviewAlreadyUnderDispute") {
+                    toast.error("Recenzja jest już w trakcie rozpatrywania przez administratora");
+                    actions.invalidateAndRefetch();
+                    closeModal();
+                    return;
+                }
+
+                toast.error("Wystąpił błąd podczas zgłaszania recenzji");
+                closeModal();
             }
-        }
-    }, [actions]);
+        })
+    }, [actions, businessId, closeModal, openModal]);
 
     const handleStatusFilterChange = (status: BusinessReviewStatus) => {
         setReviewStatusFilter(status);
@@ -385,10 +402,11 @@ const BusinessReviewsPage = () => {
                     status={status}
                     onAccept={handleAcceptReview}
                     onReport={handleReportReview}
+                    loading={isLoading}
                 />
             );
         }
-    }), [handleAcceptReview, handleReportReview]);
+    }), [handleAcceptReview, handleReportReview, isLoading]);
 
     const columns = useMemo(() => {
         const statusStr = String(reviewStatusFilter);
@@ -476,12 +494,6 @@ const BusinessReviewsPage = () => {
     if (isLoading) return <LoadingSkeleton />;
     if (error || !reviews) return <BusinessNotFound businessId={businessId} />;
 
-    const totalReviews = reviews.length;
-    const avgRating = reviews.length > 0
-        ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
-        : "0";
-    const googleMapsReviews = reviews.filter(r => r.postedGoogleMapsReview).length;
-
     return (
         <div className="space-y-6">
             <button
@@ -513,7 +525,7 @@ const BusinessReviewsPage = () => {
                 {getInfoBoxContent(reviewStatusFilter)}
             </InfoBox>
 
-            <div className={cn(
+            {/* <div className={cn(
                 "grid grid-cols-1 md:grid-cols-3 gap-4",
                 {
                     "hidden": reviewStatusFilter === BusinessReviewStatus.UnderDispute
@@ -540,7 +552,7 @@ const BusinessReviewsPage = () => {
                     icon={ExternalLink}
                     color="emerald"
                 />
-            </div>
+            </div> */}
 
             <div className="space-y-3">
                 <h2 className="text-lg font-medium text-zinc-900 dark:text-white">
@@ -553,6 +565,7 @@ const BusinessReviewsPage = () => {
                         query={reviewsQuery}
                         columns={columns}
                         data={reviews}
+                        showSearch={false}
                     />
                 </div>
             </div>

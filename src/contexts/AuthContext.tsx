@@ -43,7 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const response = await apiService.getAccount();
         if (response.success) {
             const user = response.data as User;
-            setUser(user);
             return user;
         } else {
             console.error('Failed to fetch user profile:', response.error);
@@ -54,6 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const {
         data: userProfile,
         isLoading: userProfileLoading,
+        isError: userProfileError,
         refetch
     } = useQuery({
         queryKey: ['userProfile', session?.accessToken],
@@ -83,6 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         if (status === 'unauthenticated') {
             setUser(null);
+            setIsNewUser(false);
         }
     }, [status]);
 
@@ -94,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await signOut();
         queryClient.clear();
         setUser(null);
+        setIsNewUser(false);
     };
 
     const fetchUserProfile = async () => {
@@ -101,12 +103,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const isSessionLoading = status === 'loading';
-    const hasSession = status === 'authenticated' && !!session;
-    const shouldBeLoadingUser = hasSession && !user;
-    const isLoadingUser = hasSession && userProfileLoading;
-
-    const isLoading = isSessionLoading || shouldBeLoadingUser || isLoadingUser;
-    const isAuthenticated = hasSession && !!user;
+    const hasValidSession = status === 'authenticated' && !!session?.accessToken;
+    const isLoadingUserProfile = hasValidSession && userProfileLoading;
+    
+    const isLoading = isSessionLoading || isLoadingUserProfile;
+    
+    const isAuthenticated = hasValidSession && !!user && !userProfileError;
 
     return (
         <AuthContext.Provider

@@ -55,6 +55,7 @@ export const { handlers, auth } = NextAuth({
                     token.isNewUser = data.data.isNewUser;
                 } catch (error) {
                     console.error("Error exchanging Google token:", error);
+                    token.accessToken = "";
                     token.googleToken = account.id_token;
                     token.error = "BackendAuthError";
                 }
@@ -80,6 +81,32 @@ export const { handlers, auth } = NextAuth({
                 expires: getTokenExpiryIsoString(token.exp),
             };
         },
+
+    },
+    events: {
+        // async signOut(params) {
+        //     let accessToken;
+
+        //     if ('token' in params && params.token) {
+        //         accessToken = params.token.accessToken;
+        //     } else if ('session' in params && params.session) {
+        //         accessToken = params.session.sessionToken;
+        //     }
+
+        //     if (accessToken) {
+        //         try {
+        //             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/auth/logout`, {
+        //                 method: "POST",
+        //                 headers: {
+        //                     "Content-Type": "application/json",
+        //                     Authorization: `Bearer ${accessToken}`,
+        //                 },
+        //             });
+        //         } catch (error) {
+        //             console.error("Error during sign out:", error);
+        //         }
+        //     }
+        // }
     },
     pages: {
         signIn: '/login',
