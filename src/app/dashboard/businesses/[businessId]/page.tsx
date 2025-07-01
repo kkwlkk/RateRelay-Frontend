@@ -317,7 +317,7 @@ export default function BusinessManagementPage() {
         },
         {
             title: "Średnia ocena",
-            value: isVerified ? `${businessData.averageRating}/5` : '—',
+            value: isVerified ? `${businessData.averageRating.toFixed(2)}/5` : '—',
             subtitle: isVerified ? "ogólna ocena" : "niedostępne",
             icon: Star
         }
