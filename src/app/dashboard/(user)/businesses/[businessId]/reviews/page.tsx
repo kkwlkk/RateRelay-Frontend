@@ -13,12 +13,13 @@ import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
 import { GetBusinessReviewsResponseDto } from '@/types/dtos/BusinessReviews';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
-import { Check, ExternalLink, Star, X, Clock, Info, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Check, ExternalLink, Star, X, Clock, Info, ArrowLeft, AlertTriangle, AlignLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useMemo, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { useModalStore } from '@/contexts/ModalStoreContext';
 import { ReportReviewModal } from '@/components/modals/ReportReviewModal';
+import { PiEmptyFill } from 'react-icons/pi'
 
 const LoadingSkeleton = () => (
     <div className="space-y-6">
@@ -42,12 +43,14 @@ const LoadingSkeleton = () => (
     </div>
 );
 
+type BusinessReviewStatusFilter = BusinessReviewStatus | 'ALL';
+
 const StatusFilter = ({
     value,
     onChange
 }: {
-    value: BusinessReviewStatus;
-    onChange: (status: BusinessReviewStatus) => void;
+    value: BusinessReviewStatusFilter;
+    onChange: (status: BusinessReviewStatusFilter) => void;
 }) => (
     <Select
         value={value.toString()}
@@ -57,6 +60,15 @@ const StatusFilter = ({
             <SelectValue placeholder="Wybierz status" />
         </SelectTrigger>
         <SelectContent className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm w-full min-w-32 sm:max-w-72">
+            <SelectItem value={"ALL"} className="hover:bg-gray-50 dark:hover:bg-gray-800/25 py-1.5 px-3 min-h-8 flex items-start">
+                <div className="flex items-center gap-3 w-full">
+                    <AlignLeft className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm leading-tight">Wszystkie</div>
+                        <div className="text-xs text-zinc-500 leading-tight mt-0.5">Wszystkie recenzje</div>
+                    </div>
+                </div>
+            </SelectItem>
             <SelectItem value={BusinessReviewStatus.Pending.toString()} className="hover:bg-amber-50 dark:hover:bg-amber-900/20 py-1.5 px-3 min-h-8 flex items-start">
                 <div className="flex items-center gap-3 w-full">
                     <Clock className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -320,12 +332,12 @@ const BusinessReviewsPage = () => {
     const router = useRouter();
     const { openModal, closeModal } = useModalStore();
     const businessId = Number(params.businessId);
-    const [reviewStatusFilter, setReviewStatusFilter] = useState<BusinessReviewStatus>(BusinessReviewStatus.Pending);
+    const [reviewStatusFilter, setReviewStatusFilter] = useState<BusinessReviewStatusFilter>('ALL');
 
     const reviewsQuery = usePaginatedQuery<GetBusinessReviewsResponseDto[]>({
         queryKey: ['businessReviews', businessId, reviewStatusFilter],
         queryFn: createPaginatedQueryFn((params) =>
-            apiService.getBusinessReviewsByBusinessId(businessId, reviewStatusFilter, params)
+            apiService.getBusinessReviewsByBusinessId(businessId, reviewStatusFilter === 'ALL' ? undefined : reviewStatusFilter, params)
         ),
         initialPagination: {
             page: 1,
@@ -377,7 +389,7 @@ const BusinessReviewsPage = () => {
         })
     }, [actions, businessId, closeModal, openModal]);
 
-    const handleStatusFilterChange = (status: BusinessReviewStatus) => {
+    const handleStatusFilterChange = (status: BusinessReviewStatusFilter) => {
         setReviewStatusFilter(status);
         actions.invalidateAndRefetch();
     };
@@ -411,14 +423,14 @@ const BusinessReviewsPage = () => {
     const columns = useMemo(() => {
         const statusStr = String(reviewStatusFilter);
 
-        if (statusStr === String(BusinessReviewStatus.Pending)) {
+        if (statusStr === String(BusinessReviewStatus.Pending) || statusStr === "ALL") {
             return [...baseColumns, actionsColumn];
         }
 
         return baseColumns;
     }, [reviewStatusFilter, actionsColumn]);
 
-    const getStatusTitle = (status: BusinessReviewStatus) => {
+    const getStatusTitle = (status: BusinessReviewStatusFilter) => {
         switch (status) {
             case BusinessReviewStatus.Pending:
                 return "Recenzje oczekujące";
@@ -428,12 +440,14 @@ const BusinessReviewsPage = () => {
                 return "Odrzucone recenzje";
             case BusinessReviewStatus.UnderDispute:
                 return "Recenzje w sporze";
+            case 'ALL':
+                return "Wszystkie recenzje";
             default:
                 return "Recenzje";
         }
     };
 
-    const getStatusDescription = (status: BusinessReviewStatus) => {
+    const getStatusDescription = (status: BusinessReviewStatusFilter) => {
         switch (status) {
             case BusinessReviewStatus.Pending:
                 return "Recenzje wymagające Twojej decyzji o zaakceptowaniu lub odrzuceniu";
@@ -443,12 +457,14 @@ const BusinessReviewsPage = () => {
                 return "Recenzje, które zostały odrzucone i nie są wyświetlane";
             case BusinessReviewStatus.UnderDispute:
                 return "Recenzje, które są w trakcie rozpatrywania lub sporu";
+            case "ALL":
+                return "Wszystkie recenzje, które zostały przesłane dla Twojej firmy";
             default:
                 return "Zarządzaj recenzjami swojej firmy";
         }
     };
 
-    const getInfoBoxContent = (status: BusinessReviewStatus) => {
+    const getInfoBoxContent = (status: BusinessReviewStatusFilter) => {
         const statusStr = String(status);
 
         if (statusStr === String(BusinessReviewStatus.Pending)) {
@@ -484,6 +500,14 @@ const BusinessReviewsPage = () => {
                 <>
                     <strong>Recenzje w sporze:</strong> Te recenzje są w trakcie rozpatrywania lub sporu.
                     Możesz je przeglądać, dopóki spór nie zostanie rozwiązany przez administratora.
+                </>
+            );
+        }
+
+        if (statusStr === "ALL") {
+            return (
+                <>
+                    <strong>Wszystkie recenzje:</strong> Przeglądaj wszystkie recenzje swojej firmy w jednym miejscu.
                 </>
             );
         }
@@ -561,11 +585,15 @@ const BusinessReviewsPage = () => {
 
                 <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
                     <DataTable
+                        displayToolbar={false}
                         key={`table-${reviewStatusFilter}-${JSON.stringify(columns.map(c => c.id))}`}
                         query={reviewsQuery}
                         columns={columns}
                         data={reviews}
                         showSearch={false}
+                        emptyIcon={<PiEmptyFill className="size-12 text-zinc-400 mx-auto" />}
+                        emptyMessage='Brak recenzji do wyświetlenia'
+                        emptyDescription='Nie znaleziono żadnych recenzji dla tej firmy.'
                     />
                 </div>
             </div>

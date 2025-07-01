@@ -303,16 +303,18 @@ class ApiService {
 
     async getBusinessReviewsByBusinessId(
         businessId: number,
-        status: BusinessReviewStatus = BusinessReviewStatus.Pending,
+        status: BusinessReviewStatus | undefined,
         request: PagedRequest = {}
     ): Promise<PaginatedApiResponse<GetBusinessReviewsResponseDto[]>> {
         const params = this.toQueryParams(request);
-        params.status = status.toString();
+        if (status !== undefined) {
+            params.status = status.toString();
+        }
         return this.request(`/api/user/business/${businessId}/reviews`, 'GET', undefined, params);
     }
 
     // User Tickets
-    
+
     async createTicket(title: string, content: string, type: TicketType): Promise<ApiResponse<CreateUserTicketDto>> {
         return this.request('/api/user/tickets', 'POST', { title, description: content, type });
     }

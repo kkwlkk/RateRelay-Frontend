@@ -190,7 +190,7 @@ const ReviewCard = ({ review }: { review: GetBusinessReviewsResponseDto }) => {
             </div>
 
             {review.comment && (
-                <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed truncate">
                     {review.comment}
                 </p>
             )}
@@ -226,7 +226,7 @@ const QuickActions = ({ businessId, isVerified }: { businessId: number; isVerifi
             description: "Edytuj dane i preferencje",
             icon: Building2,
             onClick: () => router.push(`/dashboard/businesses/${businessId}/settings`),
-            enabled: true
+            enabled: false
         }
     ];
 
