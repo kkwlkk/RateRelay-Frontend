@@ -6,6 +6,9 @@ import { IconType } from '@/types/IconType';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
+import { Skeleton } from '@/components/ui/skeleton';
+
 
 const StatCard = ({ title, value, subtitle, icon: Icon, color = "blue" }: {
     title: string;
@@ -16,10 +19,13 @@ const StatCard = ({ title, value, subtitle, icon: Icon, color = "blue" }: {
 }) => (
     <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-all duration-200">
         <div className="flex items-start justify-between">
-            <div>
+            <div className="flex flex-col">
                 <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{title}</p>
-                <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mt-1">{value}</p>
-                {subtitle && <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{subtitle}</p>}
+                <AnimatedCounter
+                    value={value}
+                    className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 my-1"
+                />
+                {subtitle && <p className="text-xs text-zinc-500 dark:text-zinc-500">{subtitle}</p>}
             </div>
             <div className={`p-2 rounded-lg bg-${color}-100 dark:bg-${color}-900/20`}>
                 <Icon className={`h-5 w-5 text-${color}-600 dark:text-${color}-400`} />
@@ -81,13 +87,13 @@ const tips = [
 ];
 
 const DashboardMainPage = () => {
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated, isLoading } = useAuth();
 
     const { data: userStats } = useQuery({
         queryKey: ['userStats'],
         queryFn: () => apiService.getAccountStats(),
-        staleTime: 1000 * 60 * 5,
-        enabled: isAuthenticated
+        enabled: isAuthenticated,
+        refetchOnMount: 'always'
     })
 
     const stats = {
@@ -101,7 +107,13 @@ const DashboardMainPage = () => {
         <div className="space-y-8">
             <div>
                 <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-                    Witaj ponownie {user?.username}! 👋
+                    {isLoading || !user ? (
+                        <>
+                            Witaj ponownie <Skeleton className="h-8 w-32 ml-2 inline-block" /> 👋
+                        </>
+                    ) : (
+                        <>Witaj ponownie {user.username}! 👋</>
+                    )}
                 </h1>
                 <p className="text-zinc-600 dark:text-zinc-400">
                     Oto przegląd Twojej aktywności na TrustRate
