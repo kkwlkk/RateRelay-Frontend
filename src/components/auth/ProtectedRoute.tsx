@@ -4,17 +4,24 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { GenericPageLoader } from '../GenericPageLoader';
+import { useSession } from 'next-auth/react';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-    const { isAuthenticated, isLoading, user } = useAuth();
+    const { status } = useSession();
+    const { user } = useAuth();
     const router = useRouter();
 
+    const isAuthenticated = status === 'authenticated';
+
     useEffect(() => {
-        if (isLoading) return;
+        if (status === 'loading') {
+            return;
+        }
 
         const currentPath = window.location.pathname;
 
         if (!isAuthenticated && currentPath !== '/login') {
+            console.log('Redirecting to login');
             router.push('/login');
             return;
         }
@@ -31,9 +38,9 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
                 return;
             }
         }
-    }, [isAuthenticated, isLoading, router, user]);
+    }, [status, router, user, isAuthenticated]);
 
-    if (isLoading) {
+    if (status === 'loading') {
         return <GenericPageLoader />;
     }
 
