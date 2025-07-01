@@ -43,37 +43,33 @@ const getStatusLabel = (status: TicketStatus) => {
 };
 
 const getTypeLabel = (type: TicketType) => {
-    switch (type) {
-        case TicketType.BusinessReview:
-            return "Ocena biznesowa";
-        case TicketType.UserReport:
-            return "Zgłoszenie użytkownika";
-        case TicketType.SystemIssue:
-            return "Problem systemowy";
-        case TicketType.FeatureRequest:
-            return "Prośba o funkcję";
-        case TicketType.GeneralInquiry:
-            return "Zapytanie ogólne";
-        default:
-            return "Nieznany typ";
-    }
+    const found = ticketTypes.find((ticket) => ticket.value === type);
+    return found ? found.label : "Nieznany rodzaj";
 };
 
 const getTypeColor = (type: TicketType) => {
     switch (type) {
         case TicketType.BusinessReview:
             return "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:border-indigo-800";
-        case TicketType.UserReport:
-            return "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800";
         case TicketType.SystemIssue:
             return "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800";
         case TicketType.FeatureRequest:
             return "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800";
         case TicketType.GeneralInquiry:
             return "bg-zinc-50 text-zinc-700 border-zinc-200 dark:bg-zinc-900 dark:text-zinc-300 dark:border-zinc-700";
+        case TicketType.Other:
+            return "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700";
         default:
             return "bg-zinc-50 text-zinc-700 border-zinc-200 dark:bg-zinc-900 dark:text-zinc-300 dark:border-zinc-700";
     }
 };
 
 export { getStatusColor, getStatusLabel, getTypeColor, getTypeLabel };
+
+export const ticketTypes = [
+    { value: TicketType.BusinessReview, label: "Ocena biznesowa" },
+    { value: TicketType.SystemIssue, label: "Problem systemowy" },
+    { value: TicketType.FeatureRequest, label: "Prośba o funkcję" },
+    { value: TicketType.GeneralInquiry, label: "Zapytanie ogólne" },
+    { value: TicketType.Other, label: "Inne" },
+];

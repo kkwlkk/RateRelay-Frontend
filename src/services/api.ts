@@ -7,7 +7,7 @@ import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto }
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
 import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
-import { GetUserTicketDetailsDto, GetUserTicketsResponseDto, TicketCommentDto } from '@/types/dtos/Tickets';
+import { CreateUserTicketDto, GetUserTicketDetailsDto, GetUserTicketsResponseDto, TicketCommentDto, TicketType } from '@/types/dtos/Tickets';
 import { getSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
@@ -308,6 +308,10 @@ class ApiService {
     }
 
     // User Tickets
+    
+    async createTicket(title: string, content: string, type: TicketType): Promise<ApiResponse<CreateUserTicketDto>> {
+        return this.request('/api/user/tickets', 'POST', { title, description: content, type });
+    }
 
     async getUserTickets(request: PagedRequest = {}): Promise<PaginatedApiResponse<GetUserTicketsResponseDto[]>> {
         return this.request('/api/user/tickets', 'GET', undefined, this.toQueryParams(request));

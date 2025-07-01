@@ -14,6 +14,9 @@ import dayjs from "@/utils/dayjsConfig";
 import Link from "next/link";
 import { GenericCenterLoader } from "@/components/GenericLoader";
 import { getTypeColor, getTypeLabel, getStatusColor, getStatusLabel } from "@/lib/tickets";
+import { useModalStore } from "@/contexts/ModalStoreContext";
+import { NewTicketModal } from "@/components/modals/NewTicketModal";
+import toast from "react-hot-toast";
 
 const formatDate = (date: Date) => {
     return dayjs(date).format('MMM D, YYYY HH:mm');
@@ -47,6 +50,9 @@ const columns: ColumnDef<GetUserTicketsResponseDto>[] = [
     {
         accessorKey: 'type',
         header: 'Rodzaj zgłoszenia',
+        meta: {
+            noTruncate: true
+        },
         cell: ({ row }) => (
             <Badge
                 variant="outline"
@@ -59,6 +65,9 @@ const columns: ColumnDef<GetUserTicketsResponseDto>[] = [
     {
         accessorKey: 'status',
         header: 'Status',
+        meta: {
+            noTruncate: true
+        },
         cell: ({ row }) => (
             <Badge
                 variant="outline"
@@ -127,6 +136,8 @@ const columns: ColumnDef<GetUserTicketsResponseDto>[] = [
 
 export default function TicketsPage() {
     const { isAuthenticated } = useAuth();
+    const { openModal, closeModal } = useModalStore();
+
     const query = usePaginatedQuery({
         queryKey: ['userTickets'],
         queryFn: createPaginatedQueryFn((params) => apiService.getUserTickets(params)),
@@ -134,6 +145,29 @@ export default function TicketsPage() {
     });
 
     const { data, isLoading, error } = query;
+
+    const openNewTicketModal = () => {
+        openModal(NewTicketModal, {
+            onSubmit: async (data) => {
+                const { title, content, type } = data;
+                const response = await apiService.createTicket(title, content, type);
+                console.log("Ticket creation response:", response);
+                if (response.success) {
+                    query.refetch();
+                    closeModal();
+                    toast.success("Zgłoszenie zostało utworzone.");
+                }
+
+                if (response.error?.code == 'TicketCooldown') {
+                    toast.error("Nie możesz utworzyć nowego zgłoszenia tak szybko.");
+                    return;
+                }
+
+                toast.error("Wystąpił błąd podczas tworzenia zgłoszenia.");
+                console.error("Error creating ticket:", response.error);
+            }
+        });
+    };
 
     if (isLoading) {
         return <GenericCenterLoader />;
@@ -158,10 +192,10 @@ export default function TicketsPage() {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Ticket className="w-5 h-5 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                        {data?.length || 0} zgłoszeń
-                    </span>
+                    <Button variant="default" className="bg-primary dark:bg-primary/80" onClick={openNewTicketModal}>
+                        <Ticket className="w-5 h-5" />
+                        <span>Nowe zgłoszenie</span>
+                    </Button>
                 </div>
             </div>
 
