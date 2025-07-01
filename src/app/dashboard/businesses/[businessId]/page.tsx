@@ -14,7 +14,8 @@ import {
     X,
     Check,
     BarChart3,
-    TrendingUp
+    TrendingUp,
+    AlertCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import dayjs from 'dayjs';
@@ -93,10 +94,10 @@ const StatsCard = ({
     );
 };
 
-const InfoBox = ({ 
-    children, 
-    variant = "info" 
-}: { 
+const InfoBox = ({
+    children,
+    variant = "info"
+}: {
     children: React.ReactNode;
     variant?: "info" | "warning";
 }) => {
@@ -127,11 +128,11 @@ const VerificationAlert = () => (
                 Firma wymaga weryfikacji
             </div>
             <p className="mb-3">
-                Aby w pełni korzystać z funkcji platformy, zweryfikuj swoją firmę. 
+                Aby w pełni korzystać z funkcji platformy, zweryfikuj swoją firmę.
                 Po weryfikacji będziesz mógł zarządzać recenzjami i uzyskać dostęp do zaawansowanych funkcji.
             </p>
-            <Button 
-                size="sm" 
+            <Button
+                size="sm"
                 className="bg-amber-600 hover:bg-amber-700 text-white"
             >
                 Rozpocznij weryfikację
@@ -234,11 +235,10 @@ const QuickActions = ({ businessId, isVerified }: { businessId: number; isVerifi
             {actions.map((action, index) => (
                 <button
                     key={index}
-                    className={`bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700/75 rounded-lg p-5 text-left transition-all duration-200 shadow-sm ${
-                        action.enabled 
-                            ? 'hover:shadow-md hover:border-zinc-400 dark:hover:border-zinc-500 cursor-pointer' 
-                            : 'opacity-50 cursor-not-allowed'
-                    }`}
+                    className={`bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700/75 rounded-lg p-5 text-left transition-all duration-200 shadow-sm ${action.enabled
+                        ? 'hover:shadow-md hover:border-zinc-400 dark:hover:border-zinc-500 cursor-pointer'
+                        : 'opacity-50 cursor-not-allowed'
+                        }`}
                     onClick={action.enabled ? action.onClick : undefined}
                     disabled={!action.enabled}
                 >
@@ -284,7 +284,7 @@ export default function BusinessManagementPage() {
     if (error || !business?.data) return <BusinessNotFound businessId={businessId} />;
 
     const { data: businessData } = business;
-    const isVerified = businessData.isVerified;
+    const { isVerified, isEligibleForQueue } = businessData;
 
     const handleGoBack = () => {
         router.push('/dashboard/businesses');
@@ -317,7 +317,7 @@ export default function BusinessManagementPage() {
         },
         {
             title: "Średnia ocena",
-            value: isVerified ? `${businessData.averageRating.toFixed(2)}/5` : '—',
+            value: isVerified ? `${businessData.averageRating.toFixed(1)}/5` : '—',
             subtitle: isVerified ? "ogólna ocena" : "niedostępne",
             icon: Star
         }
@@ -349,9 +349,17 @@ export default function BusinessManagementPage() {
                             <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                         )}
                     </div>
-                    <p className="text-zinc-600 dark:text-zinc-400 text-sm">
-                        {isVerified ? 'Firma zweryfikowana' : 'Oczekuje weryfikacji'} • ID: {businessId}
-                    </p>
+                    <div className="flex items-center gap-3">
+                        <p className="text-zinc-600 dark:text-zinc-400 text-sm">
+                            {isVerified ? 'Firma zweryfikowana' : 'Oczekuje weryfikacji'} • ID: {businessId}
+                        </p>
+                        {isVerified && !isEligibleForQueue && (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300">
+                                <AlertCircle className="h-3 w-3" />
+                                Nieaktywna
+                            </span>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -359,9 +367,39 @@ export default function BusinessManagementPage() {
 
             {isVerified && (
                 <InfoBox>
-                    <strong>Panel zarządzania firmą:</strong> Tutaj możesz przeglądać statystyki swojej firmy, 
+                    <strong>Panel zarządzania firmą:</strong> Tutaj możesz przeglądać statystyki swojej firmy,
                     zarządzać recenzjami i konfigurować ustawienia. Najnowsze oczekujące recenzje wymagają Twojej uwagi.
                 </InfoBox>
+            )}
+
+            {isVerified && !isEligibleForQueue && (
+                <div className="bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                        <AlertCircle className="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                            <div className="flex flex-col gap-3">
+                                <div>
+                                    <h3 className="font-semibold text-orange-900 dark:text-orange-100 text-sm mb-1">
+                                        Firma niedostępna do oceniania
+                                    </h3>
+                                    <div className="text-sm text-orange-800 dark:text-orange-200">
+                                        <span>Twoja firma jest nieaktywna.</span>
+                                        <span className="ml-1">
+                                            Potrzebujesz co najmniej <strong>2 punkty</strong> aby użytkownicy mogli wystawiać opinie.
+                                        </span>
+                                    </div>
+                                </div>
+                                <Button
+                                    size="sm"
+                                    className="bg-orange-600 hover:bg-orange-700 text-white flex-shrink-0 sm:max-w-fit"
+                                    onClick={() => router.push(`/dashboard/exchange-feedback`)}
+                                >
+                                    Oceń inne firmy
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -380,7 +418,7 @@ export default function BusinessManagementPage() {
                                 Najnowsze recenzje
                             </h2>
                             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                                {isVerified 
+                                {isVerified
                                     ? "Ostatnie recenzje oczekujące na rozpatrzenie przez Ciebie."
                                     : "Recenzje będą dostępne po weryfikacji firmy."
                                 }

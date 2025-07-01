@@ -2,7 +2,7 @@
 
 import { apiService } from "@/services/api";
 import { createPaginatedQueryFn, usePaginatedQuery } from "@/hooks/usePaginatedQuery";
-import { Building2, MessageSquare } from 'lucide-react';
+import { Building2, MessageSquare, AlertCircle } from 'lucide-react';
 import { GetBusinessesResponseDto } from "@/types/dtos/Business";
 import Link from "next/link";
 
@@ -88,11 +88,33 @@ export default function UserBusinessesManagementPage() {
                                 </div>
                             </div>
 
-                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-4 line-clamp-2 leading-tight">
+                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2 line-clamp-2 leading-tight">
                                 {business.businessName}
                             </h3>
 
-                            <div className="mt-auto">
+                            <div className="text-zinc-500 dark:text-zinc-500 text-xs mb-2">
+                                {business.isVerified ? 'Zweryfikowana' : 'Oczekuje weryfikacji'} • ID: {business.id}
+                            </div>
+
+                            {business.isVerified && !business.isEligibleForQueue && (
+                                <div className="mb-2">
+                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                        <AlertCircle className="h-3 w-3" />
+                                        Nieaktywna
+                                    </span>
+                                </div>
+                            )}
+
+                            {!business.isVerified && (
+                                <div className="mb-2">
+                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                                        <AlertCircle className="h-3 w-3" />
+                                        Niezweryfikowana
+                                    </span>
+                                </div>
+                            )}
+
+                            <div className="mt-auto pt-2">
                                 <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                                     <MessageSquare className="w-4 h-4" />
                                     <span>{business.reviews.pendingCount} oczekujących recenzji</span>

@@ -3,6 +3,7 @@ export type GetBusinessesResponseDto = {
     placeId: string;
     businessName: string;
     isVerified: boolean;
+    isEligibleForQueue: boolean;
     averageRating: number;
     dateCreatedUtc: string;
     reviews: {

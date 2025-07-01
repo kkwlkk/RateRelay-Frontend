@@ -49,6 +49,13 @@ export const dashboardRoutes: NavigationRoute[] = [
         icon: Building,
         section: 'Twoja firma',
     },
+    // support
+    {
+        path: '/dashboard/tickets',
+        label: 'Moje zgłoszenia',
+        icon: Building,
+        section: 'Wsparcie',
+    },
     // settings
     // {
     //     path: '/dashboard/settings',

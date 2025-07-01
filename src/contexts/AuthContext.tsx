@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { User } from '@/types/User';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
@@ -31,6 +32,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { data: session, status } = useSession();
+    const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [isNewUser, setIsNewUser] = useState<boolean>(false);
     const queryClient = useQueryClient();
@@ -86,6 +88,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setIsNewUser(false);
         }
     }, [status]);
+
+    useEffect(() => {
+        if (
+            status === 'authenticated' && 
+            session?.accessToken && 
+            userProfileError && 
+            !userProfileLoading
+        ) {
+            console.warn('Session valid but failed to fetch user profile, redirecting to login');
+            router.push('/auth/signin');
+        }
+    }, [status, session?.accessToken, userProfileError, userProfileLoading, router]);
 
     const login = async () => {
         await signIn('google');

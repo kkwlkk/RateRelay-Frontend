@@ -7,7 +7,7 @@ import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto }
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
 import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
-import { getSession } from 'next-auth/react';
+import { getSession, signOut } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -129,15 +129,6 @@ class ApiService {
                         : 'Przekroczono limit zapytań. Spróbuj ponownie za chwilę.';
 
                     toast.error(retryMessage);
-                }
-
-                if (response.status === 401) {
-                    console.error('Unauthorized access - token may be expired');
-                    toast.error('Twoja sesja wygasła. Proszę się zalogować ponownie.');
-                }
-
-                if (response.status === 403) {
-                    toast.error('Nie posiadasz dostępu do tego zasobu. Jeśli uważasz, że jest to błąd, skontaktuj się z administratorem.');
                 }
 
                 return {
