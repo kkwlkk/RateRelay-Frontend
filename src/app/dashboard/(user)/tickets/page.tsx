@@ -184,20 +184,11 @@ export default function TicketsPage() {
                     query={query}
                     columns={columns}
                     data={data || []}
+                    emptyIcon={<Ticket className="w-12 h-12 text-muted-foreground mx-auto mb-4" />}
+                    emptyMessage="Nie znaleziono zgłoszeń"
+                    emptyDescription="Nie utworzyłeś jeszcze żadnych zgłoszeń wsparcia."
                 />
             </div>
-
-            {!isLoading && (!data || data.length === 0) && (
-                <div className="flex items-center justify-center min-h-[300px]">
-                    <div className="text-center">
-                        <Ticket className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">Nie znaleziono zgłoszeń</h3>
-                        <p className="text-muted-foreground">
-                            Nie utworzyłeś jeszcze żadnych zgłoszeń wsparcia.
-                        </p>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
