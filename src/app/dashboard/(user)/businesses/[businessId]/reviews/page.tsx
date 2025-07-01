@@ -301,28 +301,28 @@ const ReviewActions = ({
 }) => (
     <div className="flex items-center gap-1">
         {status === BusinessReviewStatus.Pending && (
-            <>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-900/20"
-                    onClick={() => onAccept(reviewId)}
-                    loading={loading}
-                    title="Zaakceptuj"
-                >
-                    <Check className="h-4 w-4" />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20"
-                    onClick={() => onReport(reviewId)}
-                    title="Zgłoś nieprawidłowość"
-                    loading={loading}
-                >
-                    <AlertTriangle className="h-4 w-4" />
-                </Button>
-            </>
+            <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-900/20"
+                onClick={() => onAccept(reviewId)}
+                loading={loading}
+                title="Zaakceptuj"
+            >
+                <Check className="h-4 w-4" />
+            </Button>
+        )}
+        {(status === BusinessReviewStatus.Pending || status === BusinessReviewStatus.Accepted) && (
+            <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20"
+                onClick={() => onReport(reviewId)}
+                title="Zgłoś nieprawidłowość"
+                loading={loading}
+            >
+                <AlertTriangle className="h-4 w-4" />
+            </Button>
         )}
     </div>
 );
@@ -423,7 +423,11 @@ const BusinessReviewsPage = () => {
     const columns = useMemo(() => {
         const statusStr = String(reviewStatusFilter);
 
-        if (statusStr === String(BusinessReviewStatus.Pending) || statusStr === "ALL") {
+        if (
+            statusStr === String(BusinessReviewStatus.Pending) ||
+            statusStr === String(BusinessReviewStatus.Accepted) ||
+            statusStr === "ALL"
+        ) {
             return [...baseColumns, actionsColumn];
         }
 
