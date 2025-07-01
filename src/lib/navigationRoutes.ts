@@ -24,7 +24,7 @@ export const segmentRouteLabelMap: Record<string, string> = {
 export const dashboardRoutes: NavigationRoute[] = [
     {
         path: '/dashboard',
-        label: 'Statystyki',
+        label: 'Przegląd',
         icon: HomeIcon,
         section: 'Centrum',
     },

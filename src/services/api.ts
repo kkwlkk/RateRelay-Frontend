@@ -1,6 +1,6 @@
 import { ReviewReportReason } from '@/enums/reviewReportReason';
 import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
-import { AccountDataResponseDto, AccountReviewHistoryResponseDto } from '@/types/dtos/Account';
+import { AccountDataResponseDto, AccountReviewHistoryResponseDto, AccountStatisticsResponseDto } from '@/types/dtos/Account';
 import { AuthResponseDto } from '@/types/dtos/Auth';
 import { GetBusinessesResponseDto } from '@/types/dtos/Business';
 import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto } from '@/types/dtos/BusinessReviews';
@@ -207,6 +207,10 @@ class ApiService {
     // /api/user/account
     async getAccount(): Promise<ApiResponse<AccountDataResponseDto>> {
         return this.request('/api/user/account');
+    }
+
+    async getAccountStats(): Promise<ApiResponse<AccountStatisticsResponseDto>> {
+        return this.request('/api/user/account/stats');
     }
 
     // /api/user/account/reviews

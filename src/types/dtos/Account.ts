@@ -13,6 +13,13 @@ export type AccountDataResponseDto = {
     onboardingStep?: AccountOnboardingStep;
 };
 
+export type AccountStatisticsResponseDto = {
+    totalBusinesses: number;
+    totalTickets: number;
+    totalAwaitingBusinessReviews: number;
+    totalCompletedBusinessReviews: number;
+};
+
 export type AccountReviewHistoryResponseDto = {
     id: number;
     businessName: string;

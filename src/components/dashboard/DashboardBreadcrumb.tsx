@@ -61,7 +61,7 @@ export const DashboardBreadcrumb = () => {
         if (pathname === '/dashboard') {
             return [{
                 href: '/dashboard',
-                label: 'Statystyki',
+                label: 'Przegląd',
                 isLast: true
             }];
         }
