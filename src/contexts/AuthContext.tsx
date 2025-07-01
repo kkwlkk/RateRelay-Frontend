@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -97,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             !userProfileLoading
         ) {
             console.warn('Session valid but failed to fetch user profile, redirecting to login');
-            router.push('/auth/signin');
+            router.push('/login');
         }
     }, [status, session?.accessToken, userProfileError, userProfileLoading, router]);
 

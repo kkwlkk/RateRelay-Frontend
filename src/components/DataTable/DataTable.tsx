@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   ColumnDef,
@@ -63,6 +65,8 @@ interface DataTableProps<TData, TValue> {
   customToolbar?: React.ReactNode;
   toolbarPosition?: 'above' | 'below' | 'replace';
   customFilters?: React.ReactNode;
+  displayToolbar?: boolean;
+  showBorders?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -85,6 +89,8 @@ export function DataTable<TData, TValue>({
   customToolbar,
   toolbarPosition = 'above',
   customFilters,
+  displayToolbar = true,
+  showBorders = true
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -218,7 +224,8 @@ export function DataTable<TData, TValue>({
             <TableCell
               key={`skeleton-${index}-${colIndex}`}
               className={cn(
-                "px-4 py-4 border-r border-zinc-200 dark:border-zinc-700 last:border-r-0 align-middle",
+                "px-4 py-4 align-middle",
+                showBorders && "border-r border-zinc-200 dark:border-zinc-700 last:border-r-0",
                 shouldEnableResizing ? "overflow-hidden" : "whitespace-nowrap"
               )}
               style={shouldEnableResizing ? {
@@ -369,7 +376,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn("space-y-0", className)}>
       <div className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden bg-white dark:bg-zinc-900 shadow-sm">
-        {renderToolbar()}
+        {displayToolbar && renderToolbar()}
 
         {hasNoData ? (
           renderEmptyState()
@@ -389,7 +396,10 @@ export function DataTable<TData, TValue>({
               >
                 <TableHeader className="bg-zinc-50/50 dark:bg-zinc-800/30">
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id} className="hover:bg-transparent border-b border-zinc-200 dark:border-zinc-700">
+                    <TableRow key={headerGroup.id} className={cn(
+                      "hover:bg-transparent",
+                      showBorders && "border-b border-zinc-200 dark:border-zinc-700"
+                    )}>
                       {headerGroup.headers.map((header) => {
                         const canSort = header.column.getCanSort();
                         const canResize = header.column.getCanResize();
@@ -406,7 +416,8 @@ export function DataTable<TData, TValue>({
                           <TableHead
                             key={header.id}
                             className={cn(
-                              "h-11 px-4 text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-50/50 dark:bg-zinc-800/30 whitespace-nowrap border-r border-zinc-200 dark:border-zinc-700 last:border-r-0 relative",
+                              "h-11 px-4 text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-50/50 dark:bg-zinc-800/30 whitespace-nowrap relative",
+                              showBorders && "border-r border-zinc-200 dark:border-zinc-700 last:border-r-0",
                               canSort && "cursor-pointer select-none hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors",
                               shouldEnableResizing && "overflow-hidden"
                             )}
@@ -488,7 +499,8 @@ export function DataTable<TData, TValue>({
                         data-state={row.getIsSelected() && "selected"}
                         onClick={() => onRowClick?.(row.original)}
                         className={cn(
-                          "hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors border-b border-zinc-100 dark:border-zinc-800 last:border-b-0",
+                          "hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors",
+                          showBorders && "border-b border-zinc-100 dark:border-zinc-800 last:border-b-0",
                           onRowClick && "cursor-pointer active:bg-zinc-100 dark:active:bg-zinc-700"
                         )}
                       >
@@ -504,7 +516,8 @@ export function DataTable<TData, TValue>({
                             <TableCell
                               key={cell.id}
                               className={cn(
-                                "mx-4 px-4 py-4 text-sm text-zinc-900 dark:text-zinc-100 align-middle border-r border-zinc-200 dark:border-zinc-700 last:border-r-0",
+                                "mx-4 px-4 py-4 text-sm text-zinc-900 dark:text-zinc-100 align-middle",
+                                showBorders && "border-r border-zinc-200 dark:border-zinc-700 last:border-r-0",
                                 shouldTruncate && "truncate",
                                 shouldEnableResizing ? "overflow-hidden" : (shouldTruncate ? "whitespace-nowrap" : ""),
                                 cellMeta?.className

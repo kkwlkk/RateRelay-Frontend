@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery, useQueryClient, UseQueryOptions, QueryObserverResult } from '@tanstack/react-query';
 import { useState, useMemo } from 'react';
 import type { ApiResponse, PaginatedApiResponse, PaginationMeta } from '@/services/api';

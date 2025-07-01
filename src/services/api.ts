@@ -7,7 +7,8 @@ import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto }
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
 import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
-import { getSession, signOut } from 'next-auth/react';
+import { GetUserTicketDetailsDto, GetUserTicketsResponseDto, TicketCommentDto } from '@/types/dtos/Tickets';
+import { getSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -304,6 +305,32 @@ class ApiService {
         const params = this.toQueryParams(request);
         params.status = status.toString();
         return this.request(`/api/user/business/${businessId}/reviews`, 'GET', undefined, params);
+    }
+
+    // User Tickets
+
+    async getUserTickets(request: PagedRequest = {}): Promise<PaginatedApiResponse<GetUserTicketsResponseDto[]>> {
+        return this.request('/api/user/tickets', 'GET', undefined, this.toQueryParams(request));
+    }
+
+    async getTicketById(ticketId: number, includeComments: boolean = false, includeHistory: boolean = false): Promise<ApiResponse<GetUserTicketDetailsDto>> {
+        const params: Record<string, string> = {};
+        if (includeComments) params.includeComments = 'true';
+        if (includeHistory) params.includeHistory = 'true';
+
+        return this.request(`/api/user/tickets/${ticketId}`, 'GET', undefined, Object.keys(params).length > 0 ? params : undefined);
+    }
+
+    async getTicketComments(ticketId: number): Promise<ApiResponse<TicketCommentDto[]>> {
+        return this.request(`/api/user/tickets/${ticketId}/comments`);
+    }
+
+    async addTicketComment(ticketId: number, content: string, isInternal: boolean = false): Promise<ApiResponse<TicketCommentDto>> {
+        return this.request(`/api/user/tickets/${ticketId}/comments`, 'POST', { comment: content, isInternal });
+    }
+
+    async closeTicket(ticketId: number): Promise<ApiResponse<void>> {
+        return this.request(`/api/user/tickets/${ticketId}/close`, 'PUT');
     }
 }
 
