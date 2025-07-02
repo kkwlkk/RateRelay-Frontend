@@ -179,22 +179,26 @@ export default function TicketsPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <div className="flex items-center justify-center size-12 rounded-xl bg-zinc-900 dark:bg-zinc-100 shrink-0">
                         <Ticket className="size-6 text-white dark:text-zinc-900" />
                     </div>
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Moje zgłoszenia</h1>
-                        <p className="text-muted-foreground mt-1">
+                    <div className="min-w-0 flex-1">
+                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight truncate">Moje zgłoszenia</h1>
+                        <p className="text-muted-foreground mt-1 text-sm sm:text-base">
                             Zarządzaj i śledź swoje prośby o wsparcie
                         </p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Button variant="default" className="bg-primary dark:bg-primary/80" onClick={openNewTicketModal}>
-                        <Ticket className="w-5 h-5" />
-                        <span>Nowe zgłoszenie</span>
+                <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                        variant="default"
+                        className="bg-primary dark:bg-primary/80 w-full sm:w-auto"
+                        onClick={openNewTicketModal}
+                    >
+                        <Ticket className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="text-sm sm:text-base">Nowe zgłoszenie</span>
                     </Button>
                 </div>
             </div>
