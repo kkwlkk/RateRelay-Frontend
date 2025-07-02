@@ -93,25 +93,25 @@ const columns: ColumnDef<GetUserTicketsResponseDto>[] = [
         },
     },
     {
-        accessorKey: 'createdAtUtc',
+        accessorKey: 'dateCreatedUtc',
         header: 'Utworzony',
         cell: ({ row }) => (
             <div className="flex items-center gap-2">
                 <Calendar className="size-4 min-w-4 min-h-4 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
-                    {formatDate(row.getValue('createdAtUtc'))}
+                    {formatDate(row.getValue('dateCreatedUtc'))}
                 </span>
             </div>
         ),
     },
     {
-        accessorKey: 'lastActivityAtUtc',
+        accessorKey: 'lastActivityUtc',
         header: 'Ostatnia aktywność',
         cell: ({ row }) => (
             <div className="flex items-center gap-2">
                 <Clock className="size-4 min-w-4 min-h-4 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
-                    {formatDate(row.getValue('lastActivityAtUtc'))}
+                    {formatDate(row.getValue('lastActivityUtc'))}
                 </span>
             </div>
         ),
@@ -144,7 +144,7 @@ export default function TicketsPage() {
         enabled: isAuthenticated
     });
 
-    const { data, isLoading, error } = query;
+    const { data, isLoading } = query;
 
     const openNewTicketModal = () => {
         openModal(NewTicketModal, {
@@ -202,18 +202,6 @@ export default function TicketsPage() {
                     </Button>
                 </div>
             </div>
-
-            {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-                    <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-red-500" />
-                        <span className="text-sm font-medium text-red-800">Błąd ładowania zgłoszeń</span>
-                    </div>
-                    <p className="text-sm text-red-700 mt-1">
-                        {error instanceof Error ? error.message : 'Wystąpił nieoczekiwany błąd'}
-                    </p>
-                </div>
-            )}
 
             <div className="rounded-lg border bg-card">
                 <DataTable

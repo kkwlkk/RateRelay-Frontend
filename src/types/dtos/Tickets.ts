@@ -26,14 +26,14 @@ export type TicketCommentDto = {
     authorId: number;
     authorName: string;
     content: string;
-    createdAtUtc: Date;
-    editedAtUtc?: Date;
+    dateCreatedUtc: Date;
+    dateEditedUtc?: Date;
     isInternal: boolean;
     isSystemGenerated: boolean;
 }
 
 export type TicketStatusHistoryDto = {
-    createdAtUtc: Date;
+    dateCreatedUtc: Date;
     fromStatus: TicketStatus;
     toStatus: TicketStatus;
     changedByName: string;
@@ -46,8 +46,8 @@ export type GetUserTicketsResponseDto = {
     description: string;
     type: TicketType;
     status: TicketStatus;
-    createdAtUtc: Date;
-    lastActivityAtUtc: Date;
+    dateCreatedUtc: Date;
+    lastActivityUtc: Date;
     reporterId: number;
     reporterName: string;
     isAssigned: boolean;
@@ -61,8 +61,8 @@ export type GetUserTicketDetailsDto = {
     description: string;
     type: TicketType;
     status: TicketStatus;
-    createdAtUtc: Date;
-    lastActivityAtUtc: Date;
+    dateCreatedUtc: Date;
+    lastActivityUtc: Date;
     reporterId: number;
     reporterName: string;
     isAssigned: boolean;
