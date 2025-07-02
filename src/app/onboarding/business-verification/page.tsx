@@ -92,6 +92,11 @@ export default function BusinessVerification() {
                 }
             }
 
+            if (verificationResponse.error?.code == "ERR_ALREADY_EXISTS") {
+                toast.error('Ta firma już istnieje, nie można jej ponownie zweryfikować.');
+                return;
+            }
+
             if (verificationResponse.error) {
                 handleVerificationError(verificationResponse.error);
             }
@@ -141,6 +146,7 @@ export default function BusinessVerification() {
                 toast.error('Nie można zakończyć weryfikacji - brak danych firmy');
                 return;
             }
+            toast.success('Twoja firma została zweryfikowana! 🎉');
             await completeBusinessVerificationStep(metadata.placeId);
         } catch (error) {
             console.error('Error completing verification:', error);
@@ -175,7 +181,7 @@ export default function BusinessVerification() {
         <OnboardingRoute step={AccountOnboardingStep.BusinessVerification}>
             <div className="bg-zinc-50 dark:bg-zinc-900 py-4 sm:py-8 px-4 overflow-x-hidden">
                 <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 w-full">
-                    <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                    <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full ">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
                             <div className={`p-3 rounded-lg bg-${getStatusColor()}-100 dark:bg-${getStatusColor()}-900/20 flex-shrink-0 w-min`}>
                                 {getStatusIcon()}
@@ -191,7 +197,7 @@ export default function BusinessVerification() {
                         </div>
 
                         {verificationStatus?.isVerified ? (
-                            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 sm:p-6 w-full overflow-hidden">
+                            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 sm:p-6 w-full ">
                                 <div className="flex items-center gap-3 mb-4">
                                     <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400 flex-shrink-0" />
                                     <h2 className="text-lg font-semibold text-green-900 dark:text-green-100 break-words">
@@ -209,14 +215,14 @@ export default function BusinessVerification() {
                                 </Button>
                             </div>
                         ) : verificationChallenge ? (
-                            <div className="bg-orange-50 dark:bg-orange-950/15 border border-orange-200 dark:border-orange-800 rounded-lg p-4 sm:p-6 w-full overflow-hidden">
+                            <div className="bg-orange-50 dark:bg-orange-950/15 border border-orange-200 dark:border-orange-800 rounded-lg p-4 sm:p-6 w-full ">
                                 <div className="flex items-center gap-3 mb-4">
                                     <Clock className="h-6 w-6 text-orange-600 dark:text-orange-400 flex-shrink-0" />
                                     <h2 className="text-lg font-semibold text-orange-900 dark:text-orange-100 break-words">
                                         Oczekiwana weryfikacja
                                     </h2>
                                 </div>
-                                <div className="w-full overflow-hidden">
+                                <div className="w-full ">
                                     <VerificationChallenge
                                         challenge={verificationChallenge}
                                         onVerify={handleProcessVerification}
@@ -226,7 +232,7 @@ export default function BusinessVerification() {
                             </div>
                         ) : (
                             <div className="space-y-6 w-full">
-                                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 w-full overflow-hidden">
+                                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 w-full ">
                                     <div className="flex items-start gap-3">
                                         <Building2 className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
                                         <div className="min-w-0 flex-1">
@@ -240,7 +246,7 @@ export default function BusinessVerification() {
                                     </div>
                                 </div>
 
-                                <div className="w-full overflow-hidden">
+                                <div className="w-full z-50">
                                     <BusinessSearch
                                         onBusinessSelect={handleBusinessSelect}
                                         onSubmit={handleSubmit}
@@ -254,7 +260,7 @@ export default function BusinessVerification() {
 
                     {!verificationStatus?.isVerified && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full">
-                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full">
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex-shrink-0">
                                         <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -268,7 +274,7 @@ export default function BusinessVerification() {
                                 </p>
                             </div>
 
-                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full">
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/20 flex-shrink-0">
                                         <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -282,7 +288,7 @@ export default function BusinessVerification() {
                                 </p>
                             </div>
 
-                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full ">
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex-shrink-0">
                                         <Building2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
@@ -299,7 +305,7 @@ export default function BusinessVerification() {
                     )}
 
                     {!verificationStatus?.isVerified && (
-                        <div className="w-full overflow-hidden">
+                        <div className="w-full ">
                             <InfoSections />
                         </div>
                     )}

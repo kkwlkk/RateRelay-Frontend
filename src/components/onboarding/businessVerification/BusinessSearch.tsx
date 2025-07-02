@@ -1,4 +1,5 @@
 import { GooglePlacesAutocomplete } from '@/components/GooglePlacesAutocomplete';
+import { Button } from '@/components/ui/button';
 import { AlertTriangle, Search } from 'lucide-react';
 
 interface BusinessSearchProps {
@@ -59,13 +60,14 @@ export function BusinessSearch({ onBusinessSelect, onSubmit, selectedBusiness, i
             </div>
 
             <div className="flex justify-end">
-                <button
+                <Button
                     onClick={onSubmit}
                     disabled={!selectedBusiness || isSubmitting}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 disabled:text-zinc-500 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
+                    loading={isSubmitting}
+                    className="bg-blue-600 hover:bg-blue-700"
                 >
-                    {isSubmitting ? 'Rozpoczynanie...' : 'Rozpocznij weryfikację'}
-                </button>
+                    Rozpocznij weryfikację
+                </Button>
             </div>
         </div>
     );

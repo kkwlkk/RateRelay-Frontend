@@ -34,7 +34,6 @@ export default function ProfileSetupPage() {
     onSuccess: async (_, variables) => {
       try {
         await completeProfileSetupStep(variables.displayName.trim());
-        toast.success('Profil został pomyślnie zaktualizowany!');
       } catch (error) {
         console.error('Error completing profile setup:', error);
         toast.error('Nie udało się ukończyć konfiguracji profilu');
