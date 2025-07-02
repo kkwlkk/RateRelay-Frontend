@@ -36,6 +36,7 @@ const ExchangeFeedbackPage = () => {
         remainingTime: 0,
         initialTime: 0
     });
+    const [hasShownTimeoutToast, setHasShownTimeoutToast] = useState(false);
 
     const { data: business, isRefetching, isLoading, refetch } = useQuery({
         queryKey: ['businessQueue'],
@@ -47,15 +48,20 @@ const ExchangeFeedbackPage = () => {
     });
 
     useInterval(() => {
-        setReviewSessionTimer(prev => ({
-            ...prev,
-            remainingTime: Math.max(prev.remainingTime - 1, 0)
-        }));
-        
-        if (reviewSessionTimer.remainingTime === 0) {
-            toast.error('Czas na zrealizowanie oceny został przekroczony');
-            refetch();
-        }
+        setReviewSessionTimer(prev => {
+            const newRemainingTime = Math.max(prev.remainingTime - 1, 0);
+
+            if (newRemainingTime === 0 && prev.remainingTime > 0 && !hasShownTimeoutToast) {
+                setHasShownTimeoutToast(true);
+                toast.error('Czas na zrealizowanie oceny został przekroczony');
+                refetch();
+            }
+
+            return {
+                ...prev,
+                remainingTime: newRemainingTime
+            };
+        });
     }, business ? 1000 : null);
 
     useInterval(() => {
@@ -68,6 +74,7 @@ const ExchangeFeedbackPage = () => {
                 remainingTime: business.remainingReviewTimeInSeconds,
                 initialTime: business.initialReviewTimeInSeconds
             });
+            setHasShownTimeoutToast(false);
         }
     }, [business]);
 

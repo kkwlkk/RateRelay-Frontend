@@ -22,36 +22,67 @@ export default function TermsAndConditions({ acceptedTerms, onTermsChange }: Ter
                             id="terms"
                             checked={acceptedTerms}
                             onCheckedChange={onTermsChange}
-                            className="mt-0.5 data-[state=checked]:bg-blue-400 border-blue-400"
+                            className="mt-1 flex-shrink-0 data-[state=checked]:bg-blue-400 border-blue-400"
                         />
-                        <label
-                            htmlFor="terms"
-                            className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed cursor-pointer"
-                        >
-                            Akceptuję{' '}
-                            <a
-                                href=""
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline underline-offset-2 transition-colors"
-                                onClick={(e) => e.stopPropagation()}
+                        <div className="flex-1 min-w-0">
+                            <label
+                                htmlFor="terms"
+                                className="text-sm text-zinc-700 dark:text-zinc-300 leading-6 cursor-pointer block"
                             >
-                                Regulamin programu
-                            </a>
-                            {' '}i{' '}
-                            <a
-                                href=""
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline underline-offset-2 transition-colors"
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                Politykę Prywatności serwisu
-                            </a>
-                        </label>
+                                <span className="hidden sm:inline">
+                                    Akceptuję{' '}
+                                    <a
+                                        href=""
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline underline-offset-2 transition-colors"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        Regulamin programu
+                                    </a>
+                                    {' '}i{' '}
+                                    <a
+                                        href=""
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline underline-offset-2 transition-colors"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        Politykę Prywatności serwisu
+                                    </a>
+                                </span>
+                                <div className="sm:hidden space-y-1">
+                                    <div>Akceptuję następujące dokumenty:</div>
+                                    <div className="pl-2 space-y-1">
+                                        <div>
+                                            <a
+                                                href=""
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline underline-offset-2 transition-colors"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                Regulamin programu
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a
+                                                href=""
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline underline-offset-2 transition-colors"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                Politykę Prywatności serwisu
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

@@ -1,6 +1,7 @@
 import { Calendar, Clock } from 'lucide-react';
 import { BusinessVerificationChallengeResponseDto } from '@/types/dtos/BusinessVerificaton';
 import dayjs from '@/utils/dayjsConfig';
+import { Button } from '@/components/ui/button';
 
 const formatTime = (time: string) => {
     const [hours, minutes] = time.split(':');
@@ -35,7 +36,7 @@ export function VerificationChallenge({ challenge, onVerify, isSubmitting }: Ver
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-zinc-200 dark:border-zinc-800">
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/20">
@@ -49,7 +50,7 @@ export function VerificationChallenge({ challenge, onVerify, isSubmitting }: Ver
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-zinc-200 dark:border-zinc-800">
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/20">
@@ -84,7 +85,7 @@ export function VerificationChallenge({ challenge, onVerify, isSubmitting }: Ver
                             </ul>
                         </div>
                     </div>
-                    
+
                     <div className="flex gap-3">
                         <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
                             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">2</span>
@@ -93,7 +94,7 @@ export function VerificationChallenge({ challenge, onVerify, isSubmitting }: Ver
                             Kliknij przycisk &quot;Zweryfikuj firmę&quot; aby rozpocząć proces
                         </p>
                     </div>
-                    
+
                     <div className="flex gap-3">
                         <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
                             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">3</span>
@@ -102,7 +103,7 @@ export function VerificationChallenge({ challenge, onVerify, isSubmitting }: Ver
                             System automatycznie sprawdzi ustawione godziny
                         </p>
                     </div>
-                    
+
                     <div className="flex gap-3">
                         <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
                             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">4</span>
@@ -115,13 +116,14 @@ export function VerificationChallenge({ challenge, onVerify, isSubmitting }: Ver
             </div>
 
             <div className="flex justify-end pt-4">
-                <button
+                <Button
                     onClick={onVerify}
                     disabled={isSubmitting}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
+                    loading={isSubmitting}
+                    className="bg-blue-600 hover:bg-blue-700"
                 >
-                    {isSubmitting ? 'Weryfikowanie...' : 'Zweryfikuj firmę'}
-                </button>
+                    Zweryfikuj firmę
+                </Button>
             </div>
         </div>
     );

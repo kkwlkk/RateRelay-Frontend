@@ -31,7 +31,7 @@ export default function HowItWorks() {
                             </p>
                         </div>
                         {index < howItWorksSteps.length - 1 && (
-                            <Separator className="md:hidden bg-zinc-800 !w-24 mx-auto" />
+                            <Separator className="md:hidden bg-zinc-800 !w-24 mx-auto mt-5" />
                         )}
                     </div>
                 ))}

@@ -42,7 +42,7 @@ export default function BusinessVerification() {
                 if (metadata?.placeId) {
                     setVerificationStatus({
                         isVerified: true,
-                        status: 'VERIFIED',
+                        status: 'Completed',
                         verificationId: ''
                     });
                 }
@@ -111,6 +111,20 @@ export default function BusinessVerification() {
                     handleCompleteVerification();
                 } else {
                     toast.error('Weryfikacja nie powiodła się. Upewnij się, że godziny otwarcia zostały ustawione zgodnie z wymaganiami.');
+                }
+
+                return;
+            }
+
+            if (response.error?.code === 'ERR_ALREADY_VERIFIED') {
+                toast.success('Twoja firma została zweryfikowana! 🎉');
+                const metadata = response.metadata as { businessId: number; placeId: string } | undefined;
+                if (metadata?.placeId) {
+                    setVerificationStatus({
+                        isVerified: true,
+                        status: 'Completed',
+                        verificationId: ''
+                    });
                 }
             }
         } catch (error) {

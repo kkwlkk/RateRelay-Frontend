@@ -57,7 +57,7 @@ export default function WelcomePage() {
                                     Czym są punkty?
                                 </h2>
                             </div>
-                            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-sm">
                                 Za każdy udzielony feedback zdobywasz punkt - za każdy otrzymany feedback tracisz go.
                                 Dzięki temu systemowi firmy są zmotywowane, by nie tylko zbierać feedback/opinie, ale także aktywnie dzielić się swoimi doświadczeniami z innymi.
                                 Im więcej punktów zdobędziesz, tym większa Twoja widoczność w społeczności.
