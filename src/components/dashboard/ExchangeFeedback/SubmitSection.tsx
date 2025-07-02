@@ -9,6 +9,7 @@ type SubmitSectionProps = {
 };
 
 export const SubmitSection = ({ watch, isFetching }: SubmitSectionProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const watchedPostedGoogleReview = watch('postedGoogleReview');
 
     return (
@@ -19,10 +20,9 @@ export const SubmitSection = ({ watch, isFetching }: SubmitSectionProps) => {
                 hover:bg-zinc-800 dark:hover:bg-zinc-200 font-medium py-3 rounded-md 
                 transition-colors flex items-center justify-center gap-2 w-full"
                 loading={isFetching}
+                icon={<CheckCircle2 className="h-5 w-5" />}
             >
-                <CheckCircle2 className="h-5 w-5" />
                 <span>Wyślij informacje zwrotną</span>
-                {watchedPostedGoogleReview && <span className="font-semibold">(1,5 pkt)</span>}
                 <ChevronRight className="ml-1 h-5 w-5" />
             </Button>
         </div>

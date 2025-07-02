@@ -1,10 +1,10 @@
 export const feedbackRewards = [
     {
-        label: '0.5 punktu',
+        label: '1 punkt',
         description: 'Podstawowy feedback'
     },
     {
-        label: '+1 punkt',
+        label: '1 punkt',
         description: 'Pozostawienie opcjonalnej opinii w Google Maps'
     },
 ];

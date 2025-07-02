@@ -32,7 +32,7 @@ export const PointsInfoSection = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {feedbackRewards.map((reward, index) => (
                         <motion.div
-                            key={reward.label}
+                            key={reward.label + index}
                             className="flex items-center gap-3"
                             initial={{ x: -20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
