@@ -1,5 +1,4 @@
 import { CheckCircle } from 'lucide-react';
-import { onboardingText } from '@/data/onboarding/onboardingText';
 
 interface CompleteHeaderProps {
     username: string;
@@ -7,14 +6,20 @@ interface CompleteHeaderProps {
 
 export function CompleteHeader({ username }: CompleteHeaderProps) {
     return (
-        <div className="space-y-8 mb-8">
-            <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-gradient-to-br from-green-100 to-green-50 shadow-lg">
-                <CheckCircle className="h-12 w-12 text-green-600" />
+        <div className="text-center space-y-6">
+            <div className="mx-auto w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900">{onboardingText.header.title}</h2>
-            <p className="text-xl text-gray-600">
-                {onboardingText.header.welcome(username)}
-            </p>
+            
+            <div className="space-y-3">
+                <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                    Konfiguracja zakończona!
+                </h1>
+                <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+                    Witaj <span className="font-medium text-zinc-900 dark:text-zinc-100">{username}</span>! 
+                    Twoje konto jest gotowe do użycia.
+                </p>
+            </div>
         </div>
     );
-} 
+}

@@ -4,72 +4,65 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
+import { useSession } from 'next-auth/react';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { getOnboardingStepPath } from '@/lib/onboarding';
-import { GenericPageLoader } from '../GenericPageLoader';
+import { GenericCenterLoader } from '../GenericLoader';
 
 type OnboardingRouteProps = {
     children: React.ReactNode;
-    step: AccountOnboardingStep;
+    step?: AccountOnboardingStep;
 };
 
 export default function OnboardingRoute({ children, step }: OnboardingRouteProps) {
-    const { isAuthenticated, isLoading: authLoading, user } = useAuth();
-    const { status, isLoading: onboardingLoading } = useOnboarding();
+    const { status: sessionStatus } = useSession();
+    const { isLoading: authLoading, user } = useAuth();
+    const { status: onboardingStatus, isLoading: onboardingLoading } = useOnboarding();
     const router = useRouter();
 
+    const isSessionReady = sessionStatus !== 'loading';
+    const isAuthenticated = sessionStatus === 'authenticated';
+    const hasUser = !!user;
+    const hasOnboardingStatus = !!onboardingStatus;
+
+    const isDataReady = isSessionReady && !authLoading && !onboardingLoading;
+
     useEffect(() => {
-        if (authLoading || onboardingLoading) return;
+        if (!isDataReady) return;
 
         if (!isAuthenticated) {
             router.push('/login');
             return;
         }
 
-        if (!user) return;
+        if (!hasUser || !hasOnboardingStatus) return;
 
         if (user.hasCompletedOnboarding && step !== AccountOnboardingStep.Completed) {
             router.push('/dashboard');
             return;
         }
 
-        if (!status) return;
-
-        if (step > status.currentStep) {
-            const currentStepPath = getOnboardingStepPath(status.currentStep);
-            router.push(currentStepPath);
+        if (step !== onboardingStatus.currentStep) {
+            const correctPath = getOnboardingStepPath(onboardingStatus.currentStep);
+            router.push(correctPath);
             return;
         }
+    }, [isDataReady, isAuthenticated, hasUser, hasOnboardingStatus, user?.hasCompletedOnboarding, step, onboardingStatus?.currentStep, router]);
 
-        if (step < status.currentStep) {
-            const currentStepPath = getOnboardingStepPath(status.currentStep);
-            router.push(currentStepPath);
-            return;
-        }
-    }, [isAuthenticated, authLoading, user, status, onboardingLoading, step, router]);
-
-    if (authLoading || onboardingLoading) {
-        return <GenericPageLoader />;
+    if (!isDataReady) {
+        return <GenericCenterLoader />;
     }
 
-    if (!isAuthenticated) {
-        return null;
-    }
-
-    if (!user) {
-        return null;
+    if (!isAuthenticated || !hasUser || !hasOnboardingStatus) {
+        return <GenericCenterLoader />;
     }
 
     if (user.hasCompletedOnboarding && step !== AccountOnboardingStep.Completed) {
-        return null;
+        return <GenericCenterLoader />;
     }
 
-    if (!status) {
-        return null;
-    }
-
-    if (step > status.currentStep || step < status.currentStep) {
-        return null;
+    if (step !== onboardingStatus.currentStep) {
+        return <GenericCenterLoader />;
     }
 
     return <>{children}</>;

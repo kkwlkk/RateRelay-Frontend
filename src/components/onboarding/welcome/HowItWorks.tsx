@@ -1,20 +1,41 @@
+import { Separator } from '@/components/ui/separator';
 import { howItWorksSteps } from '@/data/onboarding/welcome';
 
 export default function HowItWorks() {
     return (
-        <div className="space-y-8">
-            <h2 className="text-2xl font-bold text-gray-900 text-center">Jak to działa</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-                {howItWorksSteps.map((step) => (
-                    <div key={step.number} className="bg-white rounded-2xl p-8 border border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-6">
-                            <span className="text-xl font-semibold text-blue-600">{step.number}</span>
+        <div className="space-y-6">
+            <div className="text-center">
+                <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                    Jak to działa
+                </h2>
+                <p className="text-zinc-600 dark:text-zinc-400">
+                    Prosty proces w trzech krokach
+                </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+                {howItWorksSteps.map((step, index) => (
+                    <div key={step.number}>
+                        <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                                    <span className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+                                        {step.number}
+                                    </span>
+                                </div>
+                                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                                    {step.title}
+                                </h3>
+                            </div>
+                            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-sm">
+                                {step.description}
+                            </p>
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-4">{step.title}</h3>
-                        <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                        {index < howItWorksSteps.length - 1 && (
+                            <Separator className="md:hidden bg-zinc-800 !w-24 mx-auto" />
+                        )}
                     </div>
                 ))}
             </div>
         </div>
     );
-} 
+}

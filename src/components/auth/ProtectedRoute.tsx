@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { GenericPageLoader } from '../GenericPageLoader';
@@ -8,17 +8,20 @@ import { useSession } from 'next-auth/react';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const { status } = useSession();
-    const { user } = useAuth();
+    const { user, isLoading: authLoading } = useAuth();
     const router = useRouter();
+    const [isRedirecting, setIsRedirecting] = useState(false);
 
     const isAuthenticated = status === 'authenticated';
+    const isLoading = status === 'loading' || authLoading;
 
     useEffect(() => {
-        if (status === 'loading') {
+        if (isLoading) {
             return;
         }
 
         const currentPath = window.location.pathname;
+        setIsRedirecting(true);
 
         if (!isAuthenticated && currentPath !== '/login') {
             console.log('Redirecting to login');
@@ -26,7 +29,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
             return;
         }
 
-        if (user) {
+        if (isAuthenticated && user) {
             if (!user.hasCompletedOnboarding && !currentPath.startsWith('/onboarding')) {
                 router.push('/onboarding');
                 return;
@@ -38,13 +41,19 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
                 return;
             }
         }
-    }, [status, router, user, isAuthenticated]);
 
-    if (status === 'loading') {
+        setIsRedirecting(false);
+    }, [status, router, user, isAuthenticated, isLoading]);
+
+    if (isLoading || isRedirecting) {
         return <GenericPageLoader />;
     }
 
-    if (!isAuthenticated || (user && !user.hasCompletedOnboarding)) {
+    if (!isAuthenticated) {
+        return null;
+    }
+
+    if (isAuthenticated && user && !user.hasCompletedOnboarding) {
         return null;
     }
 

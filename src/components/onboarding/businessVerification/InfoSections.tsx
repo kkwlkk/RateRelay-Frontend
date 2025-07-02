@@ -1,58 +1,95 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useState } from 'react';
 import { infoSections } from '@/data/onboarding/businessVerificationInfo';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, ChevronDown, ChevronRight } from 'lucide-react';
 
 export function InfoSections() {
+    const [openSections, setOpenSections] = useState<number[]>([]);
+
+    const toggleSection = (index: number) => {
+        setOpenSections(prev => 
+            prev.includes(index) 
+                ? prev.filter(i => i !== index)
+                : [...prev, index]
+        );
+    };
+
     return (
-        <div className="space-y-6">
-            <Card className="shadow-lg border border-gray-100">
-                <CardContent className="px-8 py-4">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                        Dlaczego należy zweryfikować firmę?
-                    </h2>
-                    <div className="mb-8 relative pl-6">
-                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-100"></div>
-                        <p className="text-gray-600 leading-relaxed">
-                            Potwierdzenie tożsamości to klucz do pełnej funkcjonalności naszej platformy. Zyskaj dostęp do wszystkich narzędzi i ciesz się pełną kontrolą nad swoim profilem – zweryfikowana firma to firma, której się ufa!
-                        </p>
-                    </div>
-                    <Accordion type="single" collapsible className="w-full space-y-4">
-                        {infoSections.map((section, index) => (
-                            <AccordionItem
-                                key={index}
-                                value={`item-${index}`}
-                                className="border border-gray-100 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow transition-all duration-200"
-                            >
-                                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50 data-[state=open]:border-b-gray-100 data-[state=open]:border-b-2 border-transparent">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-blue-50 rounded-lg">
-                                            <section.icon className="w-5 h-5 text-blue-600" />
-                                        </div>
-                                        <span className="font-medium text-gray-900">{section.title}</span>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent className="px-6 pt-4">
-                                    <ul className="list-disc pl-5 space-y-2.5 text-gray-600">
+        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+            <div className="p-6 border-b border-zinc-200 dark:border-zinc-800">
+                <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+                    Dlaczego należy zweryfikować firmę?
+                </h2>
+                <div className="pl-4 border-l-2 border-blue-200 dark:border-blue-800">
+                    <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        Potwierdzenie tożsamości to klucz do pełnej funkcjonalności naszej platformy. 
+                        Zyskaj dostęp do wszystkich narzędzi i ciesz się pełną kontrolą nad swoim profilem – 
+                        zweryfikowana firma to firma, której się ufa!
+                    </p>
+                </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+                {infoSections.map((section, index) => (
+                    <div 
+                        key={index} 
+                        className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden bg-zinc-50 dark:bg-zinc-800/50"
+                    >
+                        <button
+                            onClick={() => toggleSection(index)}
+                            className="w-full px-4 py-3 flex items-center justify-between hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/20">
+                                    <section.icon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                                    {section.title}
+                                </span>
+                            </div>
+                            {openSections.includes(index) ? (
+                                <ChevronDown className="h-4 w-4 text-zinc-500" />
+                            ) : (
+                                <ChevronRight className="h-4 w-4 text-zinc-500" />
+                            )}
+                        </button>
+                        
+                        {openSections.includes(index) && (
+                            <div className="px-4 pb-4 pt-2 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700">
+                                <div className="ml-11">
+                                    <ul className="space-y-2">
                                         {section.items.map((item, itemIndex) => (
-                                            <li key={itemIndex} className="text-sm leading-relaxed">{item}</li>
+                                            <li key={itemIndex} className="flex items-start gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 flex-shrink-0" />
+                                                <span className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                                    {item}
+                                                </span>
+                                            </li>
                                         ))}
                                     </ul>
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
-                    <div className="mt-6 p-5 bg-gray-50/50 rounded-lg border border-gray-100">
-                        <div className="flex items-center gap-3 mb-3">
-                            <ShieldCheck className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                            <h3 className="text-sm font-semibold text-gray-800">Gwarancja bezpieczeństwa</h3>
-                        </div>
-                        <p className="text-sm text-gray-600/90 pl-8 leading-relaxed">
-                            Twoje dane firmowe są bezpieczne. Przechowujemy je zgodnie z najwyższymi standardami ochrony prywatności, dbając o ich bezpieczeństwo i wykorzystywanie wyłącznie w celu ulepszania Twojego doświadczenia na naszej platformie.
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50">
+                <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/20">
+                        <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <div>
+                        <h3 className="font-medium text-zinc-900 dark:text-zinc-100 mb-2">
+                            Gwarancja bezpieczeństwa
+                        </h3>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                            Twoje dane firmowe są bezpieczne. Przechowujemy je zgodnie z najwyższymi standardami 
+                            ochrony prywatności, dbając o ich bezpieczeństwo i wykorzystywanie wyłącznie w celu 
+                            ulepszania Twojego doświadczenia na naszej platformie.
                         </p>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </div>
     );
-} 
+}

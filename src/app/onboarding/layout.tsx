@@ -8,6 +8,7 @@ import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { GenericPageLoader } from '@/components/GenericPageLoader';
+import { OnboardingUserDropdown } from '@/components/onboarding/OnboardingUserDropdown';
 
 const steps = [
     { id: AccountOnboardingStep.BusinessVerification.toString(), label: 'Weryfikacja firmy' },
@@ -22,7 +23,7 @@ export default function OnboardingLayout({
     children: React.ReactNode;
 }) {
     const { status, isLoading } = useOnboarding();
-    const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+    const { isAuthenticated, isLoading: authLoading, user, logout } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
@@ -54,9 +55,20 @@ export default function OnboardingLayout({
     if (user?.hasCompletedOnboarding) return <GenericPageLoader />;
 
     return (
-        <div className="min-h-screen flex flex-col bg-white">
-            <div className="w-full border-b border-gray-200 sticky top-0 bg-white z-10">
-                <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">
+            <div className="w-full border-b border-zinc-200 dark:border-zinc-800 sticky top-0 bg-white dark:bg-zinc-900 z-10 shadow-sm">
+                <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                    <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1 min-w-0">
+                            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-1">
+                                Konfiguracja konta
+                            </h1>
+                            <p className="text-zinc-600 dark:text-zinc-400">
+                                Skonfiguruj swoje konto, aby w pełni korzystać z TrustRate
+                            </p>
+                        </div>
+                        <OnboardingUserDropdown user={user} logout={logout} />
+                    </div>
                     <Stepper
                         steps={steps}
                         currentStep={status?.currentStep || 0}

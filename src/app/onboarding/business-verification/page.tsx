@@ -9,9 +9,11 @@ import { apiService } from '@/services/api';
 import { BusinessVerificationStatusResponseDto, BusinessVerificationChallengeResponseDto } from '@/types/dtos/BusinessVerificaton';
 import toast from 'react-hot-toast';
 import { BusinessSearch } from '@/components/onboarding/businessVerification/BusinessSearch';
-import { VerificationStatus } from '@/components/onboarding/businessVerification/VerificationStatus';
 import { VerificationChallenge } from '@/components/onboarding/businessVerification/VerificationChallenge';
 import { InfoSections } from '@/components/onboarding/businessVerification/InfoSections';
+import { Building2, Shield, CheckCircle, Clock } from 'lucide-react';
+import { GenericCenterLoader } from '@/components/GenericLoader';
+import { Button } from '@/components/ui/button';
 
 export default function BusinessVerification() {
     const router = useRouter();
@@ -110,8 +112,6 @@ export default function BusinessVerification() {
                 } else {
                     toast.error('Weryfikacja nie powiodła się. Upewnij się, że godziny otwarcia zostały ustawione zgodnie z wymaganiami.');
                 }
-            } else {
-                handleVerificationError(response.error);
             }
         } catch (error) {
             console.error('Error processing verification:', error);
@@ -135,38 +135,161 @@ export default function BusinessVerification() {
         }
     };
 
+    if (isLoading) {
+        return (
+            <OnboardingRoute step={AccountOnboardingStep.BusinessVerification}>
+                <GenericCenterLoader />
+            </OnboardingRoute>
+        );
+    }
+
+    const getStatusIcon = () => {
+        if (verificationStatus?.isVerified) {
+            return <CheckCircle className="h-8 w-8 text-green-500" />;
+        } else if (verificationChallenge) {
+            return <Clock className="h-8 w-8 text-orange-500" />;
+        }
+        return <Shield className="h-8 w-8 text-blue-500" />;
+    };
+
+    const getStatusColor = () => {
+        if (verificationStatus?.isVerified) return 'green';
+        if (verificationChallenge) return 'orange';
+        return 'blue';
+    };
+
     return (
         <OnboardingRoute step={AccountOnboardingStep.BusinessVerification}>
-            <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white">
-                <div className="max-w-3xl mx-auto">
-                    <div className="text-center mb-10">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-3">
-                        Potwierdzenie tożsamości firmy
-                        </h1>
-                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Potwierdzenie tożsamości to dowód na autentyczność Twojej firmy i gwarancja pełnego wykorzystania TrustRate.
-                        </p>
+            <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 py-4 sm:py-8 px-4 overflow-x-hidden">
+                <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 w-full">
+                    <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+                            <div className={`p-3 rounded-lg bg-${getStatusColor()}-100 dark:bg-${getStatusColor()}-900/20 flex-shrink-0 w-min`}>
+                                {getStatusIcon()}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100 break-words">
+                                    Potwierdzenie tożsamości firmy
+                                </h1>
+                                <p className="text-zinc-600 dark:text-zinc-400 mt-1 text-sm sm:text-base break-words">
+                                    Potwierdzenie tożsamości to dowód na autentyczność Twojej firmy
+                                </p>
+                            </div>
+                        </div>
+
+                        {verificationStatus?.isVerified ? (
+                            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 sm:p-6 w-full overflow-hidden">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400 flex-shrink-0" />
+                                    <h2 className="text-lg font-semibold text-green-900 dark:text-green-100 break-words">
+                                        Firma zweryfikowana
+                                    </h2>
+                                </div>
+                                <p className="text-green-700 dark:text-green-300 mb-4 text-sm sm:text-base break-words">
+                                    Twoja firma została pomyślnie zweryfikowana w systemie TrustRate.
+                                </p>
+                                <Button
+                                    onClick={handleCompleteVerification}
+                                    className="bg-green-600 hover:bg-green-700 px-6 sm:px-8 w-full sm:w-auto"
+                                >
+                                    Kontynuuj
+                                </Button>
+                            </div>
+                        ) : verificationChallenge ? (
+                            <div className="bg-orange-50 dark:bg-orange-950/15 border border-orange-200 dark:border-orange-800 rounded-lg p-4 sm:p-6 w-full overflow-hidden">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Clock className="h-6 w-6 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+                                    <h2 className="text-lg font-semibold text-orange-900 dark:text-orange-100 break-words">
+                                        Oczekiwana weryfikacja
+                                    </h2>
+                                </div>
+                                <div className="w-full overflow-hidden">
+                                    <VerificationChallenge
+                                        challenge={verificationChallenge}
+                                        onVerify={handleProcessVerification}
+                                        isSubmitting={isSubmitting}
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-6 w-full">
+                                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 w-full overflow-hidden">
+                                    <div className="flex items-start gap-3">
+                                        <Building2 className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                                        <div className="min-w-0 flex-1">
+                                            <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1 break-words">
+                                                Znajdź swoją firmę
+                                            </h3>
+                                            <p className="text-sm text-blue-700 dark:text-blue-300 break-words">
+                                                Wyszukaj swoją firmę w Google Maps, aby rozpocząć proces weryfikacji
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="w-full overflow-hidden">
+                                    <BusinessSearch
+                                        onBusinessSelect={handleBusinessSelect}
+                                        onSubmit={handleSubmit}
+                                        selectedBusiness={selectedBusiness}
+                                        isSubmitting={isSubmitting}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {isLoading ? (
-                        <div className="text-center">Ładowanie...</div>
-                    ) : verificationStatus?.isVerified ? (
-                        <VerificationStatus onComplete={handleCompleteVerification} />
-                    ) : verificationChallenge ? (
-                        <VerificationChallenge
-                            challenge={verificationChallenge}
-                            onVerify={handleProcessVerification}
-                            isSubmitting={isSubmitting}
-                        />
-                    ) : (
-                        <BusinessSearch
-                            onBusinessSelect={handleBusinessSelect}
-                            onSubmit={handleSubmit}
-                            selectedBusiness={selectedBusiness}
-                            isSubmitting={isSubmitting}
-                        />
+                    {!verificationStatus?.isVerified && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full">
+                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex-shrink-0">
+                                        <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                    </div>
+                                    <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 break-words">
+                                        Bezpieczeństwo
+                                    </h3>
+                                </div>
+                                <p className="text-sm text-zinc-600 dark:text-zinc-400 break-words">
+                                    Weryfikacja zapewnia bezpieczeństwo i autentyczność wszystkich firm w systemie
+                                </p>
+                            </div>
+
+                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/20 flex-shrink-0">
+                                        <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                                    </div>
+                                    <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 break-words">
+                                        Wiarygodność
+                                    </h3>
+                                </div>
+                                <p className="text-sm text-zinc-600 dark:text-zinc-400 break-words">
+                                    Zweryfikowane firmy budują większe zaufanie wśród klientów i partnerów
+                                </p>
+                            </div>
+
+                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex-shrink-0">
+                                        <Building2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                    </div>
+                                    <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 break-words">
+                                        Pełny dostęp
+                                    </h3>
+                                </div>
+                                <p className="text-sm text-zinc-600 dark:text-zinc-400 break-words">
+                                    Po weryfikacji otrzymasz dostęp do wszystkich funkcji platformy TrustRate
+                                </p>
+                            </div>
+                        </div>
                     )}
-                    {!verificationStatus?.isVerified && <InfoSections />}
+
+                    {!verificationStatus?.isVerified && (
+                        <div className="w-full overflow-hidden">
+                            <InfoSections />
+                        </div>
+                    )}
                 </div>
             </div>
         </OnboardingRoute>

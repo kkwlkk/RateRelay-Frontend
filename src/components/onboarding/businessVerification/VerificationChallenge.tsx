@@ -1,5 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Calendar, Clock } from 'lucide-react';
 import { BusinessVerificationChallengeResponseDto } from '@/types/dtos/BusinessVerificaton';
 import dayjs from '@/utils/dayjsConfig';
@@ -14,115 +12,6 @@ const getWeekdayName = (day: number) => {
     return date.format('dddd');
 };
 
-function IconContainer({ children, bgColor = "bg-blue-50" }: { children: React.ReactNode, bgColor?: string }) {
-    return (
-        <div className={`${bgColor} p-2 rounded-lg`}>
-            {children}
-        </div>
-    );
-}
-
-function VerificationHeader() {
-    return (
-        <div className="flex items-center gap-3 mb-6">
-            <IconContainer bgColor="bg-blue-100">
-                <Calendar className="w-6 h-6 text-blue-600" />
-            </IconContainer>
-            <h2 className="text-2xl font-semibold text-gray-900">
-                Harmonogram weryfikacji
-            </h2>
-        </div>
-    );
-}
-
-function InfoItem({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) {
-    return (
-        <div className="flex items-start gap-3">
-            <IconContainer>{icon}</IconContainer>
-            <div>
-                <p className="text-sm text-gray-500">{label}</p>
-                <p className="text-lg font-semibold text-blue-700">{value}</p>
-            </div>
-        </div>
-    );
-}
-
-function InstructionStep({ number, children }: { number: number, children: React.ReactNode }) {
-    return (
-        <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-lg border border-gray-200 w-8 h-8 flex items-center justify-center">
-                <span className="text-sm font-semibold text-gray-700">{number}</span>
-            </div>
-            <div className="text-gray-600">
-                {children}
-            </div>
-        </div>
-    );
-}
-
-interface VerificationDetailsProps {
-    challenge: BusinessVerificationChallengeResponseDto;
-}
-
-function VerificationDetails({ challenge }: VerificationDetailsProps) {
-    return (
-        <div className="bg-white p-6 rounded-xl border border-blue-100 shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Szczegóły weryfikacji
-            </h3>
-            <div className="space-y-4">
-                <InfoItem
-                    icon={<Calendar className="w-5 h-5 text-blue-600" />}
-                    label="Dzień weryfikacji"
-                    value={getWeekdayName(challenge.verificationDay)}
-                />
-                <InfoItem
-                    icon={<Clock className="w-5 h-5 text-blue-600" />}
-                    label="Godzina otwarcia"
-                    value={formatTime(challenge.verificationOpeningTime)}
-                />
-                <InfoItem
-                    icon={<Clock className="w-5 h-5 text-blue-600" />}
-                    label="Godzina zamknięcia"
-                    value={formatTime(challenge.verificationClosingTime)}
-                />
-            </div>
-        </div>
-    );
-}
-
-interface VerificationInstructionsProps {
-    challenge: BusinessVerificationChallengeResponseDto;
-}
-
-function VerificationInstructions({ challenge }: VerificationInstructionsProps) {
-    return (
-        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Jak przeprowadzić weryfikację?
-            </h3>
-            <div className="space-y-4">
-                <InstructionStep number={1}>
-                    <p>W dniu weryfikacji ({getWeekdayName(challenge.verificationDay)}):</p>
-                    <ul className="list-disc pl-5 mt-1 space-y-1">
-                        <li>Ustaw godzinę otwarcia na dokładnie {formatTime(challenge.verificationOpeningTime)}</li>
-                        <li>Ustaw godzinę zamknięcia na dokładnie {formatTime(challenge.verificationClosingTime)}</li>
-                    </ul>
-                </InstructionStep>
-                <InstructionStep number={2}>
-                    <p>Po ustawieniu godzin, kliknij &quot;Zweryfikuj firmę&quot; aby rozpocząć proces</p>
-                </InstructionStep>
-                <InstructionStep number={3}>
-                    <p>System automatycznie sprawdzi ustawione godziny otwarcia i zamknięcia w odpowiednim dniu</p>
-                </InstructionStep>
-                <InstructionStep number={4}>
-                    <p>Po zakończeniu weryfikacji, możesz przywrócić normalne godziny otwarcia i zamknięcia</p>
-                </InstructionStep>
-            </div>
-        </div>
-    );
-}
-
 interface VerificationChallengeProps {
     challenge: BusinessVerificationChallengeResponseDto;
     onVerify: () => void;
@@ -131,25 +20,109 @@ interface VerificationChallengeProps {
 
 export function VerificationChallenge({ challenge, onVerify, isSubmitting }: VerificationChallengeProps) {
     return (
-        <Card className="shadow-lg my-6 border border-gray-100">
-            <CardContent className="px-8 py-4">
-                <VerificationHeader />
-                <div className="space-y-8">
-                    <VerificationDetails challenge={challenge} />
-                    <VerificationInstructions challenge={challenge} />
-
-                    <div className="flex justify-end">
-                        <Button
-                            onClick={onVerify}
-                            disabled={isSubmitting}
-                            className="h-10 px-6 text-base rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-sm hover:shadow transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-sm disabled:hover:translate-y-0"
-                            loading={isSubmitting}
-                        >
-                            Zweryfikuj firmę
-                        </Button>
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-zinc-200 dark:border-zinc-800">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/20">
+                            <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-500">Dzień weryfikacji</p>
+                            <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                {getWeekdayName(challenge.verificationDay)}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+                
+                <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-zinc-200 dark:border-zinc-800">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/20">
+                            <Clock className="h-5 w-5 text-green-600 dark:text-green-400" />
+                        </div>
+                        <div>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-500">Otwarcie</p>
+                            <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                {formatTime(challenge.verificationOpeningTime)}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-zinc-200 dark:border-zinc-800">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/20">
+                            <Clock className="h-5 w-5 text-red-600 dark:text-red-400" />
+                        </div>
+                        <div>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-500">Zamknięcie</p>
+                            <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                {formatTime(challenge.verificationClosingTime)}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-6 border border-zinc-200 dark:border-zinc-700">
+                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+                    Instrukcje weryfikacji
+                </h3>
+                <div className="space-y-4">
+                    <div className="flex gap-3">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">1</span>
+                        </div>
+                        <div className="text-sm text-zinc-600 dark:text-zinc-400">
+                            <p className="font-medium text-zinc-900 dark:text-zinc-100 mb-1">
+                                Ustaw godziny w dniu {getWeekdayName(challenge.verificationDay)}:
+                            </p>
+                            <ul className="list-disc list-inside space-y-1 ml-2">
+                                <li>Otwarcie: {formatTime(challenge.verificationOpeningTime)}</li>
+                                <li>Zamknięcie: {formatTime(challenge.verificationClosingTime)}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div className="flex gap-3">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">2</span>
+                        </div>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                            Kliknij przycisk &quot;Zweryfikuj firmę&quot; aby rozpocząć proces
+                        </p>
+                    </div>
+                    
+                    <div className="flex gap-3">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">3</span>
+                        </div>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                            System automatycznie sprawdzi ustawione godziny
+                        </p>
+                    </div>
+                    
+                    <div className="flex gap-3">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">4</span>
+                        </div>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                            Po weryfikacji możesz przywrócić normalne godziny
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-end pt-4">
+                <button
+                    onClick={onVerify}
+                    disabled={isSubmitting}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
+                >
+                    {isSubmitting ? 'Weryfikowanie...' : 'Zweryfikuj firmę'}
+                </button>
+            </div>
+        </div>
     );
 }

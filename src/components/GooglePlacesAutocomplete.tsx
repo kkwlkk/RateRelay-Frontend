@@ -1,9 +1,8 @@
 import { Input } from "./ui/input"
 import { useLoadScript, Libraries } from '@react-google-maps/api';
 import { useRef, useState, useEffect } from 'react';
-import { Loader2, MapPin, Info } from 'lucide-react';
+import { Loader2, MapPin, AlertTriangle, Search } from 'lucide-react';
 import { useDebounceValue } from 'usehooks-ts';
-import { FaSearch } from 'react-icons/fa';
 
 interface GooglePlacesAutocompleteProps {
     onPlaceSelected?: (place: google.maps.places.PlaceResult) => void;
@@ -46,15 +45,21 @@ const useGooglePlacesServices = () => {
 
 const PredictionItem = ({ prediction, onSelect }: PredictionItemProps) => (
     <div
-        className="px-4 py-3 hover:bg-gray-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0 transition-colors duration-150"
+        className="px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer border-b border-zinc-200 dark:border-zinc-700 last:border-b-0 transition-colors"
         onClick={() => onSelect(prediction.place_id)}
     >
-        <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
-            <div>
-                <div className="font-medium text-gray-900">{prediction.structured_formatting?.main_text || prediction.description}</div>
+        <div className="flex items-center gap-3">
+            <div className="p-1.5 rounded bg-zinc-100 dark:bg-zinc-800">
+                <MapPin className="h-3.5 w-3.5 text-zinc-500 dark:text-zinc-400" />
+            </div>
+            <div className="min-w-0 flex-1">
+                <div className="font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                    {prediction.structured_formatting?.main_text || prediction.description}
+                </div>
                 {prediction.structured_formatting?.secondary_text && (
-                    <div className="text-gray-500 text-xs mt-0.5">{prediction.structured_formatting.secondary_text}</div>
+                    <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-0.5 truncate">
+                        {prediction.structured_formatting.secondary_text}
+                    </div>
                 )}
             </div>
         </div>
@@ -62,16 +67,22 @@ const PredictionItem = ({ prediction, onSelect }: PredictionItemProps) => (
 );
 
 const LoadingState = () => (
-    <div className="flex flex-col items-center justify-center p-8 rounded-lg border border-gray-200 bg-gray-50">
-        <Loader2 className="w-8 h-8 text-gray-400 animate-spin mb-3" />
-        <span className="text-gray-500 text-sm">Ładowanie wyszukiwania miejsc...</span>
+    <div className="flex flex-col items-center justify-center p-8 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800">
+        <div className="p-3 rounded-full bg-zinc-100 dark:bg-zinc-700 mb-3">
+            <Loader2 className="h-6 w-6 text-zinc-500 dark:text-zinc-400 animate-spin" />
+        </div>
+        <span className="text-zinc-600 dark:text-zinc-400 text-sm">Ładowanie wyszukiwania miejsc...</span>
     </div>
 );
 
 const ErrorState = () => (
-    <div className="flex flex-col items-center justify-center p-8 rounded-lg border border-red-200 bg-red-50">
-        <Info className="w-8 h-8 text-red-400 mb-3" />
-        <p className="text-red-600 text-sm text-center">Błąd ładowania Google Maps. Spróbuj ponownie później.</p>
+    <div className="flex flex-col items-center justify-center p-8 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+        <div className="p-3 rounded-full bg-red-100 dark:bg-red-900/30 mb-3">
+            <AlertTriangle className="h-6 w-6 text-red-500 dark:text-red-400" />
+        </div>
+        <p className="text-red-600 dark:text-red-400 text-sm text-center">
+            Błąd ładowania Google Maps. Spróbuj ponownie później.
+        </p>
     </div>
 );
 
@@ -91,7 +102,7 @@ const GooglePlacesAutocomplete = ({
     const [placeWasSelected, setPlaceWasSelected] = useState(false);
     const [noResultsFound, setNoResultsFound] = useState(false);
     const [searchPerformed, setSearchPerformed] = useState(false);
-    
+
     const inputRef = useRef<HTMLInputElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { isLoaded, loadError, autocompleteService, placesService } = useGooglePlacesServices();
@@ -119,9 +130,9 @@ const GooglePlacesAutocomplete = ({
     }, []);
 
     useEffect(() => {
-        if (!debouncedInputValue || 
-            debouncedInputValue.length < MIN_INPUT_LENGTH || 
-            !autocompleteService.current || 
+        if (!debouncedInputValue ||
+            debouncedInputValue.length < MIN_INPUT_LENGTH ||
+            !autocompleteService.current ||
             placeWasSelected) {
             if (!placeWasSelected) {
                 setPredictions([]);
@@ -147,7 +158,7 @@ const GooglePlacesAutocomplete = ({
                     request,
                     (results, status) => {
                         setSearchPerformed(true);
-                        
+
                         if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
                             setPredictions(results);
                             setNoResultsFound(false);
@@ -176,7 +187,7 @@ const GooglePlacesAutocomplete = ({
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setInputValue(value);
-        
+
         if (value.length < MIN_INPUT_LENGTH) {
             setPredictions([]);
             setShowPredictions(false);
@@ -214,11 +225,15 @@ const GooglePlacesAutocomplete = ({
 
     return (
         <div className={`space-y-4 ${className}`}>
-            <div className="space-y-2">
-                <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-                <p className="text-sm text-gray-500">{description}</p>
-            </div>
-            
+            {title && (
+                <div className="space-y-1">
+                    <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">{title}</h3>
+                    {description && (
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
+                    )}
+                </div>
+            )}
+
             <div className="relative" ref={containerRef}>
                 <div className="relative">
                     <Input
@@ -226,21 +241,21 @@ const GooglePlacesAutocomplete = ({
                         value={inputValue}
                         onChange={handleInputChange}
                         placeholder={placeholder}
-                        className="w-full pl-10 pr-4 py-2.5 text-sm border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full pl-10 pr-10 py-2.5 border-zinc-200 dark:border-zinc-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
                         onFocus={() => inputValue.length > MIN_INPUT_LENGTH && predictions.length > 0 && setShowPredictions(true)}
                     />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                        <FaSearch className="w-4 h-4" />
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                        <Search className="h-4 w-4 text-zinc-400 dark:text-zinc-500" />
                     </div>
                     {isTyping && (
                         <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                            <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+                            <Loader2 className="h-4 w-4 text-zinc-400 dark:text-zinc-500 animate-spin" />
                         </div>
                     )}
                 </div>
 
                 {showPredictions && predictions.length > 0 && (
-                    <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-y-auto">
+                    <div className="absolute z-50 mt-1 w-full bg-white dark:bg-zinc-900 shadow-lg rounded-lg border border-zinc-200 dark:border-zinc-700 max-h-60 overflow-y-auto">
                         {predictions.map((prediction) => (
                             <PredictionItem
                                 key={prediction.place_id}
@@ -248,6 +263,15 @@ const GooglePlacesAutocomplete = ({
                                 onSelect={handlePlaceSelect}
                             />
                         ))}
+                    </div>
+                )}
+
+                {searchPerformed && noResultsFound && inputValue.length >= MIN_INPUT_LENGTH && (
+                    <div className="absolute z-50 mt-1 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4">
+                        <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
+                            <Search className="h-4 w-4" />
+                            <span className="text-sm">Nie znaleziono wyników dla &quot;{inputValue}&quot;</span>
+                        </div>
                     </div>
                 )}
             </div>

@@ -4,10 +4,11 @@ import { useState } from 'react';
 import OnboardingRoute from '@/components/auth/OnboardingRoute';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
-import { Button } from '@/components/ui/button';
 import WelcomeHeader from '@/components/onboarding/welcome/WelcomeHeader';
 import HowItWorks from '@/components/onboarding/welcome/HowItWorks';
 import TermsAndConditions from '@/components/onboarding/welcome/TermsAndConditions';
+import { Users, Award } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function WelcomePage() {
     const { completeWelcomeStep } = useOnboarding();
@@ -25,14 +26,21 @@ export default function WelcomePage() {
 
     return (
         <OnboardingRoute step={AccountOnboardingStep.Welcome}>
-            <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-                <div className="max-w-5xl mx-auto px-4 pt-16 pb-6 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+                <div className="max-w-4xl mx-auto px-4 pt-8 pb-8 sm:px-6 lg:px-8">
                     <WelcomeHeader />
 
-                    <div className="space-y-12">
-                        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Dołączenie do programu TrustRate</h2>
-                            <p className="text-lg text-gray-600 leading-relaxed">
+                    <div className="space-y-8">
+                        <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/20">
+                                    <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+                                    Dołączenie do programu TrustRate
+                                </h2>
+                            </div>
+                            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                                 Zapoznaj się z naszymi zasadami bezpieczeństwa oraz zasadami działania naszego programu,
                                 aby w pełni świadomie korzystać z naszego serwisu.
                             </p>
@@ -40,10 +48,17 @@ export default function WelcomePage() {
 
                         <HowItWorks />
 
-                        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Czym są punkty?</h2>
-                            <p className="text-lg text-gray-600 leading-relaxed">
-                                Za każdy udzielony feedback zdobywasz punkt - za każdy otrzymany feedback tracisz go. 
+                        <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/20">
+                                    <Award className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                </div>
+                                <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+                                    Czym są punkty?
+                                </h2>
+                            </div>
+                            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Za każdy udzielony feedback zdobywasz punkt - za każdy otrzymany feedback tracisz go.
                                 Dzięki temu systemowi firmy są zmotywowane, by nie tylko zbierać feedback/opinie, ale także aktywnie dzielić się swoimi doświadczeniami z innymi.
                                 Im więcej punktów zdobędziesz, tym większa Twoja widoczność w społeczności.
                             </p>
@@ -58,8 +73,9 @@ export default function WelcomePage() {
                             <Button
                                 onClick={handleContinue}
                                 disabled={!acceptedTerms || isLoading}
-                                className="px-10 py-4 text-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                                 loading={isLoading}
+                                size="lg"
+                                className="bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 disabled:text-zinc-500"
                             >
                                 Kontynuuj
                             </Button>
