@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { GenericPageLoader } from '../GenericPageLoader';
 import { useSession } from 'next-auth/react';
+import { GenericCenterLoader } from '../GenericLoader';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const { status } = useSession();
@@ -46,7 +46,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     }, [status, router, user, isAuthenticated, isLoading]);
 
     if (isLoading || isRedirecting) {
-        return <GenericPageLoader />;
+        return <GenericCenterLoader />;
     }
 
     if (!isAuthenticated) {

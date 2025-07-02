@@ -26,7 +26,7 @@ export default function WelcomePage() {
 
     return (
         <OnboardingRoute step={AccountOnboardingStep.Welcome}>
-            <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+            <div className="bg-zinc-50 dark:bg-zinc-900">
                 <div className="max-w-4xl mx-auto px-4 pt-8 pb-8 sm:px-6 lg:px-8">
                     <WelcomeHeader />
 

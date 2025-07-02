@@ -142,7 +142,6 @@ export default function BusinessVerification() {
                 return;
             }
             await completeBusinessVerificationStep(metadata.placeId);
-            toast.success('Twoja firma została pomyślnie zweryfikowana!');
         } catch (error) {
             console.error('Error completing verification:', error);
             toast.error('Wystąpił błąd podczas kończenia weryfikacji');
@@ -174,7 +173,7 @@ export default function BusinessVerification() {
 
     return (
         <OnboardingRoute step={AccountOnboardingStep.BusinessVerification}>
-            <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 py-4 sm:py-8 px-4 overflow-x-hidden">
+            <div className="bg-zinc-50 dark:bg-zinc-900 py-4 sm:py-8 px-4 overflow-x-hidden">
                 <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 w-full">
                     <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 sm:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm w-full overflow-hidden">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">

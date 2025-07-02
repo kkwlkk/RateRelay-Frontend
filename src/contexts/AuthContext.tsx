@@ -93,9 +93,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         if (
-            status === 'authenticated' && 
-            session?.accessToken && 
-            userProfileError && 
+            status === 'authenticated' &&
+            session?.accessToken &&
+            userProfileError &&
             !userProfileLoading
         ) {
             console.warn('Session valid but failed to fetch user profile, redirecting to login');
@@ -121,10 +121,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isSessionLoading = status === 'loading';
     const hasValidSession = status === 'authenticated' && !!session?.accessToken;
     const isLoadingUserProfile = hasValidSession && userProfileLoading;
-    
+
     const isLoading = isSessionLoading || isLoadingUserProfile;
-    
-    const isAuthenticated = hasValidSession && !!user && !userProfileError;
+
+    const isAuthenticated = hasValidSession && !userProfileError && (!!user || userProfileLoading);
 
     return (
         <AuthContext.Provider

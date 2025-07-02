@@ -14,7 +14,7 @@ export function VerificationStatus({ onComplete }: VerificationStatusProps) {
             <h2 className="text-2xl font-bold text-green-900 dark:text-green-100 mb-3">
                 Weryfikacja zakończona
             </h2>
-            
+
             <p className="text-green-700 dark:text-green-300 mb-6 max-w-md mx-auto">
                 Twoja firma została pomyślnie zweryfikowana. Możesz teraz korzystać z pełni funkcjonalności platformy.
             </p>

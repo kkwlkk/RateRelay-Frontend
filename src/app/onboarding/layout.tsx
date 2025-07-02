@@ -1,14 +1,15 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Stepper } from '@/components/ui/Stepper';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { getOnboardingStepPath } from '@/lib/onboarding';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { GenericPageLoader } from '@/components/GenericPageLoader';
 import { OnboardingUserDropdown } from '@/components/onboarding/OnboardingUserDropdown';
+import { GenericCenterLoader } from '@/components/GenericLoader';
 
 const steps = [
     { id: AccountOnboardingStep.BusinessVerification.toString(), label: 'Weryfikacja firmy' },
@@ -22,37 +23,63 @@ export default function OnboardingLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const { status: sessionStatus } = useSession();
     const { status, isLoading } = useOnboarding();
-    const { isAuthenticated, isLoading: authLoading, user, logout } = useAuth();
+    const { user, logout } = useAuth();
     const router = useRouter();
 
-    useEffect(() => {
-        if (isLoading) return;
-        if (status?.currentStep === undefined) return;
-        if (user?.hasCompletedOnboarding) return;
-        if (window.location.pathname === '/onboarding') {
-            const currentStepPath = getOnboardingStepPath(status.currentStep);
-            router.push(currentStepPath);
-        }
-    }, [status?.currentStep, router, isLoading, user?.hasCompletedOnboarding]);
+    const isSessionResolved = sessionStatus !== 'loading';
+    const isAuthenticated = sessionStatus === 'authenticated';
 
     useEffect(() => {
-        if (!authLoading && !isAuthenticated) {
+        if (!isSessionResolved) {
+            return;
+        }
+
+        if (!isAuthenticated) {
             router.push('/login');
+            return;
         }
-    }, [isAuthenticated, authLoading, router]);
 
-    useEffect(() => {
-        if (authLoading) return;
-        if (!user) return;
+        if (!user) {
+            return;
+        }
+
         if (user.hasCompletedOnboarding) {
             router.push('/dashboard');
+            return;
         }
-    }, [user, authLoading, router]);
 
-    if (authLoading) return <GenericPageLoader />;
-    if (!isAuthenticated) return <GenericPageLoader />;
-    if (user?.hasCompletedOnboarding) return <GenericPageLoader />;
+        if (isLoading) {
+            return;
+        }
+
+        if (!status) {
+            return;
+        }
+
+        if (typeof window !== 'undefined' && window.location.pathname === '/onboarding') {
+            const correctPath = getOnboardingStepPath(status.currentStep);
+            router.push(correctPath);
+            return;
+        }
+    }, [sessionStatus, isSessionResolved, isAuthenticated, user, isLoading, status, router]);
+
+    if (!isSessionResolved || (isAuthenticated && isLoading)) {
+        return <GenericCenterLoader />;
+    }
+
+    if (!isAuthenticated) {
+        return <GenericCenterLoader />;
+    }
+
+    if (!user) {
+        return <GenericCenterLoader />;
+    }
+
+    if (user.hasCompletedOnboarding) {
+        return <GenericCenterLoader />;
+    }
 
     return (
         <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">

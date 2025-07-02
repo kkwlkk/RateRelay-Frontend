@@ -62,15 +62,17 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         throw new Error(response.error?.message || 'Failed to fetch onboarding status');
     }, [isAuthenticated]);
 
+    const shouldFetchOnboarding = !!user?.id && !authLoading && isAuthenticated && !user.hasCompletedOnboarding;
+
     const {
         data: status,
-        isLoading,
+        isLoading: queryLoading,
         isError,
         refetch: refreshStatus
     } = useQuery({
         queryKey: ['onboardingStatus', user?.id],
         queryFn: fetchOnboardingStatus,
-        enabled: !!user?.id && !authLoading && isAuthenticated && !user.hasCompletedOnboarding,
+        enabled: shouldFetchOnboarding,
         initialData: user?.hasCompletedOnboarding ? {
             currentStep: AccountOnboardingStep.Completed,
             currentStepName: 'Completed',
@@ -81,6 +83,8 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         staleTime: 0,
         gcTime: 0,
     });
+
+    const isLoading = authLoading || (shouldFetchOnboarding && queryLoading);
 
     const welcomeMutation = useMutation({
         mutationFn: (acceptedTerms: boolean) =>
