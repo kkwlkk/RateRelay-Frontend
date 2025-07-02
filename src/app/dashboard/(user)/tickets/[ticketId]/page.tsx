@@ -134,7 +134,7 @@ export default function TicketDetailPage() {
                     Powrót do listy zgłoszeń
                 </Button>
 
-                <div className="bg-white dark:bg-zinc-800/15 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+                <div className="bg-white dark:bg-zinc-700/10 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
                     <div className="flex items-start justify-between gap-6">
                         <div className="flex-1">
                             <div className="flex items-center gap-4 mb-3">
@@ -169,7 +169,7 @@ export default function TicketDetailPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
-                    <Card className="bg-white dark:bg-zinc-800/15 border-zinc-200 dark:border-zinc-800 shadow-sm">
+                    <Card className="bg-white dark:bg-zinc-700/10 border-zinc-200 dark:border-zinc-800 shadow-sm">
                         <CardHeader className="border-b border-zinc-100 dark:border-zinc-800">
                             <CardTitle className="text-xl text-zinc-900 dark:text-zinc-100">
                                 Opis zgłoszenia
@@ -184,7 +184,7 @@ export default function TicketDetailPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-white dark:bg-zinc-800/15 border-zinc-200 dark:border-zinc-800 shadow-sm sm:hidden">
+                    <Card className="bg-white dark:bg-zinc-700/10 border-zinc-200 dark:border-zinc-800 shadow-sm sm:hidden">
                         <CardHeader className="border-b border-zinc-100 dark:border-zinc-800">
                             <CardTitle className="text-lg text-zinc-900 dark:text-zinc-100">Szczegóły</CardTitle>
                         </CardHeader>
@@ -270,7 +270,7 @@ export default function TicketDetailPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-white dark:bg-zinc-800/15 border-zinc-200 dark:border-zinc-800 shadow-sm">
+                    <Card className="bg-white dark:bg-zinc-700/10 border-zinc-200 dark:border-zinc-800 shadow-sm">
                         <CardHeader className="border-b border-zinc-100 dark:border-zinc-800">
                             <CardTitle className="text-lg text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
@@ -357,7 +357,7 @@ export default function TicketDetailPage() {
                                                     value={newComment}
                                                     onChange={(e) => setNewComment(e.target.value)}
                                                     rows={3}
-                                                    className="resize-none bg-white dark:bg-zinc-800/15 border-zinc-200 dark:border-zinc-700 focus:border-zinc-300 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-200 dark:focus:ring-zinc-600 transition-all duration-200"
+                                                    className="resize-none bg-white dark:bg-zinc-700/10 border-zinc-200 dark:border-zinc-700 focus:border-zinc-300 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-200 dark:focus:ring-zinc-600 transition-all duration-200"
                                                 />
                                                 <div className={`flex ${user && user.username !== ticket.reporterName && user.email !== ticket.reporterName ? 'justify-start' : 'justify-end'}`}>
                                                     <Button
@@ -379,7 +379,7 @@ export default function TicketDetailPage() {
                 </div>
 
                 <div className="space-y-6">
-                    <Card className="bg-white dark:bg-zinc-800/15 border-zinc-200 dark:border-zinc-800 shadow-sm hidden sm:block">
+                    <Card className="bg-white dark:bg-zinc-700/10 border-zinc-200 dark:border-zinc-800 shadow-sm hidden sm:block">
                         <CardHeader className="border-b border-zinc-100 dark:border-zinc-800">
                             <CardTitle className="text-lg text-zinc-900 dark:text-zinc-100">Szczegóły</CardTitle>
                         </CardHeader>
@@ -466,7 +466,7 @@ export default function TicketDetailPage() {
                     </Card>
 
                     {ticket.statusHistory.length > 0 && (
-                        <Card className="bg-white dark:bg-zinc-800/15 border-zinc-200 dark:border-zinc-800 shadow-sm">
+                        <Card className="bg-white dark:bg-zinc-700/10 border-zinc-200 dark:border-zinc-800 shadow-sm">
                             <CardHeader
                                 className="border-b border-zinc-100 dark:border-zinc-800 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
                                 onClick={() => setShowStatusHistory(!showStatusHistory)}
