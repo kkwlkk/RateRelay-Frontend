@@ -152,7 +152,7 @@ export function AppSidebarFooter({
                                         </AvatarFallback>
                                     </Avatar>
                                     {user && (
-                                        <div className="flex flex-col items-start text-left ml-2 flex-1 min-w-0">
+                                        <div className="flex flex-col items-start text-left ml-2 flex-1 min-w-0 max-w-24">
                                             <span className="text-sm font-medium truncate w-full">
                                                 {user.username}
                                             </span>
@@ -176,7 +176,7 @@ export function AppSidebarFooter({
                                         <span className="text-sm font-medium text-zinc-900 dark:text-white">
                                             {user?.username}
                                         </span>
-                                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                        <span className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
                                             {user?.email}
                                         </span>
                                     </div>
