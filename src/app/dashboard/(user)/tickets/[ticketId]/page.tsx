@@ -155,11 +155,11 @@ export default function TicketDetailPage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-4 h-4" />
-                                    <span>{formatDate(ticket.createdAtUtc)}</span>
+                                    <span>{formatDate(ticket.dateCreatedUtc)}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Clock className="w-4 h-4" />
-                                    <span>Ostatnia aktywność {formatRelativeDate(ticket.lastActivityAtUtc)}</span>
+                                    <span>Ostatnia aktywność {formatRelativeDate(ticket.lastActivityUtc)}</span>
                                 </div>
                             </div>
                         </div>
@@ -223,12 +223,12 @@ export default function TicketDetailPage() {
 
                             <div>
                                 <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400 block mb-2">Data utworzenia</label>
-                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.createdAtUtc)}</p>
+                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.dateCreatedUtc)}</p>
                             </div>
 
                             <div>
                                 <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400 block mb-2">Ostatnia aktywność</label>
-                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.lastActivityAtUtc)}</p>
+                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.lastActivityUtc)}</p>
                             </div>
 
                             {(ticket.subjects.businessId || ticket.subjects.reviewId) && (
@@ -317,7 +317,7 @@ export default function TicketDetailPage() {
                                                                 </Badge>
                                                             )}
                                                             <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                                                                {formatRelativeDate(comment.createdAtUtc)}
+                                                                {formatRelativeDate(comment.dateCreatedUtc)}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -326,9 +326,9 @@ export default function TicketDetailPage() {
                                                             {comment.content}
                                                         </p>
                                                     </div>
-                                                    {comment.editedAtUtc && comment.editedAtUtc !== comment.createdAtUtc && (
+                                                    {comment.dateEditedUtc && comment.dateEditedUtc !== comment.dateCreatedUtc && (
                                                         <p className={`text-xs text-zinc-400 mt-2 ${!isReporter ? 'mr-4 text-right' : 'ml-4'}`}>
-                                                            Edytowano {formatRelativeDate(comment.editedAtUtc)}
+                                                            Edytowano {formatRelativeDate(comment.dateEditedUtc)}
                                                         </p>
                                                     )}
                                                 </div>
@@ -418,12 +418,12 @@ export default function TicketDetailPage() {
 
                             <div>
                                 <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400 block mb-2">Data utworzenia</label>
-                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.createdAtUtc)}</p>
+                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.dateCreatedUtc)}</p>
                             </div>
 
                             <div>
                                 <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400 block mb-2">Ostatnia aktywność</label>
-                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.lastActivityAtUtc)}</p>
+                                <p className="text-zinc-700 dark:text-zinc-300 font-mono text-sm">{formatDate(ticket.lastActivityUtc)}</p>
                             </div>
 
                             {(ticket.subjects.businessId || ticket.subjects.reviewId) && (
@@ -491,7 +491,7 @@ export default function TicketDetailPage() {
                                                         </span>
                                                     </div>
                                                     <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                                                        {history.changedByName} • {formatDate(history.createdAtUtc)}
+                                                        {history.changedByName} • {formatDate(history.dateCreatedUtc)}
                                                     </p>
                                                     {history.changedReason && (
                                                         <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 bg-zinc-50 dark:bg-zinc-800 px-2 py-1 rounded">
