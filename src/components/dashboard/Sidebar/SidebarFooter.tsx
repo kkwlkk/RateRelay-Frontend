@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { HelpCircle, LogOut, Settings } from 'lucide-react';
 import { User } from '@/types/User';
 import { cn } from '@/lib/utils';
+import { Separator } from "@/components/ui/separator";
 
 interface SidebarFooterProps {
     isOpen: boolean;
@@ -132,6 +133,7 @@ export function AppSidebarFooter({
                                 {config.label}
                             </Button>
                         ))}
+                        <Separator className="bg-zinc-800 !w-60 self-center mt-3"/>
                     </div>
                 )}
 
@@ -143,7 +145,7 @@ export function AppSidebarFooter({
                                     variant="ghost"
                                     className={cn(
                                         getButtonStyles(),
-                                        "flex-1 justify-start h-auto p-2 min-h-[40px]"
+                                        "flex-1 justify-start h-auto p-2 min-h-10"
                                     )}
                                 >
                                     <Avatar className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800">
@@ -152,7 +154,7 @@ export function AppSidebarFooter({
                                         </AvatarFallback>
                                     </Avatar>
                                     {user && (
-                                        <div className="flex flex-col items-start text-left ml-2 flex-1 min-w-0 max-w-24">
+                                        <div className="flex flex-col items-start text-left ml-2 flex-1 min-w-0 max-w-28">
                                             <span className="text-sm font-medium truncate w-full">
                                                 {user.username}
                                             </span>
@@ -196,7 +198,7 @@ export function AppSidebarFooter({
                             variant="ghost"
                             size="icon"
                             className={cn(
-                                "h-8 w-8 shrink-0",
+                                "h-12 w-8 shrink-0",
                                 getButtonStyles('destructive')
                             )}
                             onClick={onLogout}
