@@ -7,6 +7,7 @@ import { AppSidebarContent } from './SidebarContent';
 import { AppSidebarFooter } from './SidebarFooter';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { hasPermission } from '@/utils/permissionUtils';
 
 export function AppSidebar() {
     const { user, logout } = useAuth();
@@ -18,9 +19,30 @@ export function AppSidebar() {
         setIsClient(true);
     }, []);
 
+    const filterRoutesByPermissions = (routes: NavigationRoute[]): NavigationRoute[] => {
+        return routes.filter(route => {
+            if (!route.requiredPermission) return true;
+            if (!user?.permissions || !user.mappedPermissions) return false;
+
+            if (!hasPermission(user.mappedPermissions, route.requiredPermission)) {
+                return false;
+            }
+
+            if (route.subRoutes) {
+                const filteredSubRoutes = filterRoutesByPermissions(route.subRoutes);
+                route.subRoutes = filteredSubRoutes;
+                return filteredSubRoutes.length > 0;
+            }
+
+            return true;
+        });
+    };
+
+    const filteredRoutes = filterRoutesByPermissions([...dashboardRoutes]);
+
     const getDefaultExpandedItems = () => {
         const defaultExpanded: Record<string, boolean> = {};
-        dashboardRoutes.forEach(route => {
+        filteredRoutes.forEach(route => {
             if (route.subRoutes) {
                 defaultExpanded[route.path] = true;
             }
@@ -29,7 +51,7 @@ export function AppSidebar() {
     };
 
     const [expandedItems, setExpandedItems] = useLocalStorage<Record<string, boolean>>(
-        'sidebar-expanded-items', 
+        'sidebar-expanded-items',
         getDefaultExpandedItems()
     );
 
@@ -42,7 +64,7 @@ export function AppSidebar() {
         }));
     };
 
-    const { ungroupedRoutes, groupedRoutes } = dashboardRoutes.reduce((acc, route) => {
+    const { ungroupedRoutes, groupedRoutes } = filteredRoutes.reduce((acc, route) => {
         if (!route.section) {
             acc.ungroupedRoutes.push(route);
         } else {

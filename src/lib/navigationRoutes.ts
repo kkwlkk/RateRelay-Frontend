@@ -22,13 +22,15 @@ export const segmentRouteLabelMap: Record<string, string> = {
 };
 
 export const dashboardRoutes: NavigationRoute[] = [
+    // ------------------------------------------------------------ //
+    //                         USER ROUTES
+    // ------------------------------------------------------------ //
     {
         path: '/dashboard',
         label: 'Przegląd',
         icon: HomeIcon,
         section: 'Centrum',
     },
-    // activity
     {
         path: '/dashboard/exchange-feedback',
         label: 'Wymiana doświadczeń',
@@ -42,37 +44,28 @@ export const dashboardRoutes: NavigationRoute[] = [
             }
         ],
     },
-    // // your business
     {
         path: '/dashboard/businesses',
         label: 'Zarządzanie firmą',
         icon: Building,
         section: 'Twoja firma',
     },
-    // support
     {
         path: '/dashboard/tickets',
         label: 'Moje zgłoszenia',
         icon: Building,
         section: 'Wsparcie',
     },
-    // settings
-    // {
-    //     path: '/dashboard/settings',
-    //     label: 'Ustawienia',
-    //     icon: Settings,
-    //     section: 'Ustawienia',
-    //     subRoutes: [
-    //         {
-    //             path: '/dashboard/settings/account',
-    //             label: 'Konto',
-    //             icon: User,
-    //         },
-    //         {
-    //             path: '/dashboard/settings/notifications',
-    //             label: 'Powiadomienia',
-    //             icon: Bell,
-    //         },
-    //     ],
-    // },
+
+    // ------------------------------------------------------------ //
+    //                       ADMIN ROUTES
+    // ------------------------------------------------------------ //
+
+    {
+        path: '/dashboard/admin/tickets',
+        section: 'Admin',
+        label: 'Zgłoszenia',
+        icon: Building,
+        requiredPermission: UserPermission.ViewAllTickets
+    }
 ]
