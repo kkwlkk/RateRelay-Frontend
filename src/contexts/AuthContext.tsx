@@ -7,6 +7,7 @@ import { User } from '@/types/User';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
 import { mapIntToPermissions } from '@/utils/permissionUtils';
+import { getCookie } from 'cookies-next';
 
 type AuthContextType = {
     user: User | null;
@@ -37,6 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [isNewUser, setIsNewUser] = useState<boolean>(false);
+    const pendingReferralCode = getCookie('pendingReferralCode');
     const queryClient = useQueryClient();
 
     const fetchAccountData = async (): Promise<User> => {
@@ -104,7 +106,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [status, session?.accessToken, userProfileError, userProfileLoading, router]);
 
     const login = async () => {
-        await signIn('google');
+        signIn('google', {
+            callbackUrl: '/dashboard'
+        }, {
+            referralCode: pendingReferralCode
+        });
     };
 
     const logout = async () => {

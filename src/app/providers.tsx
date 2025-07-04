@@ -12,6 +12,7 @@ import { Toaster } from 'react-hot-toast';
 import { toastOptions } from '@/lib/reactHotToastConfiguration';
 import ModalRenderer from '@/components/ModalRenderer';
 import { ModalProvider } from '@/contexts/ModalStoreContext';
+import { ReferralHandler } from '@/components/dashboard/Referrals/ReferralHandler';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
@@ -22,6 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                     <ModalProvider>
                         <ModalRenderer />
                         <OnboardingProvider>
+                            <ReferralHandler />
                             {children}
                         </OnboardingProvider>
                     </ModalProvider>

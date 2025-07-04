@@ -28,7 +28,7 @@ export default function ProfileSetupPage() {
       if (!response.success) {
         throw new Error(response.error?.message || 'Nie udało się zaktualizować profilu');
       }
-      
+  
       return response.data;
     },
     onSuccess: async (_, variables) => {

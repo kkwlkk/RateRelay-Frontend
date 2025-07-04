@@ -20,7 +20,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         const hasIcon = !!icon;
 
         return (
-            <div className="flex flex-col relative">
+            <div className="flex flex-col relative flex-1 min-w-0">
                 {label && (
                     <div className="flex items-center space-x-1 mb-0.5">
                         <label htmlFor={inputId} className="text-sm font-medium text-zinc-300">

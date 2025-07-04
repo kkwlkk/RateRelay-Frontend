@@ -6,6 +6,7 @@ import { GetBusinessesResponseDto } from '@/types/dtos/Business';
 import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto } from '@/types/dtos/BusinessReviews';
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
 import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
+import { GenerateReferralCodeResponseDto, LinkReferralCodeResponseDto, ReferralGoalsResponseDto, ReferralStatsResponseDto } from '@/types/dtos/Referrals';
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
 import { CreateUserTicketDto, GetUserTicketDetailsDto, GetUserTicketsResponseDto, TicketCommentDto, TicketType } from '@/types/dtos/Tickets';
 import { getSession } from 'next-auth/react';
@@ -132,18 +133,7 @@ class ApiService {
                     toast.error(retryMessage);
                 }
 
-                const errorResponse = {
-                    success: false,
-                    data: null as unknown,
-                    error: {
-                        message: result?.error?.message || `HTTP ${response.status}: ${response.statusText}`,
-                        code: result?.error?.code || 'HTTP_ERROR',
-                        details: result?.error?.details
-                    },
-                    metadata: result?.metadata || {}
-                } as ApiResponse<T, TMeta, TPagination>;
-
-                throw new Error(errorResponse.error?.message);
+                return result as ApiResponse<T, TMeta, TPagination>;
             }
 
             return result;
@@ -151,7 +141,7 @@ class ApiService {
             if (err instanceof Error && err.message.includes('HTTP')) {
                 throw err;
             }
-            
+
             console.error('Error during API request:', err);
 
             if (err instanceof Error && err.message.includes('Failed to fetch')) {
@@ -204,8 +194,8 @@ class ApiService {
         return this.request('/api/auth/refresh-token', 'POST', { refreshToken }, undefined, false);
     }
 
-    async googleAuth(oAuthIdToken: string): Promise<ApiResponse<AuthResponseDto>> {
-        return this.request('/api/auth/google', 'POST', { oAuthIdToken }, undefined, false);
+    async googleAuth(oAuthIdToken: string, referralCode?: string): Promise<ApiResponse<AuthResponseDto>> {
+        return this.request('/api/auth/google', 'POST', { oAuthIdToken, referralCode }, undefined, false);
     }
 
     // Account endpoints
@@ -347,6 +337,27 @@ class ApiService {
 
     async closeTicket(ticketId: number): Promise<ApiResponse<void>> {
         return this.request(`/api/user/tickets/${ticketId}/close`, 'PUT', {});
+    }
+
+    // Referrals
+
+    async getReferralStats(): Promise<ApiResponse<ReferralStatsResponseDto>> {
+        return this.request('/api/user/referral/stats');
+    }
+
+    async getReferralGoals(): Promise<ApiResponse<ReferralGoalsResponseDto[]>> {
+        return this.request('/api/user/referral/goals');
+    }
+
+    async generateReferralCode(): Promise<ApiResponse<GenerateReferralCodeResponseDto>> {
+        return this.request('/api/user/referral/generate-code', 'POST');
+    }
+
+    /**
+     * Links a referral code to the user.
+     */
+    async linkReferralCode(referralCode: string): Promise<ApiResponse<LinkReferralCodeResponseDto>> {
+        return this.request(`/api/user/referral/link`, 'POST', { referralCode });
     }
 }
 

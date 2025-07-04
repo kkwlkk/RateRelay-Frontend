@@ -1,4 +1,4 @@
-import { Building, History, HomeIcon, MessagesSquare } from 'lucide-react';
+import { Building, Handshake, History, HomeIcon, MessagesSquare } from 'lucide-react';
 import { IconType } from '@/types/IconType';
 import { UserPermission } from '@/enums/permissions';
 
@@ -29,6 +29,12 @@ export const dashboardRoutes: NavigationRoute[] = [
         path: '/dashboard',
         label: 'Przegląd',
         icon: HomeIcon,
+        section: 'Centrum',
+    },
+    {
+        path: '/dashboard/referrals',
+        label: 'Program poleceń',
+        icon: Handshake,
         section: 'Centrum',
     },
     {

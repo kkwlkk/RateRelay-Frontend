@@ -146,7 +146,6 @@ export default function BusinessVerification() {
                 toast.error('Nie można zakończyć weryfikacji - brak danych firmy');
                 return;
             }
-            toast.success('Twoja firma została zweryfikowana! 🎉');
             await completeBusinessVerificationStep(metadata.placeId);
         } catch (error) {
             console.error('Error completing verification:', error);

@@ -1,7 +1,9 @@
+import { apiService } from "@/services/api";
 import { isDev } from "@/utils/environmentUtils";
 import NextAuth from "next-auth";
 import "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
+import { cookies } from "next/headers";
 
 const getTokenExpiryIsoString = (expires: number | undefined): string => {
     if (expires) {
@@ -32,27 +34,22 @@ export const { handlers, auth } = NextAuth({
     },
     callbacks: {
         async jwt({ token, account, trigger, session }) {
+            
             if (account && account.id_token) {
                 try {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            oAuthIdToken: account.id_token,
-                        }),
-                    });
+                    const cookieStore = cookies();
+                    const referralCode = (await cookieStore).get('pendingReferralCode')?.value;
 
-                    const data = await response.json();
+                    const response = await apiService.googleAuth(account.id_token, referralCode);
 
-                    if (!response.ok) {
-                        throw new Error(data.error?.message || "Failed to authenticate with backend");
+                    if (!response.success) {
+                        throw new Error(response.error?.message || "Failed to authenticate with backend");
                     }
 
-                    token.accessToken = data.data.accessToken;
-                    token.refreshToken = data.data.refreshToken;
-                    token.isNewUser = data.data.isNewUser;
+                    token.accessToken = response.data.accessToken;
+                    token.refreshToken = response.data.refreshToken;
+                    token.isNewUser = response.data.isNewUser;
+                    
                 } catch (error) {
                     console.error("Error exchanging Google token:", error);
                     token.accessToken = "";
