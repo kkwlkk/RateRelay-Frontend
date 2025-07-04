@@ -310,7 +310,7 @@ export default function TicketDetailPage() {
                                         <MessageSquare className="w-6 h-6 text-zinc-400" />
                                     </div>
                                     <p className="text-zinc-500 dark:text-zinc-400">
-                                        Brak komentarzy. Bądź pierwszy, który skomentuje to zgłoszenie.
+                                        {ticket.isOpen ? "Brak komentarzy. Bądź pierwszy, który skomentuje to zgłoszenie." : "Zgłoszenie zostało zamknięte."}
                                     </p>
                                 </div>
                             ) : (
