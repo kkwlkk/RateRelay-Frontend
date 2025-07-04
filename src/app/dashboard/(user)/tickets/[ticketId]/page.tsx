@@ -495,9 +495,10 @@ export default function TicketDetailPage() {
                                         disabled={closeTicketMutation.isPending}
                                         variant="outline"
                                         className="w-full bg-red-50 hover:bg-red-100 dark:bg-red-950/50 dark:hover:bg-red-950/70 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200"
+                                        loading={closeTicketMutation.isPending}
+                                        icon={<X className="w-4 h-4 mr-2" />}
                                     >
-                                        <X className="w-4 h-4 mr-2" />
-                                        {closeTicketMutation.isPending ? 'Zamykanie...' : 'Zamknij zgłoszenie'}
+                                        Zamknij zgłoszenie
                                     </Button>
                                 </>
                             )}
