@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { setCookie, getCookie } from 'cookies-next';
 
-export function ReferralHandler() {
+function ReferralHandlerInner() {
     const searchParams = useSearchParams();
 
     useEffect(() => {
@@ -22,4 +22,12 @@ export function ReferralHandler() {
     }, [searchParams]);
 
     return null;
+}
+
+export function ReferralHandler() {
+    return (
+        <Suspense fallback={null}>
+            <ReferralHandlerInner />
+        </Suspense>
+    );
 }
