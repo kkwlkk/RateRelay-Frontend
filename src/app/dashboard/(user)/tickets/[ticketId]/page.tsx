@@ -19,7 +19,8 @@ import {
     Send,
     History,
     Building,
-    Star
+    Star,
+    X
 } from "lucide-react";
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,6 +28,8 @@ import { GenericCenterLoader } from "@/components/GenericLoader";
 import dayjs from "@/utils/dayjsConfig";
 import { toast } from "react-hot-toast";
 import { getStatusColor, getStatusLabel, getTypeColor, getTypeLabel } from "@/lib/tickets";
+import { useModalStore } from "@/contexts/ModalStoreContext";
+import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 
 const formatDate = (date: Date) => {
     return dayjs.utc(date).local().format('MMM D, YYYY HH:mm');
@@ -49,6 +52,7 @@ export default function TicketDetailPage() {
     const params = useParams<{ ticketId: string }>();
     const router = useRouter();
     const { user, isAuthenticated } = useAuth();
+    const { openModal, closeModal } = useModalStore();
     const queryClient = useQueryClient();
     const [newComment, setNewComment] = useState('');
     const [showStatusHistory, setShowStatusHistory] = useState(false);
@@ -86,6 +90,26 @@ export default function TicketDetailPage() {
     const handleAddComment = () => {
         if (!newComment.trim()) return;
         addCommentMutation.mutate(newComment.trim());
+    };
+
+    const closeTicketMutation = useMutation({
+        mutationFn: (ticketId: number) => apiService.closeTicket(ticketId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['ticket', ticketId] });
+            closeModal();
+            toast.success('Zgłoszenie zostało zamknięte');
+        },
+        onError: () => {
+            toast.error('Nie udało się zamknąć zgłoszenia');
+        }
+    });
+
+    const handleCloseTicket = () => {
+        openModal(ConfirmationModal, {
+            onConfirm: () => closeTicketMutation.mutate(ticketId),
+            title: 'Zamknięcie zgłoszenia',
+            description: 'Czy na pewno chcesz zamknąć to zgłoszenie?',
+        })
     };
 
     if (isLoading) {
@@ -460,6 +484,21 @@ export default function TicketDetailPage() {
                                             )}
                                         </div>
                                     </div>
+                                </>
+                            )}
+
+                            {ticket.isOpen && (
+                                <>
+                                    <Separator className="bg-zinc-200 dark:bg-zinc-800" />
+                                    <Button
+                                        onClick={handleCloseTicket}
+                                        disabled={closeTicketMutation.isPending}
+                                        variant="outline"
+                                        className="w-full bg-red-50 hover:bg-red-100 dark:bg-red-950/50 dark:hover:bg-red-950/70 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200"
+                                    >
+                                        <X className="w-4 h-4 mr-2" />
+                                        {closeTicketMutation.isPending ? 'Zamykanie...' : 'Zamknij zgłoszenie'}
+                                    </Button>
                                 </>
                             )}
                         </CardContent>

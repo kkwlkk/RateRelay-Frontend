@@ -132,7 +132,7 @@ class ApiService {
                     toast.error(retryMessage);
                 }
 
-                return {
+                const errorResponse = {
                     success: false,
                     data: null as unknown,
                     error: {
@@ -142,10 +142,16 @@ class ApiService {
                     },
                     metadata: result?.metadata || {}
                 } as ApiResponse<T, TMeta, TPagination>;
+
+                throw new Error(errorResponse.error?.message);
             }
 
             return result;
         } catch (err) {
+            if (err instanceof Error && err.message.includes('HTTP')) {
+                throw err;
+            }
+            
             console.error('Error during API request:', err);
 
             if (err instanceof Error && err.message.includes('Failed to fetch')) {
@@ -340,7 +346,7 @@ class ApiService {
     }
 
     async closeTicket(ticketId: number): Promise<ApiResponse<void>> {
-        return this.request(`/api/user/tickets/${ticketId}/close`, 'PUT');
+        return this.request(`/api/user/tickets/${ticketId}/close`, 'PUT', {});
     }
 }
 
