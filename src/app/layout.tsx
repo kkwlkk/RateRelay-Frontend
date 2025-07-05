@@ -49,15 +49,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/assets/logo-white.png',
-        width: 1200,
-        height: 630,
+        width: 1000,
+        height: 400,
         alt: 'TrustRate - Platforma Opinii Klientów',
-      },
-      {
-        url: '/assets/logo-arrows.png',
-        width: 600,
-        height: 315,
-        alt: 'TrustRate - Zbuduj Zaufanie z Klientami',
       },
     ],
   },
