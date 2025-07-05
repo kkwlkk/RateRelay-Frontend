@@ -85,6 +85,11 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/assets/logo-arrows.png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/assets/logo-arrows.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#18181b" />
+        <meta name="msapplication-TileColor" content="#18181b" />
+        <meta name="format-detection" content="telephone=no" />
       </head>
       <body className={cn(
         'min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 antialiased',
