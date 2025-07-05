@@ -17,6 +17,9 @@ import { getTypeColor, getTypeLabel, getStatusColor, getStatusLabel } from "@/li
 import { useModalStore } from "@/contexts/ModalStoreContext";
 import { NewTicketModal } from "@/components/modals/NewTicketModal";
 import toast from "react-hot-toast";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const formatDate = (date: Date) => {
     return dayjs(date).format('MMM D, YYYY HH:mm');
@@ -135,6 +138,10 @@ const columns: ColumnDef<GetUserTicketsResponseDto>[] = [
 ];
 
 export default function TicketsPage() {
+    const router = useRouter()
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+    const startNewTicket = searchParams.get("startNewTicket");
     const { isAuthenticated } = useAuth();
     const { openModal, closeModal } = useModalStore();
 
@@ -168,6 +175,14 @@ export default function TicketsPage() {
             }
         });
     };
+
+    useEffect(() => {
+        if (!startNewTicket) return;
+        openNewTicketModal();
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete("startNewTicket");
+        router.replace(`${pathname}`);
+    }, [startNewTicket]);
 
     if (isLoading) {
         return <GenericCenterLoader />;

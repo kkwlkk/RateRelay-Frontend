@@ -8,7 +8,8 @@ import { Metadata } from 'next';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TrustRate',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  title: 'TrustRate - Platforma Opinii i Feedbacku dla Biznesu',
   description: 'Nowoczesne narzędzie do wymiany opinii i sugestii między firmami. Wspieraj komunikację, zwiększaj zaangażowanie, buduj zaufanie na rynku biznesu.',
   keywords: [
     'TrustRate',
@@ -61,12 +62,7 @@ export const metadata: Metadata = {
     description: 'Nowoczesne narzędzie do wymiany opinii i sugestii między firmami. Wspieraj komunikację, zwiększaj zaangażowanie, buduj zaufanie na rynku biznesu.',
     creator: '@trustrate',
     images: ['/assets/logo-white.png'],
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
+  }
 };
 
 export default function RootLayout({
@@ -78,8 +74,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/assets/logo-arrows.png" sizes="32x32" />
-        <link rel="apple-touch-icon" href="/assets/logo-arrows.png" />
+        <link rel="icon" href="/assets/icon-192.png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/assets/icon-192.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#18181b" />
         <meta name="msapplication-TileColor" content="#18181b" />
