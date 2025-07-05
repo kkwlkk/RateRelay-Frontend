@@ -3,6 +3,8 @@ import { Table } from "@tanstack/react-table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { useCallback } from "react";
+import React from "react";
 
 interface DataTablePaginationProps<TData> {
     table: Table<TData>;
@@ -10,11 +12,12 @@ interface DataTablePaginationProps<TData> {
     showPageSize?: boolean;
 }
 
-export const DataTablePagination = <TData,>({
+// FIX: Remove the generic from React.memo and use a regular function component
+function DataTablePaginationComponent<TData>({
     table,
     query,
     showPageSize = true
-}: DataTablePaginationProps<TData>) => {
+}: DataTablePaginationProps<TData>) {
     const meta = query?.meta;
     const actions = query?.actions;
     const isServerSide = !!query;
@@ -27,23 +30,38 @@ export const DataTablePagination = <TData,>({
     const canPreviousPage = isServerSide ? (meta?.hasPreviousPage || false) : table.getCanPreviousPage();
     const canNextPage = isServerSide ? (meta?.hasNextPage || false) : table.getCanNextPage();
 
-    const handlePageChange = (page: number) => {
-        if (isServerSide) {
-            actions?.setPage(page);
+    const handlePageChange = useCallback((page: number) => {
+        if (isServerSide && actions?.setPage) {
+            actions.setPage(page);
         } else {
             table.setPageIndex(page - 1);
         }
-    };
+    }, [isServerSide, actions, table]);
 
-    const handlePageSizeChange = (size: string) => {
+    const handlePageSizeChange = useCallback((size: string) => {
         const newSize = Number(size);
-        if (isServerSide) {
-            actions?.setPageSize(newSize);
-            actions?.invalidateAll?.();
+        if (isServerSide && actions?.setPageSize) {
+            actions.setPageSize(newSize);
         } else {
             table.setPageSize(newSize);
         }
-    };
+    }, [isServerSide, actions, table]);
+
+    const handleFirstPage = useCallback(() => {
+        handlePageChange(1);
+    }, [handlePageChange]);
+
+    const handlePreviousPage = useCallback(() => {
+        handlePageChange(currentPage - 1);
+    }, [handlePageChange, currentPage]);
+
+    const handleNextPage = useCallback(() => {
+        handlePageChange(currentPage + 1);
+    }, [handlePageChange, currentPage]);
+
+    const handleLastPage = useCallback(() => {
+        handlePageChange(totalPages);
+    }, [handlePageChange, totalPages]);
 
     const from = totalRows > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
     const to = Math.min(currentPage * pageSize, totalRows);
@@ -91,7 +109,7 @@ export const DataTablePagination = <TData,>({
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handlePageChange(1)}
+                        onClick={handleFirstPage}
                         disabled={!canPreviousPage}
                         className="h-9 w-full sm:w-9 p-0 border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-sm"
                         title="Pierwsza strona"
@@ -101,7 +119,7 @@ export const DataTablePagination = <TData,>({
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handlePageChange(currentPage - 1)}
+                        onClick={handlePreviousPage}
                         disabled={!canPreviousPage}
                         className="h-9 w-full sm:w-9 p-0 border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-sm"
                         title="Poprzednia strona"
@@ -118,7 +136,7 @@ export const DataTablePagination = <TData,>({
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handlePageChange(currentPage + 1)}
+                        onClick={handleNextPage}
                         disabled={!canNextPage}
                         className="h-9 w-full sm:w-9 p-0 border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-sm"
                         title="Następna strona"
@@ -128,7 +146,7 @@ export const DataTablePagination = <TData,>({
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handlePageChange(totalPages)}
+                        onClick={handleLastPage}
                         disabled={!canNextPage}
                         className="h-9 w-full sm:w-9 p-0 border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-sm"
                         title="Ostatnia strona"
@@ -140,3 +158,5 @@ export const DataTablePagination = <TData,>({
         </div>
     );
 }
+
+export const DataTablePagination = React.memo(DataTablePaginationComponent) as typeof DataTablePaginationComponent;

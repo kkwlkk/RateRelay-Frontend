@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useQueryClient, UseQueryOptions, QueryObserverResult } from '@tanstack/react-query';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import type { ApiResponse, PaginatedApiResponse, PaginationMeta } from '@/services/api';
 
 export interface PaginationState {
@@ -41,7 +41,7 @@ export interface PaginationActions<TData = unknown, TError = Error> {
 export interface UsePaginatedQueryResult<TData, TError = Error> {
     data?: TData;
     meta?: PaginationMeta;
-    
+
     error: TError | null;
     isError: boolean;
     isLoading: boolean;
@@ -61,17 +61,30 @@ export function usePaginatedQuery<TData, TError = Error>({
     ...options
 }: UsePaginatedQueryOptions<TData, TError>): UsePaginatedQueryResult<TData, TError> {
     const queryClient = useQueryClient();
-    
-    const [pagination, setPagination] = useState<PaginationState>({
+
+    const [pagination, setPagination] = useState<PaginationState>(() => ({
         page: 1,
         pageSize: 10,
         ...initialPagination,
-    });
+    }));
 
-    const paginatedQueryKey = useMemo(
-        () => [...queryKey, 'paginated', pagination],
-        [queryKey, pagination]
-    );
+    // FIXED: Create stable query key by serializing only the values we care about
+    const paginatedQueryKey = useMemo(() => [
+        ...queryKey,
+        'paginated',
+        pagination.page,
+        pagination.pageSize,
+        pagination.sortBy || null,
+        pagination.sortDirection || null,
+        pagination.search || null,
+    ], [
+        queryKey,
+        pagination.page,
+        pagination.pageSize,
+        pagination.sortBy,
+        pagination.sortDirection,
+        pagination.search,
+    ]);
 
     const query = useQuery<PaginatedResponse<TData>, TError>({
         queryKey: paginatedQueryKey,
@@ -98,49 +111,102 @@ export function usePaginatedQuery<TData, TError = Error>({
                 meta,
             };
         },
+
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        retry: 1,
+        enabled: true,
         ...options,
     });
 
+    const setPage = useCallback((page: number) => {
+        setPagination(prev => ({ ...prev, page }));
+    }, []);
+
+    const setPageSize = useCallback((pageSize: number) => {
+        setPagination(prev => ({ ...prev, pageSize, page: 1 }));
+    }, []);
+
+    const setSort = useCallback((sortBy: string, sortDirection: 'asc' | 'desc' = 'asc') => {
+        setPagination(prev => ({ ...prev, sortBy, sortDirection, page: 1 }));
+    }, []);
+
+    const setSearch = useCallback((search: string) => {
+        setPagination(prev => ({ ...prev, search, page: 1 }));
+    }, []);
+
+    const resetPagination = useCallback(() => {
+        setPagination({ page: 1, pageSize: 10, ...initialPagination });
+    }, [initialPagination]);
+
+    const nextPage = useCallback(() => {
+        if (query.data?.meta.hasNextPage) {
+            setPagination(prev => ({ ...prev, page: prev.page + 1 }));
+        }
+    }, [query.data?.meta.hasNextPage]);
+
+    const previousPage = useCallback(() => {
+        if (query.data?.meta.hasPreviousPage) {
+            setPagination(prev => ({ ...prev, page: prev.page - 1 }));
+        }
+    }, [query.data?.meta.hasPreviousPage]);
+
+    const goToPage = useCallback((page: number) => {
+        if (page >= 1 && page <= (query.data?.meta.totalPages || 1)) {
+            setPagination(prev => ({ ...prev, page }));
+        }
+    }, [query.data?.meta.totalPages]);
+
+    const invalidateQuery = useCallback(async () => {
+        await queryClient.invalidateQueries({
+            queryKey: paginatedQueryKey,
+            exact: true
+        });
+    }, [queryClient, paginatedQueryKey]);
+
+    const invalidateAll = useCallback(async () => {
+        await queryClient.invalidateQueries({
+            queryKey: [...queryKey, 'paginated'],
+            exact: false
+        });
+    }, [queryClient, queryKey]);
+
+    const invalidateAndRefetch = useCallback(async () => {
+        await queryClient.invalidateQueries({
+            queryKey: paginatedQueryKey,
+            exact: true
+        });
+        return query.refetch();
+    }, [queryClient, paginatedQueryKey, query]);
+
     const actions = useMemo<PaginationActions<TData, TError>>(() => ({
-        setPage: (page: number) => setPagination(prev => ({ ...prev, page })),
-        setPageSize: (pageSize: number) => setPagination(prev => ({ ...prev, pageSize, page: 1 })),
-        setSort: (sortBy: string, sortDirection: 'asc' | 'desc' = 'asc') =>
-            setPagination(prev => ({ ...prev, sortBy, sortDirection, page: 1 })),
-        setSearch: (search: string) => setPagination(prev => ({ ...prev, search, page: 1 })),
-        resetPagination: () => setPagination({ page: 1, pageSize: 10, ...initialPagination }),
-        nextPage: () => setPagination(prev => ({
-            ...prev,
-            page: query.data?.meta.hasNextPage ? prev.page + 1 : prev.page
-        })),
-        previousPage: () => setPagination(prev => ({
-            ...prev,
-            page: query.data?.meta.hasPreviousPage ? prev.page - 1 : prev.page
-        })),
-        goToPage: (page: number) => {
-            if (page >= 1 && page <= (query.data?.meta.totalPages || 1)) {
-                setPagination(prev => ({ ...prev, page }));
-            }
-        },
-        invalidateQuery: async () => {
-            await queryClient.invalidateQueries({ 
-                queryKey: paginatedQueryKey,
-                exact: true 
-            });
-        },
-        invalidateAll: async () => {
-            await queryClient.invalidateQueries({ 
-                queryKey: [...queryKey, 'paginated'],
-                exact: false 
-            });
-        },
-        invalidateAndRefetch: async () => {
-            await queryClient.invalidateQueries({ 
-                queryKey: paginatedQueryKey,
-                exact: true 
-            });
-            return query.refetch();
-        },
-    }), [initialPagination, query, queryClient, paginatedQueryKey, queryKey]);
+        setPage,
+        setPageSize,
+        setSort,
+        setSearch,
+        resetPagination,
+        nextPage,
+        previousPage,
+        goToPage,
+        invalidateQuery,
+        invalidateAll,
+        invalidateAndRefetch,
+    }), [
+        setPage,
+        setPageSize,
+        setSort,
+        setSearch,
+        resetPagination,
+        nextPage,
+        previousPage,
+        goToPage,
+        invalidateQuery,
+        invalidateAll,
+        invalidateAndRefetch,
+    ]);
 
     return {
         data: query.data?.data,
@@ -169,7 +235,7 @@ export function createPaginationRequest(pagination: PaginationState) {
 }
 
 export function createPaginatedQueryFn<
-    T, 
+    T,
     TRequest extends PaginationState = PaginationState,
     TMeta = unknown
 >(

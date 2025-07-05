@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -69,7 +69,7 @@ interface DataTableProps<TData, TValue> {
   showBorders?: boolean;
 }
 
-export function DataTable<TData, TValue>({
+const DataTableComponent = <TData, TValue>({
   columns,
   data = [],
   query,
@@ -91,64 +91,51 @@ export function DataTable<TData, TValue>({
   customFilters,
   displayToolbar = true,
   showBorders = true
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  const processedColumns = useMemo(() => {
-    const hasResizableColumns = columns.some(col => col.enableResizing === true);
-    const shouldEnableResizing = enableColumnResizing || hasResizableColumns;
-
-    return shouldEnableResizing ? columns.map(col => ({
-      ...col,
-      enableResizing: col.enableResizing !== false && (enableColumnResizing || col.enableResizing === true)
-    })) : columns;
-  }, [columns, enableColumnResizing]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [searchValue, setSearchValue] = useState('');
+  const [debouncedSearchValue] = useDebounceValue(searchValue, 500);
 
   const shouldEnableResizing = useMemo(() => {
     return enableColumnResizing || columns.some(col => col.enableResizing === true);
   }, [columns, enableColumnResizing]);
 
-  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() => {
-    const initialSizing: ColumnSizingState = {};
+  const processedColumns = useMemo(() => {
+    const hasResizableColumns = columns.some(col => col.enableResizing === true);
+    const shouldResize = enableColumnResizing || hasResizableColumns;
+
+    return shouldResize ? columns.map(col => ({
+      ...col,
+      enableResizing: col.enableResizing !== false && (enableColumnResizing || col.enableResizing === true)
+    })) : columns;
+  }, [columns, enableColumnResizing]);
+
+  const initialColumnSizing = useMemo(() => {
+    const sizing: ColumnSizingState = {};
     if (shouldEnableResizing) {
       processedColumns.forEach((column) => {
         if (column.id && column.size) {
-          initialSizing[column.id] = column.size;
+          sizing[column.id] = column.size;
         }
       });
     }
-    return initialSizing;
-  });
+    return sizing;
+  }, [processedColumns, shouldEnableResizing]);
+
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(initialColumnSizing);
 
   useEffect(() => {
-    const initialSizing: ColumnSizingState = {};
-    if (shouldEnableResizing) {
-      processedColumns.forEach((column) => {
-        if (column.id && column.size) {
-          initialSizing[column.id] = column.size;
-        }
-      });
-    }
-    setColumnSizing(initialSizing);
+    setColumnSizing(initialColumnSizing);
     setColumnVisibility({});
-  }, [processedColumns, shouldEnableResizing, columns.length]);
-
-  const [rowSelection, setRowSelection] = useState({});
-  const [searchValue, setSearchValue] = useState('');
-  const [debouncedSearchValue] = useDebounceValue(searchValue, 300);
+  }, [initialColumnSizing]);
 
   const isServerSide = !!query;
   const tableData = isServerSide ? (query.data || []) : data;
   const isLoading = isServerSide ? query.isLoading : false;
   const error = isServerSide ? query.error : null;
-
-  useEffect(() => {
-    if (isServerSide && query?.actions && debouncedSearchValue !== '') {
-      query.actions.setSearch(debouncedSearchValue);
-    }
-  }, [debouncedSearchValue, isServerSide, query]);
 
   const table = useReactTable({
     data: tableData,
@@ -190,15 +177,24 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const handleSearch = (value: string) => {
+  const handleSearch = useCallback((value: string) => {
     setSearchValue(value);
     if (!isServerSide) {
       table.setGlobalFilter(value);
-    }
-  };
+    } else if (query?.actions) {
+      // Debounce the server-side search manually
+      const timeoutId = setTimeout(() => {
+        if (value !== query.pagination.search) {
+          query.actions.setSearch(value);
+        }
+      }, 300);
 
-  const handleSort = (columnId: string) => {
-    if (isServerSide) {
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isServerSide, table, query]);
+
+  const handleSort = useCallback((columnId: string) => {
+    if (isServerSide && query?.actions) {
       const currentSortBy = query.pagination.sortBy;
       const currentDirection = query.pagination.sortDirection;
 
@@ -214,9 +210,9 @@ export function DataTable<TData, TValue>({
         query.actions.setSort(columnId, 'asc');
       }
     }
-  };
+  }, [isServerSide, query]);
 
-  const renderSkeletonRows = () => {
+  const renderSkeletonRows = useCallback(() => {
     return Array.from({ length: 5 }).map((_, index) => (
       <TableRow key={`skeleton-${index}`}>
         {table.getVisibleFlatColumns().map((column, colIndex) => {
@@ -240,9 +236,9 @@ export function DataTable<TData, TValue>({
         })}
       </TableRow>
     ));
-  };
+  }, [table, showBorders, shouldEnableResizing]);
 
-  const renderEmptyState = () => {
+  const renderEmptyState = useCallback(() => {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-6 text-center min-h-[300px]">
         <div className="mb-4 text-zinc-400 dark:text-zinc-500">
@@ -263,9 +259,9 @@ export function DataTable<TData, TValue>({
         )}
       </div>
     );
-  };
+  }, [emptyIcon, emptyMessage, emptyDescription, emptyAction]);
 
-  const defaultToolbar = (showSearch || showViewOptions || customFilters) && (
+  const defaultToolbar = useMemo(() => (showSearch || showViewOptions || customFilters) && (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center flex-1">
         {showSearch && (
@@ -332,9 +328,9 @@ export function DataTable<TData, TValue>({
         </div>
       )}
     </div>
-  );
+  ), [showSearch, showViewOptions, customFilters, searchPlaceholder, searchValue, handleSearch, table]);
 
-  const renderToolbar = () => {
+  const renderToolbar = useCallback(() => {
     if (toolbarPosition === 'replace' && customToolbar) {
       return (
         <div className="px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
@@ -358,7 +354,7 @@ export function DataTable<TData, TValue>({
         )}
       </>
     );
-  };
+  }, [toolbarPosition, customToolbar, defaultToolbar]);
 
   if (error) {
     return (
@@ -405,11 +401,11 @@ export function DataTable<TData, TValue>({
                         const canResize = header.column.getCanResize();
 
                         const isSorted = isServerSide
-                          ? query.pagination.sortBy === header.column.id
+                          ? query?.pagination.sortBy === header.column.id
                           : header.column.getIsSorted();
 
                         const sortDirection = isServerSide
-                          ? (isSorted ? query.pagination.sortDirection : false)
+                          ? (isSorted ? query?.pagination.sortDirection : false)
                           : header.column.getIsSorted();
 
                         return (
@@ -551,3 +547,7 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+
+DataTableComponent.displayName = 'DataTable';
+
+export const DataTable = DataTableComponent;
