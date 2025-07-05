@@ -9,10 +9,10 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'TrustRate',
-  description: 'Platforma wymiany informacji zwrotnych od klientów o Twojej firmie. Zbuduj zaufanie, zarówno wśród klientów, jak i wśród Twoich pracowników.',
+  description: 'Nowoczesne narzędzie do wymiany opinii i sugestii między firmami. Wspieraj komunikację, zwiększaj zaangażowanie, buduj zaufanie na rynku biznesu.',
   keywords: [
     'TrustRate',
-    'opinie klientów',
+    'opinie biznesowe',
     'feedback',
     'zarządzanie opinią',
     'zaufanie klientów',
@@ -44,21 +44,21 @@ export const metadata: Metadata = {
     locale: 'pl_PL',
     url: 'https://trustrate.com',
     siteName: 'TrustRate',
-    title: 'TrustRate - Platforma Opinii i Feedbacku Klientów',
-    description: 'Platforma wymiany informacji zwrotnych od klientów o Twojej firmie. Zbuduj zaufanie, zarówno wśród klientów, jak i wśród Twoich pracowników.',
+    title: 'TrustRate - Platforma Opinii i Feedbacku dla Biznesu',
+    description: 'Nowoczesne narzędzie do wymiany opinii i sugestii między firmami. Wspieraj komunikację, zwiększaj zaangażowanie, buduj zaufanie na rynku biznesu.',
     images: [
       {
         url: '/assets/logo-white.png',
         width: 500,
         height: 200,
-        alt: 'TrustRate - Platforma Opinii Klientów',
+        alt: 'TrustRate - Platforma Opinii i Feedbacku dla Biznesu',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TrustRate - Platforma Opinii i Feedbacku Klientów',
-    description: 'Platforma wymiany informacji zwrotnych od klientów o Twojej firmie. Zbuduj zaufanie, zarówno wśród klientów, jak i wśród Twoich pracowników.',
+    title: 'TrustRate - Platforma Opinii i Feedbacku dla Biznesu',
+    description: 'Nowoczesne narzędzie do wymiany opinii i sugestii między firmami. Wspieraj komunikację, zwiększaj zaangażowanie, buduj zaufanie na rynku biznesu.',
     creator: '@trustrate',
     images: ['/assets/logo-white.png'],
   },
