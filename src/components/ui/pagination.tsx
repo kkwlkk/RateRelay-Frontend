@@ -62,7 +62,6 @@ function PaginationLink({
           variant: isActive ? "default" : "ghost",
           size,
         }),
-        // Use zinc color palette
         isActive && "bg-primary text-primary-foreground shadow-sm",
         !isActive && "hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100",
         disabled && "pointer-events-none opacity-50 cursor-not-allowed",

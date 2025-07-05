@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import { SidebarHeader, SidebarSeparator, useSidebar } from "@/components/ui/sidebar";
+import { useRouter } from 'next/navigation';
 
 interface SidebarHeaderProps {
     isOpen: boolean;
@@ -7,13 +10,14 @@ interface SidebarHeaderProps {
 
 export function AppSidebarHeader({ isOpen }: SidebarHeaderProps) {
     const { isMobile } = useSidebar();
+    const router = useRouter();
 
     const showExpandedContent = isMobile || isOpen;
 
     return (
         <SidebarHeader className="flex flex-col items-center justify-center py-4 pb-0 bg-white dark:bg-zinc-900">
             {showExpandedContent ? (
-                <div className="transition-all duration-200">
+                <div className="transition-all duration-200 hover:cursor-pointer" onClick={() => router.push('/dashboard')}>
                     <div className="relative w-[150px] h-[60px]">
                         <Image
                             src="/assets/logo-dark.png"

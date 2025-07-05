@@ -8,6 +8,7 @@ import { Metadata } from 'next';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  manifest: '/manifest.json',
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   title: 'TrustRate - Platforma Opinii i Feedbacku dla Biznesu',
   description: 'Nowoczesne narzędzie do wymiany opinii i sugestii między firmami. Wspieraj komunikację, zwiększaj zaangażowanie, buduj zaufanie na rynku biznesu.',

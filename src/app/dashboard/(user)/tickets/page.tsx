@@ -17,9 +17,8 @@ import { getTypeColor, getTypeLabel, getStatusColor, getStatusLabel } from "@/li
 import { useModalStore } from "@/contexts/ModalStoreContext";
 import { NewTicketModal } from "@/components/modals/NewTicketModal";
 import toast from "react-hot-toast";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
+import { useURLParams } from "@/hooks/useURLParams";
 
 const formatDate = (date: Date) => {
     return dayjs(date).format('MMM D, YYYY HH:mm');
@@ -138,10 +137,8 @@ const columns: ColumnDef<GetUserTicketsResponseDto>[] = [
 ];
 
 export default function TicketsPage() {
-    const router = useRouter()
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
-    const startNewTicket = searchParams.get("startNewTicket");
+    const { removeParam, getParam } = useURLParams();
+    const startNewTicket = getParam("startNewTicket");
     const { isAuthenticated } = useAuth();
     const { openModal, closeModal } = useModalStore();
 
@@ -153,7 +150,7 @@ export default function TicketsPage() {
 
     const { data, isLoading } = query;
 
-    const openNewTicketModal = () => {
+    const openNewTicketModal = useCallback(() => {
         openModal(NewTicketModal, {
             onSubmit: async (data) => {
                 const { title, content, type } = data;
@@ -174,15 +171,13 @@ export default function TicketsPage() {
                 console.error("Error creating ticket:", response.error);
             }
         });
-    };
+    }, [closeModal, openModal, query]);
 
     useEffect(() => {
         if (!startNewTicket) return;
         openNewTicketModal();
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.delete("startNewTicket");
-        router.replace(`${pathname}`);
-    }, [startNewTicket]);
+        removeParam("startNewTicket");
+    }, [openNewTicketModal, removeParam, startNewTicket]);
 
     if (isLoading) {
         return <GenericCenterLoader />;

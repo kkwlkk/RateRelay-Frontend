@@ -68,7 +68,6 @@ export function usePaginatedQuery<TData, TError = Error>({
         ...initialPagination,
     }));
 
-    // FIXED: Create stable query key by serializing only the values we care about
     const paginatedQueryKey = useMemo(() => [
         ...queryKey,
         'paginated',
