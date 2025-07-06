@@ -105,10 +105,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             session?.accessToken &&
             userProfileError &&
             !userProfileLoading &&
-            !isProtectedRoute
+            isProtectedRoute
         ) {
             console.warn('Session valid but failed to fetch user profile, redirecting to login');
-            router.push('/login');
+            signOut();
         }
     }, [status, session?.accessToken, userProfileError, userProfileLoading, router, isProtectedRoute]);
 
