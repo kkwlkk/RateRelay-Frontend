@@ -66,11 +66,6 @@ export function Header() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-4">
-            {/* <Link href="/login">
-              <Button variant="ghost" className="text-zinc-600 dark:text-zinc-400">
-                Zaloguj się
-              </Button>
-            </Link> */}
             <Link href="/login">
               <Button className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                 Rozpocznij za darmo
@@ -109,11 +104,6 @@ export function Header() {
                 </Link>
               ))}
               <div className="pt-4 space-y-2">
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full mb-2 sm:mb-0">
-                    Zaloguj się
-                  </Button>
-                </Link>
                 <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900">
                     Rozpocznij za darmo
