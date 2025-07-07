@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pl_PL',
-    url: 'https://trustrate.com',
+    url: 'https://trustrate.pl',
     siteName: 'TrustRate',
     title: 'TrustRate - Platforma Opinii i Feedbacku dla Biznesu',
     description: 'Nowoczesne narzędzie do wymiany opinii i sugestii między firmami. Wspieraj komunikację, zwiększaj zaangażowanie, buduj zaufanie na rynku biznesu.',
