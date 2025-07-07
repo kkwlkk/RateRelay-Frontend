@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 
 
 const StatCard = ({ title, value, subtitle, icon: Icon, color = "blue" }: {
@@ -158,13 +159,13 @@ const DashboardMainPage = () => {
                         <p className="text-blue-100 mb-4 text-sm">
                             Pomóż innym przedsiębiorcom i zdobądź punkty za swoje doświadczenia
                         </p>
-                        <a
+                        <Link 
                             href="/dashboard/exchange-feedback"
                             className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                         >
                             Rozpocznij ocenianie
                             <ArrowUpRight className="h-4 w-4" />
-                        </a>
+                        </Link>
                     </div>
                     <MessageSquare className="h-8 w-8 text-white/80" />
                 </div>
