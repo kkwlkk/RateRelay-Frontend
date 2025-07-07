@@ -208,35 +208,42 @@ export default function FAQPage() {
                                     <AccordionItem
                                         key={faq.id}
                                         value={faq.id}
-                                        className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-6 shadow-sm hover:shadow-md transition-all duration-200"
+                                        className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 sm:px-6 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
                                     >
-                                        <AccordionTrigger className="text-left hover:no-underline py-6">
-                                            <div className="flex items-start gap-4 w-full">
-                                                <div className="flex items-center gap-3 flex-1">
-                                                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <AccordionTrigger className="text-left hover:no-underline py-4 sm:py-6">
+                                            <div className="flex items-start gap-2 sm:gap-4 w-full min-w-0">
+                                                <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                                                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center flex-shrink-0">
                                                         {getCategoryIcon(faq.category)}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 text-left">
+                                                        <h3 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-zinc-100 text-left break-words hyphens-auto">
                                                             {faq.question}
                                                         </h3>
-                                                        <div className="flex items-center gap-2 mt-2">
-                                                            <Badge variant="secondary" className="text-xs">
-                                                                {faq.category}
+                                                        <div className="flex items-center gap-1 sm:gap-2 mt-2 overflow-hidden">
+                                                            <Badge variant="secondary" className="text-xs flex-shrink-0 max-w-24 sm:max-w-none">
+                                                                <span className="truncate">{faq.category}</span>
                                                             </Badge>
-                                                            {faq.tags.slice(0, 2).map((tag) => (
-                                                                <Badge key={tag} variant="outline" className="text-xs text-zinc-800 dark:text-zinc-200">
-                                                                    {tag}
-                                                                </Badge>
-                                                            ))}
+                                                            <div className="flex gap-1 overflow-hidden">
+                                                                {faq.tags.slice(0, window.innerWidth < 640 ? 1 : 2).map((tag) => (
+                                                                    <Badge key={tag} variant="outline" className="text-xs text-zinc-800 dark:text-zinc-200 flex-shrink-0 max-w-20 sm:max-w-none">
+                                                                        <span className="truncate">{tag}</span>
+                                                                    </Badge>
+                                                                ))}
+                                                                {faq.tags.length > (window.innerWidth < 640 ? 1 : 2) && (
+                                                                    <Badge variant="outline" className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0">
+                                                                        +{faq.tags.length - (window.innerWidth < 640 ? 1 : 2)}
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </AccordionTrigger>
-                                        <AccordionContent className="pb-6">
-                                            <div className="pl-12">
-                                                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                        <AccordionContent className="pb-4 sm:pb-6">
+                                            <div className="pl-8 sm:pl-12">
+                                                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed break-words hyphens-auto">
                                                     {faq.answer}
                                                 </p>
                                             </div>
