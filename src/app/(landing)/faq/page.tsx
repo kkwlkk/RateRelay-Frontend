@@ -225,14 +225,31 @@ export default function FAQPage() {
                                                                 <span className="truncate">{faq.category}</span>
                                                             </Badge>
                                                             <div className="flex gap-1 overflow-hidden">
-                                                                {faq.tags.slice(0, window.innerWidth < 640 ? 1 : 2).map((tag) => (
-                                                                    <Badge key={tag} variant="outline" className="text-xs text-zinc-800 dark:text-zinc-200 flex-shrink-0 max-w-20 sm:max-w-none">
+                                                                {faq.tags.slice(0, 3).map((tag, index) => (
+                                                                    <Badge
+                                                                        key={tag}
+                                                                        variant="outline"
+                                                                        className={`text-xs text-zinc-800 dark:text-zinc-200 flex-shrink-0 max-w-20 sm:max-w-none ${index === 0 ? 'block' :
+                                                                                index === 1 ? 'hidden sm:block' :
+                                                                                    'hidden lg:block'
+                                                                            }`}
+                                                                    >
                                                                         <span className="truncate">{tag}</span>
                                                                     </Badge>
                                                                 ))}
-                                                                {faq.tags.length > (window.innerWidth < 640 ? 1 : 2) && (
-                                                                    <Badge variant="outline" className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0">
-                                                                        +{faq.tags.length - (window.innerWidth < 640 ? 1 : 2)}
+                                                                {faq.tags.length > 1 && (
+                                                                    <Badge variant="outline" className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0 sm:hidden">
+                                                                        +{faq.tags.length - 1}
+                                                                    </Badge>
+                                                                )}
+                                                                {faq.tags.length > 2 && (
+                                                                    <Badge variant="outline" className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0 hidden sm:block lg:hidden">
+                                                                        +{faq.tags.length - 2}
+                                                                    </Badge>
+                                                                )}
+                                                                {faq.tags.length > 3 && (
+                                                                    <Badge variant="outline" className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0 hidden lg:block">
+                                                                        +{faq.tags.length - 3}
                                                                     </Badge>
                                                                 )}
                                                             </div>
