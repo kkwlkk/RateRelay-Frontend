@@ -135,8 +135,8 @@ export default function FAQPage() {
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-            <section className="py-16 sm:py-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <section className="py-16 sm:py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
                     <div className="text-center">
                         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
                             <HelpCircle className="h-4 w-4" />
@@ -156,7 +156,7 @@ export default function FAQPage() {
                 </div>
             </section>
 
-            <section className="py-12 bg-white dark:bg-zinc-900/50 border-b border-zinc-200 dark:border-zinc-800">
+            <section className="py-12 bg-white dark:bg-zinc-900/50 border-y border-zinc-200 dark:border-zinc-800">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="space-y-6">
                         <div className="relative">
