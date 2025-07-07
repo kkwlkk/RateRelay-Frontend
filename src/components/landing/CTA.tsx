@@ -63,7 +63,7 @@ export function CTA() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/businesses" className="focus:outline-none" tabIndex={-1}>
+            <Link href="/login" className="focus:outline-none" tabIndex={-1}>
               <Button
                 size="lg"
                 className="group bg-primary/80 text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-6 text-lg rounded-xl focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"

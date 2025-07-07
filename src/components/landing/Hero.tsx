@@ -117,7 +117,7 @@ export function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start mb-8 sm:mb-12">
-              <Link href="/businesses" className="focus:outline-none w-full sm:w-auto" tabIndex={-1}>
+              <Link href="/login" className="focus:outline-none w-full sm:w-auto" tabIndex={-1}>
                 <Button
                   size="lg"
                   className="group bg-primary/80 hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 w-full sm:w-auto"

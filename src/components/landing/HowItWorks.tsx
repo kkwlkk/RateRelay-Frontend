@@ -1,5 +1,6 @@
 import { FaSearch, FaCommentAlt, FaStar } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface StepCardProps {
   icon: React.ReactNode;
@@ -22,12 +23,14 @@ function StepCard({ icon, title, description }: StepCardProps) {
           {description}
         </p>
         <div className="flex items-center justify-center mt-auto">
-          <Button
-            variant="ghost"
-            className="text-primary hover:bg-primary/75 hover:!text-white group-hover:scale-105 transition-all duration-300 rounded-md font-medium px-4 sm:px-6 py-2 border border-primary/20 hover:border-primary text-sm sm:text-base w-full sm:w-auto"
-          >
-            Rozpocznij
-          </Button>
+          <Link href="/login">
+            <Button
+              variant="ghost"
+              className="text-primary hover:bg-primary/75 hover:!text-white group-hover:scale-105 transition-all duration-300 rounded-md font-medium px-4 sm:px-6 py-2 border border-primary/20 hover:border-primary text-sm sm:text-base w-full sm:w-auto"
+            >
+              Rozpocznij
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
