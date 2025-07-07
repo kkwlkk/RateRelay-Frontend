@@ -302,12 +302,12 @@ export default function FAQPage() {
                                         Formularz kontaktowy
                                     </Button>
                                 </Link>
-                                <a href="mailto:kontakt@trustrate.pl">
+                                <Link href="mailto:kontakt@trustrate.pl">
                                     <Button size="lg" variant="outline" className="border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100">
                                         <Mail className="h-4 w-4 mr-2" />
                                         kontakt@trustrate.pl
                                     </Button>
-                                </a>
+                                </Link>
                             </div>
                         </div>
 
