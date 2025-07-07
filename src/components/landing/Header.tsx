@@ -87,7 +87,7 @@ export function Header() {
 
         {mobileMenuOpen && (
           <div className="lg:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-gray-950/80 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="px-2 pt-2 pb-3 space-y-1 border-t border-zinc-200 dark:border-zinc-800">
               {navigationLinks.map((link) => (
                 <Link
                   key={link.href}
