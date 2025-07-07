@@ -126,7 +126,7 @@ export default function FeaturesPage() {
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900 overflow-hidden py-16 sm:py-24">
+            <section className="relative  bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900 overflow-hidden py-16 sm:py-24">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
@@ -139,7 +139,7 @@ export default function FeaturesPage() {
                                 {" "}w jednym miejscu
                             </span>
                         </h1>
-                        <p className="text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-zinc-500 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed">
                             TrustRate oferuje kompletny zestaw narzędzi do budowania zaufania,
                             zarządzania opiniami i rozwijania relacji biznesowych.
                         </p>
@@ -214,7 +214,7 @@ export default function FeaturesPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {additionalFeatures.map((feature) => (
-                            <Card key={feature.title} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 dark:bg-zinc-900/80">
+                            <Card key={feature.title} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-zinc-900/80">
                                 <CardHeader>
                                     <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-${feature.color}-100 dark:bg-${feature.color}-900/20`}>
                                         <feature.icon className={`h-6 w-6 text-${feature.color}-600 dark:text-${feature.color}-400`} />
@@ -332,13 +332,13 @@ export default function FeaturesPage() {
                     <h2 className="text-3xl sm:text-4xl font-bold mb-6">
                         Gotowy, żeby zacząć?
                     </h2>
-                    <p className="text-zinc-300 text-lg mb-8 max-w-2xl mx-auto">
+                    <p className="text-zinc-500 dark:text-zinc-400 text-lg mb-8 max-w-2xl mx-auto">
                         Wypróbuj wszystkie funkcje TrustRate za darmo. Żadnych zobowiązań,
                         pełen dostęp do platformy.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/login" className='z-10'>
-                            <Button size="lg" className="bg-white text-zinc-900 hover:bg-zinc-100">
+                            <Button size="lg" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-900 dark:bg-zinc-300 dark:text-zinc-900 dark:hover:bg-zinc-200">
                                 Rozpocznij za darmo
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>

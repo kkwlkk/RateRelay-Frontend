@@ -56,7 +56,7 @@ export default function ContactPage() {
                                 {" "}z nami
                             </span>
                         </h1>
-                        <p className="text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-zinc-500 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed">
                             Masz pytania? Potrzebujesz pomocy? Nasz zespół jest gotowy, aby Ci pomóc.
                             Skontaktuj się z nami w dowolny sposób.
                         </p>
@@ -143,7 +143,7 @@ export default function ContactPage() {
                             </div>
 
                             <Link href="/faq" className="w-full">
-                                <Button variant="outline" className="w-full">
+                                <Button variant="outline" className="w-full bg-zinc-800 text-zinc-300 hover:bg-zinc-900 dark:bg-zinc-300 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:hover:text-zinc-800">
                                     Zobacz FAQ
                                 </Button>
                             </Link>

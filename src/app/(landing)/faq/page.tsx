@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface FAQItem {
     id: string;
@@ -147,7 +148,7 @@ export default function FAQPage() {
                                 {" "}pytania
                             </span>
                         </h1>
-                        <p className="text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-zinc-500 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed">
                             Znajdź szybkie odpowiedzi na najczęściej zadawane pytania dotyczące TrustRate.
                             Jeśli nie znajdziesz tego, czego szukasz, skontaktuj się z nami.
                         </p>
@@ -173,10 +174,15 @@ export default function FAQPage() {
                             {categories.map((category) => (
                                 <Button
                                     key={category}
-                                    variant={selectedCategory === category ? "default" : "outline"}
+                                    variant={selectedCategory === category ? "default" : "ghost"}
                                     size="sm"
                                     onClick={() => setSelectedCategory(category)}
-                                    className="flex items-center gap-2"
+                                    className={cn(
+                                        "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200",
+                                        selectedCategory === category
+                                            ? "!bg-zinc-900 !text-white dark:!bg-zinc-100 dark:!text-zinc-900 !border-zinc-900 dark:!border-zinc-100"
+                                            : "!bg-zinc-50 !text-zinc-700 !border !border-zinc-200 hover:!bg-zinc-100 hover:!text-zinc-900 hover:!border-zinc-300 dark:!bg-zinc-800/30 dark:!text-zinc-300 dark:!border-zinc-700 dark:hover:!bg-zinc-800/50 dark:hover:!text-zinc-100"
+                                    )}
                                 >
                                     {category !== 'Wszystkie' && getCategoryIcon(category)}
                                     {category}
@@ -219,7 +225,7 @@ export default function FAQPage() {
                                                                 {faq.category}
                                                             </Badge>
                                                             {faq.tags.slice(0, 2).map((tag) => (
-                                                                <Badge key={tag} variant="outline" className="text-xs">
+                                                                <Badge key={tag} variant="outline" className="text-xs text-zinc-800 dark:text-zinc-200">
                                                                     {tag}
                                                                 </Badge>
                                                             ))}
@@ -274,7 +280,7 @@ export default function FAQPage() {
                             Nasz zespół jest gotowy, aby Ci pomóc. Skontaktuj się z nami, a odpowiemy najszybciej jak to możliwe.
                         </p>
 
-                        <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl p-8 mb-8">
+                        <div className="bg-zinc-100 dark:bg-zinc-800/50 rounded-2xl p-8 mb-8">
                             <div className="flex items-center justify-center gap-4 mb-6">
                                 <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
                                     <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -297,7 +303,7 @@ export default function FAQPage() {
                                     </Button>
                                 </Link>
                                 <a href="mailto:kontakt@trustrate.pl">
-                                    <Button size="lg" variant="outline" className="border-zinc-300 dark:border-zinc-600">
+                                    <Button size="lg" variant="outline" className="border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100">
                                         <Mail className="h-4 w-4 mr-2" />
                                         kontakt@trustrate.pl
                                     </Button>

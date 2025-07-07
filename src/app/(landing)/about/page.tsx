@@ -12,13 +12,13 @@ export default function AboutPage() {
                             <Building2 className="h-4 w-4" />
                             <span className="text-sm font-medium">O nas</span>
                         </div>
-                        <h1 className="text-4xl sm:text-6xl font-bold mb-6 leading-tight">
+                        <h1 className="text-4xl sm:text-6xl font-bold mb-6 leading-tight ">
                             Budujemy mosty między
                             <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                                 {" "}firmami
                             </span>
                         </h1>
-                        <p className="text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-zinc-500 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed">
                             TrustRate to platforma, która łączy przedsiębiorców, umożliwiając im wymianę
                             autentycznych opinii i budowanie wzajemnego zaufania w ekosystemie biznesowym.
                         </p>
@@ -239,13 +239,13 @@ export default function AboutPage() {
                     <h2 className="text-3xl sm:text-4xl font-bold mb-6">
                         Dołącz do naszej społeczności
                     </h2>
-                    <p className="text-zinc-300 text-lg mb-8 max-w-2xl mx-auto">
+                    <p className="text-zinc-500 dark:text-zinc-400 text-lg mb-8 max-w-2xl mx-auto">
                         Rozpocznij budowanie zaufania w swojej branży. Zarejestruj się dziś
                         i zobacz, jak TrustRate może pomóc Twojemu biznesowi.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/login" className='z-10'>
-                            <Button size="lg" className="bg-white text-zinc-900 hover:bg-zinc-100">
+                            <Button size="lg" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-900 dark:bg-zinc-300 dark:text-zinc-900 dark:hover:bg-zinc-200">
                                 Rozpocznij za darmo
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
@@ -254,7 +254,7 @@ export default function AboutPage() {
                             <Button
                                 size="lg"
                                 variant="outline"
-                                className="border-white text-white hover:bg-white hover:text-zinc-900"
+                                className="border-zinc-300 dark:border-zinc-700 text-zinc-900 hover:text-zinc-900 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800 flex items-center gap-2"
                             >
                                 Skontaktuj się z nami
                             </Button>
