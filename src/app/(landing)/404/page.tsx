@@ -3,8 +3,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Home, ArrowLeft, Search, Settings, Users, Mail } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function LandingNotFound() {
+    const router = useRouter();
+    
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex items-center justify-center">
             <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -42,6 +45,7 @@ export default function LandingNotFound() {
                         size="lg"
                         variant="outline"
                         className="border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+                        onClick={() => router.back()}
                     >
                         <ArrowLeft className="h-5 w-5 mr-2" />
                         Wróć
