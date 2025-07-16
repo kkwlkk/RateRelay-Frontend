@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { ApiError } from '@/types/exceptions';
+import { useOnClickOutside } from 'usehooks-ts';
 
 interface ReferralCodeSectionProps {
     referralCode?: string;
@@ -100,6 +101,13 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
         }
     };
 
+    const shareOptionsRef = React.useRef<HTMLDivElement | null>(null) as React.RefObject<HTMLDivElement>;
+    useOnClickOutside(shareOptionsRef, () => {
+        if (showShareOptions) {
+            setShowShareOptions(false);
+        }
+    });
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl p-8 text-white relative">
@@ -161,7 +169,7 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
                                 </button>
 
                                 {showShareOptions && (
-                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm rounded-xl border border-white/30 dark:border-white/20 shadow-xl overflow-hidden z-50">
+                                    <div ref={shareOptionsRef} className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm rounded-xl border border-white/30 dark:border-white/20 shadow-xl overflow-hidden z-50">
                                         <div className="p-1">
                                             <button
                                                 onClick={() => handleCopy('link', generateReferralLink())}
