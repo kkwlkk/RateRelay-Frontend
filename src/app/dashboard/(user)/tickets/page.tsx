@@ -138,7 +138,8 @@ const columns: ColumnDef<GetUserTicketsResponseDto>[] = [
 
 export default function TicketsPage() {
     const { removeParam, getParam } = useURLParams();
-    const startNewTicket = getParam("startNewTicket");
+    const startNewTicket = getParam("new");
+    const ticketType = getParam("type") as unknown as TicketType | undefined;
     const { isAuthenticated } = useAuth();
     const { openModal, closeModal } = useModalStore();
 
@@ -150,8 +151,9 @@ export default function TicketsPage() {
 
     const { data, isLoading } = query;
 
-    const openNewTicketModal = useCallback(() => {
+    const openNewTicketModal = useCallback((type?: TicketType) => {
         openModal(NewTicketModal, {
+            initialType: type,
             onSubmit: async (data) => {
                 const { title, content, type } = data;
                 const response = await apiService.createTicket(title, content, type);
@@ -174,10 +176,17 @@ export default function TicketsPage() {
     }, [closeModal, openModal, query]);
 
     useEffect(() => {
-        if (!startNewTicket) return;
-        openNewTicketModal();
-        removeParam("startNewTicket");
-    }, [openNewTicketModal, removeParam, startNewTicket]);
+        const shouldOpenModal = ticketType || startNewTicket;
+
+        if (!shouldOpenModal) return;
+
+        openNewTicketModal(ticketType);
+
+        const paramsToRemove = ["new"];
+        if (ticketType) paramsToRemove.push("type");
+
+        paramsToRemove.forEach(removeParam);
+    }, [openNewTicketModal, removeParam, startNewTicket, ticketType]);
 
     if (isLoading) {
         return <GenericCenterLoader />;
@@ -205,7 +214,7 @@ export default function TicketsPage() {
                     <Button
                         variant="default"
                         className="bg-primary dark:bg-primary/80 w-full sm:w-auto"
-                        onClick={openNewTicketModal}
+                        onClick={() => openNewTicketModal(ticketType)}
                     >
                         <Ticket className="w-4 h-4 sm:w-5 sm:h-5" />
                         <span className="text-sm sm:text-base">Nowe zgłoszenie</span>

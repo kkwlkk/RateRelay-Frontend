@@ -20,13 +20,17 @@ type NewTicketFormData = z.infer<typeof newTicketSchema>;
 interface NewTicketModalProps {
     onSubmit: (data: NewTicketFormData) => void;
     isLoading?: boolean;
+    initialType?: TicketType;
 }
 
 export const NewTicketModal = ({
     onSubmit,
+    initialType,
     isLoading = false,
 }: NewTicketModalProps) => {
     const { closeModal } = useModalStore();
+
+    console.log('NewTicketModal rendered with initialType:', initialType);
 
     const {
         register,
@@ -38,7 +42,7 @@ export const NewTicketModal = ({
         resolver: zodResolver(newTicketSchema),
         mode: "onChange",
         defaultValues: {
-            type: undefined,
+            type: initialType || undefined,
             title: "",
             content: "",
         },

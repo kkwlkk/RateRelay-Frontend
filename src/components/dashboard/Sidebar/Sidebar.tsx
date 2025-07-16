@@ -8,12 +8,15 @@ import { AppSidebarFooter } from './SidebarFooter';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { hasPermission } from '@/utils/permissionUtils';
+import { useModalStore } from '@/contexts/ModalStoreContext';
+import { HelpModal } from '@/components/modals/HelpModal';
 
 export function AppSidebar() {
     const { user, logout } = useAuth();
     const router = useRouter();
     const [isClient, setIsClient] = useState(false);
     const { open, isMobile } = useSidebar();
+    const { openModal } = useModalStore();
 
     useEffect(() => {
         setIsClient(true);
@@ -84,7 +87,7 @@ export function AppSidebar() {
     };
 
     const handleHelp = () => {
-        router.push('/dashboard/help');
+        openModal(HelpModal);
     };
 
     return (

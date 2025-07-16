@@ -3,6 +3,7 @@
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { DashboardBreadcrumb } from '@/components/dashboard/DashboardBreadcrumb';
 import { AppSidebar } from '@/components/dashboard/Sidebar/Sidebar';
+import TawkToChat from '@/components/TawkToChat';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -13,6 +14,8 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
+    TawkToChat({ loadOnMount: true });
+
     return (
         <ProtectedRoute>
             <SidebarProvider defaultOpen>

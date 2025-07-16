@@ -79,7 +79,7 @@ const quickActions = [
     { title: 'Oceń firmę', description: 'Podziel się doświadczeniem', icon: MessageSquare, href: '/dashboard/exchange-feedback' },
     { title: 'Zarządzaj firmami', description: 'Sprawdź swoje firmy', icon: Building2, href: '/dashboard/businesses' },
     { title: 'Historia ocen', description: 'Zobacz wszystkie oceny', icon: Clock, href: '/dashboard/exchange-feedback/history' },
-    { title: 'Wsparcie', description: 'Utwórz zgłoszenie', icon: Users, href: '/dashboard/tickets?startNewTicket=true' }
+    { title: 'Wsparcie', description: 'Utwórz zgłoszenie', icon: Users, href: '/dashboard/tickets?new=true' }
 ];
 
 const tips = [

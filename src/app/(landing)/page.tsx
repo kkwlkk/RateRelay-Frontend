@@ -8,12 +8,14 @@ import { CTA } from '@/components/landing/CTA';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Hero />
-      <Stats />
-      <Features />
-      <HowItWorks />
-      <CTA />
-    </div>
+    <>
+      <div className="min-h-screen flex flex-col">
+        <Hero />
+        <Stats />
+        <Features />
+        <HowItWorks />
+        <CTA />
+      </div>
+    </>
   );
 }

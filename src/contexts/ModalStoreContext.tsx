@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, ComponentType, ReactNode, u
 import { useAuth } from "./AuthContext";
 
 type ModalOptions = {
+    description: string;
+    title: string;
     closable: boolean;
     forceOpen?: boolean;
 };
@@ -37,7 +39,11 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     const [modalState, setModalState] = useState<ModalState>({
         modalComponent: null,
         modalProps: {},
-        options: { closable: true },
+        options: {
+            closable: true,
+            description: "",
+            title: ""
+        },
         isOpen: false,
         openedComponentName: null,
     });
@@ -45,7 +51,11 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     const openModal = <T extends object>(
         component: ComponentType<T>,
         props?: T,
-        options: ModalOptions = { closable: true }
+        options: ModalOptions = {
+            closable: true,
+            description: "",
+            title: ""
+        }
     ) => {
         const componentName = component.displayName || component.name || "UnknownComponent";
 
@@ -66,7 +76,11 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         setModalState({
             modalComponent: null,
             modalProps: {},
-            options: { closable: true },
+            options: {
+                closable: true,
+                description: "",
+                title: ""
+            },
             isOpen: false,
             openedComponentName: null,
         });
