@@ -4,7 +4,8 @@ import { AccountOnboardingStep } from "./Onboarding";
 
 export type AccountDataResponseDto = {
     id: number;
-    username: string;
+    googleUsername: string;
+    displayName: string;
     email: string;
     permissions: number;
     pointBalance: number;
@@ -30,3 +31,7 @@ export type AccountReviewHistoryResponseDto = {
     comment: string;
     dateCreatedUtc: string;
 }
+
+export type AccountSettingsUpdateRequestDto = {
+    displayName?: string;
+};

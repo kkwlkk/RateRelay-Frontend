@@ -3,7 +3,8 @@ import { UserPermission } from "@/enums/permissions";
 
 type User = {
     id: number;
-    username: string;
+    googleUsername: string;
+    displayName: string;
     email: string;
     pointBalance: number;
     permissions: number;

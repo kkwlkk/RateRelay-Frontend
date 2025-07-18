@@ -40,7 +40,7 @@ export default function OnboardingCompletePage() {
         <OnboardingRoute step={AccountOnboardingStep.Completed}>
             <div className="bg-zinc-50 dark:bg-zinc-900 py-8 px-4">
                 <div className="max-w-4xl mx-auto space-y-8">
-                    <CompleteHeader username={user?.username || user?.email || 'Użytkowniku'} />
+                    <CompleteHeader username={user?.googleUsername || user?.email || 'Użytkowniku'} />
 
                     <FeatureCards pointBalance={user?.pointBalance || 0} />
 

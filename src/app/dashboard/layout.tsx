@@ -30,8 +30,8 @@ export default function DashboardLayout({
                                 "text-zinc-900 dark:text-zinc-50 flex-shrink-0"
                             )}
                             >
-                                <SidebarTrigger className='transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 rounded-md p-1' />
-                                <hr className="h-4 border-l border-zinc-200 dark:border-zinc-800 hidden sm:block" />
+                                <SidebarTrigger className='transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:hover:text-zinc-100 rounded-md p-1' />
+                                <hr className="h-4 border-l border-zinc-200 dark:border-zinc-800 hidden sm:block text-zinc-900 dark:text-zinc-50" />
                                 <DashboardBreadcrumb />
                             </header>
                             <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 overflow-auto">

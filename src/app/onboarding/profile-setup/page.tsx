@@ -16,8 +16,8 @@ export default function ProfileSetupPage() {
   const { completeProfileSetupStep } = useOnboarding();
 
   const defaultValues = useMemo(() => ({
-    displayName: user?.username || '',
-  }), [user?.username]);
+    displayName: user?.displayName || '',
+  }), [user?.displayName]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: ProfileSetupFormData) => {

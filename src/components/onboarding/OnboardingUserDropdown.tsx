@@ -38,12 +38,12 @@ const OnboardingUserDropdown = ({ user, logout }: OnboardingUserDropdownProps) =
                     >
                         <Avatar className="h-8 w-8">
                             <AvatarFallback className="bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-sm font-medium">
-                                {user?.username ? getUserInitials(user.username) : 'U'}
+                                {user?.googleUsername ? getUserInitials(user.googleUsername) : 'U'}
                             </AvatarFallback>
                         </Avatar>
                         <div className="hidden sm:flex flex-col items-start min-w-0">
                             <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate max-w-40">
-                                {user?.username || 'Użytkownik'}
+                                {user?.googleUsername || 'Użytkownik'}
                             </span>
                             <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                 Konfiguracja
@@ -56,12 +56,12 @@ const OnboardingUserDropdown = ({ user, logout }: OnboardingUserDropdownProps) =
                     <div className="flex items-center gap-3 px-2 py-3">
                         <Avatar className="h-10 w-10">
                             <AvatarFallback className="bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium">
-                                {user?.username ? getUserInitials(user.username) : 'U'}
+                                {user?.googleUsername ? getUserInitials(user.googleUsername) : 'U'}
                             </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col min-w-0 flex-1">
                             <div className="font-medium text-zinc-900 dark:text-zinc-100 truncate">
-                                {user?.username || 'Użytkownik'}
+                                {user?.googleUsername || 'Użytkownik'}
                             </div>
                             <div className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
                                 {user?.email}

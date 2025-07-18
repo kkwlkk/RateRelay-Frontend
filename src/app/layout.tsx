@@ -82,7 +82,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
       </head>
       <body className={cn(
-        'min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 antialiased',
+        'min-h-screen bg-background text-foreground antialiased',
         inter.className
       )}>
         <Providers>{children}</Providers>
