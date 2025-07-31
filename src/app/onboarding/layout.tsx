@@ -9,7 +9,7 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 import { getOnboardingStepPath } from '@/lib/onboarding';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { OnboardingUserDropdown } from '@/components/onboarding/OnboardingUserDropdown';
-import { GenericCenterLoader } from '@/components/GenericLoader';
+import { GenericPageCenterLoader } from '@/components/GenericLoader';
 
 const steps = [
     { id: AccountOnboardingStep.BusinessVerification.toString(), label: 'Weryfikacja firmy' },
@@ -66,19 +66,19 @@ export default function OnboardingLayout({
     }, [sessionStatus, isSessionResolved, isAuthenticated, user, isLoading, status, router]);
 
     if (!isSessionResolved || (isAuthenticated && isLoading)) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     if (!isAuthenticated) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     if (!user) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     if (user.hasCompletedOnboarding) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     return (

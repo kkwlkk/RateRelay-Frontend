@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { LuSearch } from "react-icons/lu";
 import dayjs from "@/utils/dayjsConfig";
 import Link from "next/link";
-import { GenericCenterLoader } from "@/components/GenericLoader";
+import { GenericPageCenterLoader } from "@/components/GenericLoader";
 import { getTypeColor, getTypeLabel, getStatusColor, getStatusLabel } from "@/lib/tickets";
 import { useModalStore } from "@/contexts/ModalStoreContext";
 import { NewTicketModal } from "@/components/modals/NewTicketModal";
@@ -189,11 +189,11 @@ export default function TicketsPage() {
     }, [openNewTicketModal, removeParam, startNewTicket, ticketType]);
 
     if (isLoading) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     if (!isAuthenticated) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     return (

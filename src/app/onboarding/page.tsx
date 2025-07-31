@@ -1,5 +1,5 @@
-import { GenericCenterLoader } from '@/components/GenericLoader';
+import { GenericPageCenterLoader } from '@/components/GenericLoader';
 
 export default function OnboardingPage() {
-    return <GenericCenterLoader />;
+    return <GenericPageCenterLoader />;
 }

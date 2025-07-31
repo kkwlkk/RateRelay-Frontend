@@ -18,12 +18,12 @@ const ModalRenderer = () => {
 
         if (isOpen) {
             document.addEventListener('keydown', handleKeyDown);
-            document.body.style.overflow = 'hidden';
+            // document.body.style.overflow = 'hidden';
         }
 
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
-            document.body.style.overflow = 'unset';
+            // document.body.style.overflow = 'unset';
         };
     }, [isOpen, options.closable, closeModal]);
 
@@ -51,7 +51,7 @@ const ModalRenderer = () => {
                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 )}
             >
-                <div className="overflow-y-auto flex-1 p-8">
+                <div className="flex-1 p-8">
                     <AnimatePresence mode="wait">
                         {ModalComponent && (
                             <motion.div

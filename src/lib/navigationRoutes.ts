@@ -1,4 +1,4 @@
-import { Building, Handshake, History, HomeIcon, MessagesSquare } from 'lucide-react';
+import { Building, Handshake, History, HomeIcon, MessageCircleQuestion, MessagesSquare } from 'lucide-react';
 import { IconType } from '@/types/IconType';
 import { UserPermission } from '@/enums/permissions';
 
@@ -59,7 +59,7 @@ export const dashboardRoutes: NavigationRoute[] = [
     {
         path: '/dashboard/tickets',
         label: 'Moje zgłoszenia',
-        icon: Building,
+        icon: MessageCircleQuestion,
         section: 'Wsparcie',
     },
 
@@ -67,11 +67,18 @@ export const dashboardRoutes: NavigationRoute[] = [
     //                       ADMIN ROUTES
     // ------------------------------------------------------------ //
 
+    // {
+    //     path: '/dashboard/admin/tickets',
+    //     section: 'Admin',
+    //     label: 'Zgłoszenia',
+    //     icon: MessageCircleQuestion,
+    //     requiredPermission: UserPermission.ViewAllTickets
+    // },
     {
-        path: '/dashboard/admin/tickets',
-        section: 'Admin',
-        label: 'Zgłoszenia',
+        path: '/dashboard/admin/businesses',
+        section: 'Administracja',
+        label: 'Zarządzanie firmami',
         icon: Building,
-        requiredPermission: UserPermission.ViewAllTickets
+        requiredPermission: UserPermission.ManageBusinessPriority
     }
 ]

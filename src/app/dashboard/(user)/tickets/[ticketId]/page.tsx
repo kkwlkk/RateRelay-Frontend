@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { GenericCenterLoader } from "@/components/GenericLoader";
+import { GenericPageCenterLoader } from "@/components/GenericLoader";
 import dayjs from "@/utils/dayjsConfig";
 import { toast } from "react-hot-toast";
 import { getStatusColor, getStatusLabel, getTypeColor, getTypeLabel } from "@/lib/tickets";
@@ -113,11 +113,11 @@ export default function TicketDetailPage() {
     };
 
     if (isLoading) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     if (!isAuthenticated) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     if (error || !ticket) {

@@ -12,4 +12,12 @@ export enum UserPermission {
     MarkTicketsObsolete = 128,
     ViewTicketHistory = 256,
     DeleteTickets = 512,
+
+    // Businesses
+    ViewAllBusinesses = 1024,
+    ManageBusinessPriority = 4096,
+    CreateBusiness = 2048,
+    DeleteBusiness = 16384,
+
+    ViewAllUsers = 8192,
 };

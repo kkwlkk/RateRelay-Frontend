@@ -1,6 +1,8 @@
 import { ReviewReportReason } from '@/enums/reviewReportReason';
 import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
 import { AccountDataResponseDto, AccountReviewHistoryResponseDto, AccountSettingsUpdateRequestDto, AccountStatisticsResponseDto } from '@/types/dtos/Account';
+import { AdminBusinessDetailDto, AdminBusinessFilterDto, AdminBusinessListDto, AdminCreateBusinessInputDto, AdminCreateBusinessOutputDto, BoostBusinessInputDto, BusinessBoostResultDto, UnboostBusinessInputDto } from '@/types/dtos/AdminBusinesses';
+import { AdminGetUsersDto, AdminGetUsersFiltersDto } from '@/types/dtos/AdminUsers';
 import { AuthResponseDto } from '@/types/dtos/Auth';
 import { GetBusinessesResponseDto } from '@/types/dtos/Business';
 import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto } from '@/types/dtos/BusinessReviews';
@@ -41,12 +43,13 @@ export interface PaginationMeta {
 
 export type PaginatedApiResponse<T, M = unknown> = ApiResponse<T, M, PaginationMeta>;
 
-interface PagedRequest {
+export interface PagedRequest<T = unknown> {
     page?: number;
     pageSize?: number;
     sortBy?: string;
     sortDirection?: 'asc' | 'desc';
     search?: string;
+    filters?: T;
 }
 
 class ApiService {
@@ -92,8 +95,14 @@ class ApiService {
             const contentType = response.headers.get('content-type');
             let result;
 
-            if (response.status === 204 || !contentType) {
-                result = {};
+            if ([201, 204, 205].includes(response.status) || !contentType) {
+                result = {
+                    success: true,
+                    data: null as unknown,
+                    error: undefined,
+                    metadata: undefined,
+                    pagination: undefined,
+                } as ApiResponse<T, TMeta, TPagination>;
             } else if (contentType && contentType.includes('application/json')) {
                 try {
                     const text = await response.text();
@@ -168,7 +177,7 @@ class ApiService {
         }
     }
 
-    private dtoToQueryParams(dto: Record<string, unknown>): Record<string, string> {
+    private dtoToQueryParams(dto: Record<string, unknown> | object): Record<string, string> {
         return Object.entries(dto).reduce((acc, [key, value]) => {
             if (value !== null && value !== undefined) {
                 acc[key] = String(value);
@@ -185,6 +194,14 @@ class ApiService {
         if (request.sortBy) params.sortBy = request.sortBy;
         if (request.sortDirection) params.sortDirection = request.sortDirection;
         if (request.search) params.search = request.search;
+
+        if (request.filters) {
+            Object.entries(request.filters).forEach(([key, value]) => {
+                if (value !== null && value !== undefined) {
+                    params[`filters.${key}`] = String(value);
+                }
+            });
+        }
 
         return params;
     }
@@ -363,6 +380,37 @@ class ApiService {
      */
     async linkReferralCode(referralCode: string): Promise<ApiResponse<LinkReferralCodeResponseDto>> {
         return this.request(`/api/user/referral/link`, 'POST', { referralCode });
+    }
+
+
+
+    // Admin businesses
+    async getBusinessesForAdmin(input: PagedRequest<AdminBusinessFilterDto>): Promise<PaginatedApiResponse<AdminBusinessListDto[]>> {
+        return this.request('/api/admin/businesses', 'GET', undefined, this.toQueryParams(input));
+    }
+
+    async boostSpecificBusiness(businessId: number, input: BoostBusinessInputDto): Promise<ApiResponse<BusinessBoostResultDto>> {
+        return this.request(`/api/admin/businesses/${businessId}/boost`, 'POST', input);
+    }
+
+    async unboostSpecificBusiness(businessId: number, input: UnboostBusinessInputDto): Promise<ApiResponse<BusinessBoostResultDto>> {
+        return this.request(`/api/admin/businesses/${businessId}/unboost`, 'POST', input);
+    }
+
+    async getSpecificBusinessDetails(businessId: number): Promise<ApiResponse<AdminBusinessDetailDto>> {
+        return this.request(`/api/admin/businesses/${businessId}`);
+    }
+
+    async deleteBusiness(businessId: number): Promise<ApiResponse<void>> {
+        return this.request(`/api/admin/businesses/${businessId}`, 'DELETE');
+    }
+
+    async createBusiness(input: AdminCreateBusinessInputDto): Promise<ApiResponse<AdminCreateBusinessOutputDto>> {
+        return this.request('/api/admin/businesses', 'POST', input);
+    }
+
+    async getAllUsers(input: PagedRequest & AdminGetUsersFiltersDto = {}): Promise<PaginatedApiResponse<AdminGetUsersDto[]>> {
+        return this.request('/api/admin/users', 'GET', undefined, this.toQueryParams(input));
     }
 }
 

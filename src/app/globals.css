@@ -42,7 +42,7 @@
   --color-ring: hsl(0 0% 83.1%); /* zinc-300 */
   --color-card: hsl(0 0% 3.9%); /* zinc-950 */
   --color-card-foreground: hsl(0 0% 98%);
-  --color-popover: hsl(0 0% 3.9%); /* zinc-950 */
+  --color-popover: hsl(0 0% 9.02%);
   --color-popover-foreground: hsl(0 0% 98%);
   --color-destructive: hsl(0 84% 51%);
   --color-destructive-foreground: hsl(0 0% 100%);

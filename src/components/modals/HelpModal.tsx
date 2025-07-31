@@ -3,7 +3,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Bug, AlertTriangle, Headphones } from 'lucide-react';
-import TawkToChat from '../TawkToChat';
 import { useRouter } from 'next/navigation';
 import { TicketType } from '@/types/dtos/Tickets';
 import { useModalStore } from '@/contexts/ModalStoreContext';
@@ -31,17 +30,11 @@ const HELP_OPTIONS = [
 
 export const HelpModal = () => {
     const { closeModal } = useModalStore();
-    const { maximize } = TawkToChat({ unmountOnClose: false });
     const router = useRouter();
 
     const handleOptionClick = (option: typeof HELP_OPTIONS[number]) => {
         const destination = option.href || `/dashboard/tickets?new=true&type=${option.ticketType}`;
         router.push(destination);
-        closeModal();
-    };
-
-    const handleLiveSupportClick = () => {
-        maximize();
         closeModal();
     };
 
@@ -100,7 +93,7 @@ export const HelpModal = () => {
                 })}
             </div>
 
-            <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-900/20">
+            {/* <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-900/20">
                 <div className="space-y-3">
                     <div>
                         <h4 className="text-sm font-medium text-zinc-200">
@@ -123,7 +116,7 @@ export const HelpModal = () => {
                         </Button>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

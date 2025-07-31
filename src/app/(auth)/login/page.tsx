@@ -8,7 +8,7 @@ import { LoginForm } from '@/components/login/loginForm';
 import { FeaturesCarousel } from '@/components/login/featuresCarousel';
 import { signOut } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { GenericCenterLoader } from '@/components/GenericLoader';
+import { GenericPageCenterLoader } from '@/components/GenericLoader';
 
 export default function LoginPage() {
     const { isAuthenticated, isLoading, user, error } = useAuth();
@@ -36,11 +36,11 @@ export default function LoginPage() {
     }, [isAuthenticated, isLoading, router, user]);
 
     if (isLoading) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     if (isAuthenticated) {
-        return <GenericCenterLoader />;
+        return <GenericPageCenterLoader />;
     }
 
     return (

@@ -333,7 +333,7 @@ const DataTableComponent = <TData, TValue>({
   const renderToolbar = useCallback(() => {
     if (toolbarPosition === 'replace' && customToolbar) {
       return (
-        <div className="px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
+        <div className="px-5 py-4 sm:px-6 sm:py-5 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
           {customToolbar}
         </div>
       )
@@ -342,13 +342,13 @@ const DataTableComponent = <TData, TValue>({
     return (
       <>
         {toolbarPosition === 'above' && customToolbar && (
-          <div className="px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
+          <div className="px-5 py-4 sm:px-6 sm:py-5 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
             {customToolbar}
           </div>
         )}
         {defaultToolbar}
         {toolbarPosition === 'below' && customToolbar && (
-          <div className="px-3 py-3 sm:px-4 sm:py-3 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
+          <div className="px-5 py-4 sm:px-6 sm:py-5 bg-zinc-50/30 dark:bg-zinc-800/20 border-b border-zinc-200 dark:border-zinc-700">
             {customToolbar}
           </div>
         )}
