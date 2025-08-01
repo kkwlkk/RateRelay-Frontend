@@ -2,7 +2,7 @@
 const nextConfig = {
   transpilePackages: ['next-mdx-remote'],
   experimental: {
-    turbo: {
+    turbopack: {
       rules: {
         '*.md': {
           loaders: ['raw-loader'],
@@ -11,14 +11,61 @@ const nextConfig = {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  webpack: (config: any) => {
-    // Fallback for when Turbopack is disabled
-    config.module.rules.push({
-      test: /\.md$/,
-      use: 'raw-loader',
-    });
-    return config;
+  turbopack: {
+    rules: {
+      '*.md': {
+        loaders: ['raw-loader'],
+        as: '*.js',
+      },
+    },
+  },
+  async rewrites() {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    const hangfireBaseUrl = isDevelopment 
+      ? 'http://localhost:5206'
+      : process.env.HANGFIRE_URL || 'http://localhost:5000';
+    
+    return [
+      {
+        source: '/admin/hangfire/:path*',
+        destination: `${hangfireBaseUrl}/hangfire/:path*`
+      },
+      {
+        source: '/hangfire/:path*',
+        destination: `${hangfireBaseUrl}/hangfire/:path*`
+      }
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/admin/hangfire/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self'",
+          },
+        ],
+      },
+      {
+        source: '/hangfire/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
 };
 

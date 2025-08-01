@@ -20,4 +20,10 @@ export enum UserPermission {
     DeleteBusiness = 16384,
 
     ViewAllUsers = 8192,
+
+    /** Can access Hangfire Dashboard */
+    AccessHangfireDashboard = 32768,
+
+    /** Manage Hangfire Jobs */
+    ManageHangfireJobs = 65536,
 };

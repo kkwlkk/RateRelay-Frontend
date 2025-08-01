@@ -1,4 +1,4 @@
-import { Building, Handshake, History, HomeIcon, MessageCircleQuestion, MessagesSquare } from 'lucide-react';
+import { Building, FileBox, Handshake, History, HomeIcon, MessageCircleQuestion, MessagesSquare } from 'lucide-react';
 import { IconType } from '@/types/IconType';
 import { UserPermission } from '@/enums/permissions';
 
@@ -76,9 +76,16 @@ export const dashboardRoutes: NavigationRoute[] = [
     // },
     {
         path: '/dashboard/admin/businesses',
-        section: 'Administracja',
-        label: 'Zarządzanie firmami',
+        section: 'Administracja [Zarządzanie]',
+        label: 'Firmy',
         icon: Building,
         requiredPermission: UserPermission.ManageBusinessPriority
+    },
+    {
+        path: '/dashboard/admin/background-jobs',
+        section: 'Administracja [Zarządzanie]',
+        label: 'Zadania w tle',
+        icon: FileBox,
+        requiredPermission: UserPermission.AccessHangfireDashboard
     }
 ]
