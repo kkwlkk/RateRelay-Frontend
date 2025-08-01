@@ -46,8 +46,9 @@ export function AppSidebar() {
     const getDefaultExpandedItems = () => {
         const defaultExpanded: Record<string, boolean> = {};
         filteredRoutes.forEach(route => {
+            const routeKey = route.path || route.href || route.label;
             if (route.subRoutes) {
-                defaultExpanded[route.path] = true;
+                defaultExpanded[routeKey] = true;
             }
         });
         return defaultExpanded;

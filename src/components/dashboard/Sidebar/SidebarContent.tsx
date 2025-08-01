@@ -27,15 +27,18 @@ export function AppSidebarContent({
             {ungroupedRoutes.length > 0 && (
                 <SidebarGroup>
                     <SidebarMenu>
-                        {ungroupedRoutes.map((route) => (
-                            <AppSidebarMenuItem
-                                key={route.path}
-                                route={route}
-                                isOpen={isOpen}
-                                isExpanded={expandedItems[route.path] || false}
-                                onToggle={onToggle}
-                            />
-                        ))}
+                        {ungroupedRoutes.map((route) => {
+                            const routeKey = route.path || route.href || route.label;
+                            return (
+                                <AppSidebarMenuItem
+                                    key={routeKey}
+                                    route={route}
+                                    isOpen={isOpen}
+                                    isExpanded={expandedItems[routeKey] || false}
+                                    onToggle={onToggle}
+                                />
+                            )
+                        })}
                     </SidebarMenu>
                 </SidebarGroup>
             )}
@@ -52,15 +55,18 @@ export function AppSidebarContent({
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="mt-1">
                         <SidebarMenu>
-                            {routes.map((route) => (
-                                <AppSidebarMenuItem
-                                    key={route.path}
-                                    route={route}
-                                    isOpen={isOpen}
-                                    isExpanded={expandedItems[route.path] || false}
-                                    onToggle={onToggle}
-                                />
-                            ))}
+                            {routes.map((route) => {
+                                const routeKey = route.path || route.href || route.label;
+                                return (
+                                    <AppSidebarMenuItem
+                                        key={routeKey}
+                                        route={route}
+                                        isOpen={isOpen}
+                                        isExpanded={expandedItems[routeKey] || false}
+                                        onToggle={onToggle}
+                                    />
+                                );
+                            })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>

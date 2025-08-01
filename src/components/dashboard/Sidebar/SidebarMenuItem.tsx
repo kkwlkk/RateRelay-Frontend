@@ -18,6 +18,8 @@ export function AppSidebarMenuItem({ route, isOpen, isExpanded, onToggle }: Side
     const hasSubRoutes = route.subRoutes && route.subRoutes.length > 0;
     const isActive = pathname === route.path;
     const isChildActive = route.subRoutes?.some(subRoute => pathname === subRoute.path) ?? false;
+    const routeKey = route.path || route.href || route.label;
+    const isExternalLink = !!route.href;
 
     const handleClick = (e: React.MouseEvent) => {
         if (hasSubRoutes && isOpen) {
@@ -27,11 +29,37 @@ export function AppSidebarMenuItem({ route, isOpen, isExpanded, onToggle }: Side
 
             if (clickPosition > arrowAreaStart) {
                 e.preventDefault();
-                onToggle(route.path);
+                onToggle(routeKey);
                 return;
             }
         }
     };
+
+    const renderLinkContent = () => (
+        <div className={cn(
+            "flex items-center gap-2 w-full",
+            isOpen ? "justify-between" : "justify-center"
+        )}>
+            <div className={cn(
+                "flex items-center gap-2",
+                !isOpen && "justify-center"
+            )}>
+                {route.icon && <route.icon className="h-4 w-4 flex-shrink-0" />}
+                {isOpen && <span>{route.label}</span>}
+                {isOpen && route.labelIcon && (
+                    <route.labelIcon className="h-3 w-3 flex-shrink-0" />
+                )}
+            </div>
+            {hasSubRoutes && isOpen && (
+                <ChevronRightIcon
+                    className={cn(
+                        "h-4 w-4 transition-transform flex-shrink-0",
+                        isExpanded ? "rotate-90" : ""
+                    )}
+                />
+            )}
+        </div>
+    );
 
     const menuButton = (
         <SidebarMenuButton
@@ -45,31 +73,20 @@ export function AppSidebarMenuItem({ route, isOpen, isExpanded, onToggle }: Side
                 isOpen ? "px-3 py-2" : "p-2 w-10 h-10 justify-center"
             )}
         >
-            <Link
-                href={route.path}
-                onClick={handleClick}
-                className={cn(
-                    "flex items-center gap-2 w-full",
-                    // When open, justify between for proper spacing
-                    isOpen ? "justify-between" : "justify-center"
-                )}
-            >
-                <div className={cn(
-                    "flex items-center gap-2",
-                    !isOpen && "justify-center"
-                )}>
-                    {route.icon && <route.icon className="h-4 w-4 flex-shrink-0" />}
-                    {isOpen && <span>{route.label}</span>}
-                </div>
-                {hasSubRoutes && isOpen && (
-                    <ChevronRightIcon
-                        className={cn(
-                            "h-4 w-4 transition-transform flex-shrink-0",
-                            isExpanded ? "rotate-90" : ""
-                        )}
-                    />
-                )}
-            </Link>
+            {isExternalLink ? (
+                <a
+                    href={routeKey}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleClick}
+                >
+                    {renderLinkContent()}
+                </a>
+            ) : (
+                <Link href={routeKey} onClick={handleClick}>
+                    {renderLinkContent()}
+                </Link>
+            )}
         </SidebarMenuButton>
     );
 
@@ -94,6 +111,25 @@ export function AppSidebarMenuItem({ route, isOpen, isExpanded, onToggle }: Side
         </TooltipProvider>
     ) : menuButton;
 
+    const renderSubMenuLink = (subRoute: NavigationRoute) => {
+        const subRouteKey = subRoute.path || subRoute.href || subRoute.label;
+        const isSubExternal = !!subRoute.href;
+
+        return isSubExternal ? (
+            <a
+                href={subRouteKey}
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <span>{subRoute.label}</span>
+            </a>
+        ) : (
+            <Link href={subRouteKey}>
+                <span>{subRoute.label}</span>
+            </Link>
+        );
+    };
+
     return (
         <SidebarMenuItem key={route.path}>
             {menuButtonWithTooltip}
@@ -101,7 +137,7 @@ export function AppSidebarMenuItem({ route, isOpen, isExpanded, onToggle }: Side
             {hasSubRoutes && isExpanded && isOpen && (
                 <SidebarMenuSub>
                     {route.subRoutes?.map((subRoute) => (
-                        <SidebarMenuSubItem key={subRoute.path}>
+                        <SidebarMenuSubItem key={subRoute.path || subRoute.href}>
                             <SidebarMenuSubButton
                                 asChild
                                 isActive={pathname === subRoute.path}
@@ -112,9 +148,7 @@ export function AppSidebarMenuItem({ route, isOpen, isExpanded, onToggle }: Side
                                     pathname === subRoute.path && "bg-zinc-100 text-zinc-900 dark:bg-zinc-800/50 dark:text-zinc-100"
                                 )}
                             >
-                                <Link href={subRoute.path}>
-                                    <span>{subRoute.label}</span>
-                                </Link>
+                                {renderSubMenuLink(subRoute)}
                             </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                     ))}
