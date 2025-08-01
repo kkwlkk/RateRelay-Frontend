@@ -1,5 +1,3 @@
-import { isStaging } from "@/utils/environment";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ['next-mdx-remote'],
@@ -20,72 +18,6 @@ const nextConfig = {
       use: 'raw-loader',
     });
     return config;
-  },
-  async rewrites() {
-    const isDevelopment = process.env.NODE_ENV === 'development';
-
-    const hangfireBaseUrl = (() => {
-      console.error('[DEBUG] Getting Hangfire base URL');
-      if (isStaging()) {
-        if (!process.env.HANGFIRE_URL || process.env.HANGFIRE_URL === '') {
-          throw new Error("HANGFIRE_URL is not defined");
-        }
-
-        return process.env.HANGFIRE_URL;
-      }
-
-      if (isDevelopment) {
-        return 'http://localhost:5206';
-      }
-
-      if (!process.env.HANGFIRE_URL || process.env.HANGFIRE_URL === '') {
-        throw new Error("HANGFIRE_URL is not defined");
-      }
-
-      return process.env.HANGFIRE_URL;
-    })();
-    console.error(`[DEBUG] Hangfire base URL: ${hangfireBaseUrl}`);
-
-    return [
-      {
-        source: '/admin/hangfire/:path*',
-        destination: `${hangfireBaseUrl}/hangfire/:path*`
-      },
-      {
-        source: '/hangfire/:path*',
-        destination: `${hangfireBaseUrl}/hangfire/:path*`
-      }
-    ];
-  },
-  async headers() {
-    return [
-      {
-        source: '/admin/hangfire/:path*',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self'",
-          },
-        ],
-      },
-      {
-        source: '/hangfire/:path*',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-    ];
   },
 };
 
