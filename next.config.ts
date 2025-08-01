@@ -25,6 +25,7 @@ const nextConfig = {
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     const hangfireBaseUrl = (() => {
+      console.error('[DEBUG] Getting Hangfire base URL');
       if (isStaging()) {
         if (!process.env.HANGFIRE_URL || process.env.HANGFIRE_URL === '') {
           throw new Error("HANGFIRE_URL is not defined");
@@ -43,6 +44,7 @@ const nextConfig = {
 
       return process.env.HANGFIRE_URL;
     })();
+    console.error(`[DEBUG] Hangfire base URL: ${hangfireBaseUrl}`);
 
     return [
       {
