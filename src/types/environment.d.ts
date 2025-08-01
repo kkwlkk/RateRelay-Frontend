@@ -1,7 +1,5 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    NEXT_PUBLIC_TAWK_PROPERTY_ID?: string;
-    NEXT_PUBLIC_TAWK_WIDGET_ID?: string;
-    HANGFIRE_URL?: string;
+    NEXT_PUBLIC_HANGFIRE_URL?: string;
   }
 }

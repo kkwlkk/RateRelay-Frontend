@@ -85,7 +85,7 @@ export const dashboardRoutes: NavigationRoute[] = [
         requiredPermission: UserPermission.ManageBusinessPriority
     },
     {
-        href: getHangfireBaseUrl() || "",
+        href: getHangfireBaseUrl(),
         section: 'Administracja [Zarządzanie]',
         label: 'Zadania w tle',
         icon: FileBox,
