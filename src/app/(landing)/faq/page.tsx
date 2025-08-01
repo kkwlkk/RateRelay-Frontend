@@ -210,7 +210,7 @@ export default function FAQPage() {
                                         value={faq.id}
                                         className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 sm:px-6 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
                                     >
-                                        <AccordionTrigger className="text-left hover:no-underline py-4 sm:py-6">
+                                        <AccordionTrigger className="text-left hover:no-underline py-4 sm:py-6 cursor-pointer">
                                             <div className="flex items-start gap-2 sm:gap-4 w-full min-w-0">
                                                 <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                                                     <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center flex-shrink-0">

@@ -184,10 +184,10 @@ export default function FeaturesPage() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <Button className="bg-blue-600 hover:bg-blue-700">
+                                    {/* <Button className="bg-blue-600 hover:bg-blue-700">
                                         Dowiedz się więcej
                                         <ArrowRight className="ml-2 h-4 w-4" />
-                                    </Button>
+                                    </Button> */}
                                 </div>
                                 <div className={`relative ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
                                     <div className="aspect-[4/3] bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl flex items-center justify-center">
@@ -339,7 +339,7 @@ export default function FeaturesPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/login" className='z-10'>
                             <Button size="lg" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-900 dark:bg-zinc-300 dark:text-zinc-900 dark:hover:bg-zinc-200">
-                                Rozpocznij za darmo
+                                Rozpocznij teraz
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>

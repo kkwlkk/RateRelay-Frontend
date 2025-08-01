@@ -246,7 +246,7 @@ export default function AboutPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/login" className='z-10'>
                             <Button size="lg" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-900 dark:bg-zinc-300 dark:text-zinc-900 dark:hover:bg-zinc-200">
-                                Rozpocznij za darmo
+                                Rozpocznij teraz
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
