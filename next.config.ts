@@ -19,13 +19,21 @@ const nextConfig = {
       },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  webpack: (config: any) => {
+    config.module.rules.push({
+      test: /\.md$/,
+      use: 'raw-loader',
+    });
+    return config;
+  },
   async rewrites() {
     const isDevelopment = process.env.NODE_ENV === 'development';
-    
-    const hangfireBaseUrl = isDevelopment 
+
+    const hangfireBaseUrl = isDevelopment
       ? 'http://localhost:5206'
       : process.env.HANGFIRE_URL || 'http://localhost:5000';
-    
+
     return [
       {
         source: '/admin/hangfire/:path*',
