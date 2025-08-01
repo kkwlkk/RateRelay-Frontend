@@ -1,5 +1,5 @@
 import { apiService } from "@/services/api";
-import { isDev } from "@/utils/environmentUtils";
+import { isDevelopment } from "@/utils/environment";
 import NextAuth from "next-auth";
 import "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
@@ -23,12 +23,12 @@ export const { handlers, auth } = NextAuth({
     ],
     cookies: {
         sessionToken: {
-            name: isDev ? "auth.session-token" : `__Secure-auth.session-token`,
+            name: isDevelopment() ? "auth.session-token" : `__Secure-auth.session-token`,
             options: {
                 httpOnly: true,
                 sameSite: "lax",
                 path: "/",
-                secure: process.env.NODE_ENV === "production"
+                secure: isDevelopment() ? false : true
             }
         }
     },

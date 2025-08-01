@@ -32,10 +32,11 @@
     }
   },
   "include": [
-    "process.d.ts",
+    "environment.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "types/**/*.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [

@@ -1,3 +1,5 @@
+import { isStaging } from "@/utils/environment";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ['next-mdx-remote'],
@@ -8,14 +10,6 @@ const nextConfig = {
           loaders: ['raw-loader'],
           as: '*.js',
         },
-      },
-    },
-  },
-  turbopack: {
-    rules: {
-      '*.md': {
-        loaders: ['raw-loader'],
-        as: '*.js',
       },
     },
   },
@@ -30,9 +24,25 @@ const nextConfig = {
   async rewrites() {
     const isDevelopment = process.env.NODE_ENV === 'development';
 
-    const hangfireBaseUrl = isDevelopment
-      ? 'http://localhost:5206'
-      : process.env.HANGFIRE_URL || 'http://localhost:5000';
+    const hangfireBaseUrl = (() => {
+      if (isStaging()) {
+        if (!process.env.HANGFIRE_URL || process.env.HANGFIRE_URL === '') {
+          throw new Error("HANGFIRE_URL is not defined");
+        }
+
+        return process.env.HANGFIRE_URL;
+      }
+
+      if (isDevelopment) {
+        return 'http://localhost:5206';
+      }
+
+      if (!process.env.HANGFIRE_URL || process.env.HANGFIRE_URL === '') {
+        throw new Error("HANGFIRE_URL is not defined");
+      }
+
+      return process.env.HANGFIRE_URL;
+    })();
 
     return [
       {
