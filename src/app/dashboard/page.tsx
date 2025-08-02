@@ -122,34 +122,14 @@ const DashboardMainPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard
-                    title="Twoje firmy"
-                    value={stats.totalBusinesses}
-                    subtitle="zweryfikowane"
-                    icon={Building2}
-                    color="blue"
-                />
-                <StatCard
-                    title="Oczekujące recenzje"
-                    value={stats.pendingReviews}
-                    subtitle="do rozpatrzenia"
-                    icon={AlertTriangle}
-                    color="orange"
-                />
-                <StatCard
-                    title="Saldo punktów"
-                    value={stats.pointBalance}
-                    subtitle="dostępne"
-                    icon={Award}
-                    color="purple"
-                />
-                <StatCard
-                    title="Ukończone oceny"
-                    value={stats.completedReviews}
-                    subtitle="łącznie"
-                    icon={Target}
-                    color="green"
-                />
+                {[
+                    { title: "Twoje firmy", value: stats.totalBusinesses, subtitle: "zweryfikowane", icon: Building2, color: "blue" },
+                    { title: "Oczekujące recenzje twoich firm", value: stats.pendingReviews, subtitle: "do rozpatrzenia", icon: AlertTriangle, color: "orange" },
+                    { title: "Saldo punktów", value: stats.pointBalance, subtitle: "dostępne", icon: Award, color: "purple" },
+                    { title: "Ukończone oceny przez Ciebie", value: stats.completedReviews, subtitle: "łącznie", icon: Target, color: "green" }
+                ].map((card, index) => (
+                    <StatCard key={index} {...card} />
+                ))}
             </div>
 
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white">
@@ -159,7 +139,7 @@ const DashboardMainPage = () => {
                         <p className="text-blue-100 mb-4 text-sm">
                             Pomóż innym przedsiębiorcom i zdobądź punkty za swoje doświadczenia
                         </p>
-                        <Link 
+                        <Link
                             href="/dashboard/exchange-feedback"
                             className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                         >

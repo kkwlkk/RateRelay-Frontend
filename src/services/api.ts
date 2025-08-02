@@ -30,6 +30,7 @@ export type ApiResponse<T, M = unknown, P = unknown> = {
     };
     metadata?: M;
     pagination?: P;
+    status: number;
 };
 
 export interface PaginationMeta {
@@ -102,6 +103,7 @@ class ApiService {
                     error: undefined,
                     metadata: undefined,
                     pagination: undefined,
+                    status: 200
                 } as ApiResponse<T, TMeta, TPagination>;
             } else if (contentType && contentType.includes('application/json')) {
                 try {
@@ -117,6 +119,7 @@ class ApiService {
                             code: 'INVALID_RESPONSE',
                             details: parseError instanceof Error ? parseError.message : undefined
                         },
+                        status: 400
                     } as ApiResponse<T, TMeta, TPagination>;
                 }
             } else {
@@ -129,6 +132,7 @@ class ApiService {
                         code: 'INVALID_FORMAT',
                         details: text.substring(0, 100)
                     },
+                    status: 400
                 } as ApiResponse<T, TMeta, TPagination>;
             }
 
@@ -142,9 +146,12 @@ class ApiService {
                     showToast.error(retryMessage, 'rate-limit-exceeded');
                 }
 
+                result.success = false;
+                result.status = response.status;
                 return result as ApiResponse<T, TMeta, TPagination>;
             }
 
+            result.status = response.status;
             return result;
         } catch (err) {
             if (err instanceof Error && err.message.includes('HTTP')) {
@@ -173,6 +180,7 @@ class ApiService {
                     code: 'REQUEST_ERROR',
                     details: err instanceof Error ? err.message : String(err)
                 },
+                status: 500
             } as ApiResponse<T, TMeta, TPagination>;
         }
     }

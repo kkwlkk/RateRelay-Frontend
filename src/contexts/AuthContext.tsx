@@ -38,6 +38,13 @@ const PROTECTED_ROUTE_PATTERNS = [
     /^\/onboarding/,
 ];
 
+class AuthenticationError extends Error {
+    constructor(message: string, public status: number) {
+        super(message);
+        this.name = 'AuthenticationError';
+    }
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { data: session, status } = useSession();
     const router = useRouter();
@@ -51,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const fetchAccountData = async (): Promise<User> => {
         if (!session?.accessToken) {
-            return Promise.reject('No access token');
+            throw new AuthenticationError('No access token', 401);
         }
 
         const response = await apiService.getAccount();
@@ -60,7 +67,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return user;
         } else {
             console.error('Failed to fetch user profile:', response.error);
-            return Promise.reject('Failed to fetch user profile');
+
+            if (response.status === 401) {
+                throw new AuthenticationError('Unauthorized - token expired or invalid', 401);
+            }
+
+            throw new Error(response.error?.message || 'Failed to fetch user profile');
         }
     }
 
@@ -68,6 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         data: userProfile,
         isLoading: userProfileLoading,
         isError: userProfileError,
+        error: userProfileErrorDetails,
         refetch
     } = useQuery({
         queryKey: ['userProfile', session?.accessToken],
@@ -75,7 +88,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         enabled: !!session?.accessToken && status === 'authenticated' && isProtectedRoute && !hasBackendError,
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
-        retry: 1
+        retry: (failureCount, error) => {
+            if (error instanceof AuthenticationError && error.status === 401) {
+                return false;
+            }
+            return failureCount < 1;
+        }
     })
 
     useEffect(() => {
@@ -115,12 +133,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             userProfileError &&
             !userProfileLoading &&
             isProtectedRoute &&
-            !hasBackendError
+            !hasBackendError &&
+            userProfileErrorDetails instanceof AuthenticationError &&
+            userProfileErrorDetails.status === 401
+        ) {
+            console.warn('Token expired or unauthorized, signing out');
+            signOut({ callbackUrl: '/login' });
+        }
+    }, [status, session?.accessToken, userProfileError, userProfileLoading, isProtectedRoute, hasBackendError, userProfileErrorDetails]);
+
+    useEffect(() => {
+        if (
+            status === 'authenticated' &&
+            session?.accessToken &&
+            userProfileError &&
+            !userProfileLoading &&
+            isProtectedRoute &&
+            !hasBackendError &&
+            !(userProfileErrorDetails instanceof AuthenticationError)
         ) {
             console.warn('Session valid but failed to fetch user profile, redirecting to login');
             signOut();
         }
-    }, [status, session?.accessToken, userProfileError, userProfileLoading, router, isProtectedRoute, hasBackendError]);
+    }, [status, session?.accessToken, userProfileError, userProfileLoading, router, isProtectedRoute, hasBackendError, userProfileErrorDetails]);
 
     const login = async () => {
         signIn('google', {
