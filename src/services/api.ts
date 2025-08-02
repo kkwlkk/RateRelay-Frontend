@@ -1,4 +1,5 @@
 import { ReviewReportReason } from '@/enums/reviewReportReason';
+import { showToast } from '@/lib/toast';
 import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
 import { AccountDataResponseDto, AccountReviewHistoryResponseDto, AccountSettingsUpdateRequestDto, AccountStatisticsResponseDto } from '@/types/dtos/Account';
 import { AdminBusinessDetailDto, AdminBusinessFilterDto, AdminBusinessListDto, AdminCreateBusinessInputDto, AdminCreateBusinessOutputDto, BoostBusinessInputDto, BusinessBoostResultDto, UnboostBusinessInputDto } from '@/types/dtos/AdminBusinesses';
@@ -12,7 +13,6 @@ import { GenerateReferralCodeResponseDto, LinkReferralCodeResponseDto, ReferralG
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
 import { CreateUserTicketDto, GetUserTicketDetailsDto, GetUserTicketsResponseDto, TicketCommentDto, TicketType } from '@/types/dtos/Tickets';
 import { getSession } from 'next-auth/react';
-import toast from 'react-hot-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -139,7 +139,7 @@ class ApiService {
                         ? `Przekroczono limit zapytań. Spróbuj ponownie za ${retryAfter} sekund.`
                         : 'Przekroczono limit zapytań. Spróbuj ponownie za chwilę.';
 
-                    toast.error(retryMessage);
+                    showToast.error(retryMessage, 'rate-limit-exceeded');
                 }
 
                 return result as ApiResponse<T, TMeta, TPagination>;
@@ -154,15 +154,15 @@ class ApiService {
             console.error('Error during API request:', err);
 
             if (err instanceof Error && err.message.includes('Failed to fetch')) {
-                toast.error('Błąd sieci. Sprawdź połączenie internetowe.');
+                showToast.error('Błąd sieci. Sprawdź połączenie internetowe.', 'network-error');
             } else if (err instanceof Error && err.message.includes('NetworkError')) {
-                toast.error('Błąd sieci. Sprawdź połączenie internetowe.');
+                showToast.error('Błąd sieci. Sprawdź połączenie internetowe.', 'network-error');
             } else if (err instanceof Error && err.message.includes('Unexpected token')) {
-                toast.error('Otrzymano nieprawidłowy format odpowiedzi z serwera.');
+                showToast.error('Otrzymano nieprawidłowy format odpowiedzi z serwera.', 'unexpected-token');
             } else if (err instanceof Error && err.message.includes('JSON')) {
-                toast.error('Otrzymano nieprawidłowy format odpowiedzi z serwera.');
+                showToast.error('Otrzymano nieprawidłowy format odpowiedzi z serwera.', 'json-error');
             } else {
-                toast.error('Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.');
+                showToast.error('Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.', 'unexpected-error');
             }
 
             return {

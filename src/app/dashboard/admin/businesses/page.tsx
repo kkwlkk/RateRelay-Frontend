@@ -19,8 +19,8 @@ import { useModalStore } from "@/contexts/ModalStoreContext";
 import { BusinessBoostModal } from "@/components/modals/BusinessBoostModal";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 import { CreateBusinessModal } from "@/components/modals/CreateBusinessModal";
-import toast from "react-hot-toast";
 import { AdminBusinessFilters } from "./components/AdminBusinessFilters";
+import { showToast } from "@/lib/toast";
 
 const AdminBusinessesManagementPage = () => {
     const { user, isLoading } = useAuth();
@@ -70,17 +70,17 @@ const AdminBusinessesManagementPage = () => {
                     });
 
                     if (response.success) {
-                        toast.success(`Firma "${data.businessData.name}" została dodana`);
+                        showToast.success(`Firma "${data.businessData.name}" została dodana`, 'business-create-success');
                         refreshData();
                         closeModal();
                     } else if (response.error?.code === "BusinessAlreadyExists") {
-                        toast.error(`Firma "${data.businessData.name}" już istnieje`);
+                        showToast.error(`Firma "${data.businessData.name}" już istnieje`, 'business-create-error');
                     } else {
-                        toast.error('Nie udało się dodać firmy');
+                        showToast.error('Nie udało się dodać firmy', 'business-create-error');
                     }
                 } catch (error) {
                     console.error('Error creating business:', error);
-                    toast.error('Wystąpił błąd podczas dodawania firmy');
+                    showToast.error('Wystąpił błąd podczas dodawania firmy', 'business-create-error');
                 }
             }
         });
@@ -102,14 +102,14 @@ const AdminBusinessesManagementPage = () => {
                     const response = await apiService.deleteBusiness(business.id);
 
                     if (response.success) {
-                        toast.success(`Firma "${business.businessName}" została usunięta`);
+                        showToast.success(`Firma "${business.businessName}" została usunięta`, 'business-delete-success');
                         refreshData();
                     } else {
-                        toast.error('Nie udało się usunąć firmy');
+                        showToast.error('Nie udało się usunąć firmy', 'business-delete-error');
                     }
                 } catch (error) {
                     console.error('Error deleting business:', error);
-                    toast.error('Wystąpił błąd podczas usuwania firmy');
+                    showToast.error('Wystąpił błąd podczas usuwania firmy', 'business-delete-error');
                 } finally {
                     setLoadingActions(prev => ({ ...prev, [business.id]: false }));
                 }
@@ -136,10 +136,10 @@ const AdminBusinessesManagementPage = () => {
                         });
 
                         if (response.success) {
-                            toast.success(`Promowanie firmy "${business.businessName}" zostało cofnięte`);
+                            showToast.success(`Promowanie firmy "${business.businessName}" zostało cofnięte`, 'business-boost-success');
                             refreshData();
                         } else {
-                            toast.error('Nie udało się cofnąć promowania firmy');
+                            showToast.error('Nie udało się cofnąć promowania firmy', 'business-boost-error');
                         }
 
                         closeModal();
@@ -154,11 +154,11 @@ const AdminBusinessesManagementPage = () => {
                         });
 
                         if (response.success) {
-                            toast.success(`Firma "${business.businessName}" została promowana`);
+                            showToast.success(`Firma "${business.businessName}" została promowana`, 'business-boost-success');
                             refreshData();
                             closeModal();
                         } else {
-                            toast.error('Nie udało się promować firmy');
+                            showToast.error('Nie udało się promować firmy', 'business-boost-error');
                         }
                     }
                 });

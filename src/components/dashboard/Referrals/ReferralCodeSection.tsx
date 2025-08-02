@@ -5,9 +5,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { ApiError } from '@/types/exceptions';
 import { useOnClickOutside } from 'usehooks-ts';
+import { showToast } from '@/lib/toast';
 
 interface ReferralCodeSectionProps {
     referralCode?: string;
@@ -41,7 +41,7 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
             message: 'Wiadomość skopiowana!'
         };
 
-        toast.success(messages[type]);
+        showToast.success(messages[type], `referral-code-copied-${type}`);
         setTimeout(() => setCopied(null), 2000);
     };
 
@@ -75,23 +75,23 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['referralStats'] });
-            toast.success('Kod polecający został dodany!');
+            showToast.success('Kod polecający został dodany!', 'referral-code-added');
             setShowLinkForm(false);
             setReferralCodeInput('');
         },
         onError: (error: ApiError) => {
             if (error.code === "ReferralCodeInvalid") {
-                toast.error('Kod polecający jest nieprawidłowy');
+                showToast.error('Kod polecający jest nieprawidłowy', 'invalid-referral-code');
                 return;
             }
 
             if (error.code === "ReferralLinkFailed") {
-                toast.error('Nie możesz użyć tego linku polecającego');
+                showToast.error('Nie możesz użyć tego linku polecającego', 'invalid-referral-link');
                 return;
             }
 
             console.error('Error linking referral code:', error);
-            toast.error('Wystąpił błąd podczas łączenia kodu polecającego');
+            showToast.error('Wystąpił błąd podczas łączenia kodu polecającego', 'linking-error');
         },
     });
 

@@ -7,8 +7,8 @@ import Image from 'next/image';
 import { LoginForm } from '@/components/login/loginForm';
 import { FeaturesCarousel } from '@/components/login/featuresCarousel';
 import { signOut } from 'next-auth/react';
-import toast from 'react-hot-toast';
 import { GenericPageCenterLoader } from '@/components/GenericLoader';
+import { showToast } from '@/lib/toast';
 
 export default function LoginPage() {
     const { isAuthenticated, isLoading, user, error } = useAuth();
@@ -18,7 +18,7 @@ export default function LoginPage() {
         if (!error) return;
         if (error === "BackendAuthError") {
             signOut({ callbackUrl: '/login', redirect: false });
-            toast.error('Błąd uwierzytelniania. Proszę spróbować ponownie.');
+            showToast.error('Błąd uwierzytelniania. Proszę spróbować ponownie.', 'auth-error');
         } else {
             console.error('Unexpected error:', error);
         }

@@ -16,9 +16,9 @@ import { GenericPageCenterLoader } from "@/components/GenericLoader";
 import { getTypeColor, getTypeLabel, getStatusColor, getStatusLabel } from "@/lib/tickets";
 import { useModalStore } from "@/contexts/ModalStoreContext";
 import { NewTicketModal } from "@/components/modals/NewTicketModal";
-import toast from "react-hot-toast";
 import { useCallback, useEffect } from "react";
 import { useURLParams } from "@/hooks/useURLParams";
+import { showToast } from "@/lib/toast";
 
 const formatDate = (date: Date) => {
     return dayjs(date).format('MMM D, YYYY HH:mm');
@@ -161,15 +161,15 @@ export default function TicketsPage() {
                 if (response.success) {
                     query.refetch();
                     closeModal();
-                    toast.success("Zgłoszenie zostało utworzone.");
+                    showToast.success("Zgłoszenie zostało utworzone.", "ticket-create-success");
                 }
 
                 if (response.error?.code == 'TicketCooldown') {
-                    toast.error("Nie możesz utworzyć nowego zgłoszenia tak szybko.");
+                    showToast.error("Nie możesz utworzyć nowego zgłoszenia tak szybko.", "ticket-create-error");
                     return;
                 }
 
-                toast.error("Wystąpił błąd podczas tworzenia zgłoszenia.");
+                showToast.error("Wystąpił błąd podczas tworzenia zgłoszenia.", "ticket-create-error");
                 console.error("Error creating ticket:", response.error);
             }
         });

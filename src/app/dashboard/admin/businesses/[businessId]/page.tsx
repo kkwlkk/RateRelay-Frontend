@@ -30,8 +30,8 @@ import { useParams } from "next/navigation";
 import { useModalStore } from "@/contexts/ModalStoreContext";
 import { BusinessBoostModal } from "@/components/modals/BusinessBoostModal";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
-import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
+import { showToast } from "@/lib/toast";
 
 const AdminBusinessDetailPage = () => {
     const { user, isLoading } = useAuth();
@@ -99,10 +99,10 @@ const AdminBusinessDetailPage = () => {
                         });
 
                         if (response.success) {
-                            toast.success(`Promowanie firmy "${business.businessName}" zostało cofnięte`);
+                            showToast.success(`Promowanie firmy "${business.businessName}" zostało cofnięte`, 'business-boost-success');
                             refreshData();
                         } else {
-                            toast.error('Nie udało się cofnąć promowania firmy');
+                            showToast.error('Nie udało się cofnąć promowania firmy', 'business-boost-error');
                         }
 
                         closeModal();
@@ -117,11 +117,11 @@ const AdminBusinessDetailPage = () => {
                         });
 
                         if (response.success) {
-                            toast.success(`Firma "${business.businessName}" została promowana`);
+                            showToast.success(`Firma "${business.businessName}" została promowana`, 'business-boost-success');
                             refreshData();
                             closeModal();
                         } else {
-                            toast.error('Nie udało się promować firmy');
+                            showToast.error('Nie udało się promować firmy', 'business-boost-error');
                         }
                     }
                 });

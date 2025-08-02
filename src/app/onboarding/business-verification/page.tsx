@@ -7,13 +7,13 @@ import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { useRouter } from 'next/navigation';
 import { apiService } from '@/services/api';
 import { BusinessVerificationStatusResponseDto, BusinessVerificationChallengeResponseDto } from '@/types/dtos/BusinessVerificaton';
-import toast from 'react-hot-toast';
 import { BusinessSearch } from '@/components/onboarding/businessVerification/BusinessSearch';
 import { VerificationChallenge } from '@/components/onboarding/businessVerification/VerificationChallenge';
 import { InfoSections } from '@/components/onboarding/businessVerification/InfoSections';
 import { Building2, Shield, CheckCircle, Clock } from 'lucide-react';
 import { GenericPageCenterLoader } from '@/components/GenericLoader';
 import { Button } from '@/components/ui/button';
+import { showToast } from '@/lib/toast';
 
 export default function BusinessVerification() {
     const router = useRouter();
@@ -49,7 +49,7 @@ export default function BusinessVerification() {
             }
         } catch (error) {
             console.error('Error checking verification status:', error);
-            toast.error('Wystąpił błąd podczas sprawdzania statusu weryfikacji');
+            showToast.error('Wystąpił błąd podczas sprawdzania statusu weryfikacji', 'business-verification-error');
         } finally {
             setIsLoading(false);
         }
@@ -68,9 +68,9 @@ export default function BusinessVerification() {
         if (typedError?.code === 'ERR_ALREADY_VERIFIED') {
             handleCompleteVerification();
         } else if (typedError?.code === 'ERR_BUSINESS_NOT_FOUND') {
-            toast.error('Firma nie została znaleziona. Upewnij się, że podałeś poprawną firmę.');
+            showToast.error('Firma nie została znaleziona. Upewnij się, że podałeś poprawną firmę.', 'business-verification-error');
         } else {
-            toast.error(typedError?.message || 'Wystąpił nieoczekiwany błąd podczas weryfikacji');
+            showToast.error(typedError?.message || 'Wystąpił nieoczekiwany błąd podczas weryfikacji', 'business-verification-error');
         }
     };
 
@@ -92,8 +92,8 @@ export default function BusinessVerification() {
                 }
             }
 
-            if (verificationResponse.error?.code == "ERR_ALREADY_EXISTS") {
-                toast.error('Ta firma już istnieje, nie można jej ponownie zweryfikować.');
+            if (verificationResponse.error?.code === "ERR_ALREADY_EXISTS") {
+                showToast.error('Ta firma już istnieje, nie można jej ponownie zweryfikować.', 'business-verification-error');
                 return;
             }
 
@@ -115,14 +115,14 @@ export default function BusinessVerification() {
                 if (response.data.isVerified) {
                     handleCompleteVerification();
                 } else {
-                    toast.error('Weryfikacja nie powiodła się. Upewnij się, że godziny otwarcia zostały ustawione zgodnie z wymaganiami.');
+                    showToast.error('Weryfikacja nie powiodła się. Upewnij się, że godziny otwarcia zostały ustawione zgodnie z wymaganiami.', 'business-verification-error');
                 }
 
                 return;
             }
 
             if (response.error?.code === 'ERR_ALREADY_VERIFIED') {
-                toast.success('Twoja firma została zweryfikowana! 🎉');
+                showToast.success('Twoja firma została zweryfikowana! 🎉', 'business-verification-success');
                 const metadata = response.metadata as { businessId: number; placeId: string } | undefined;
                 if (metadata?.placeId) {
                     setVerificationStatus({
@@ -143,13 +143,13 @@ export default function BusinessVerification() {
             const statusResponse = await apiService.getBusinessVerificationStatus();
             const metadata = statusResponse.metadata as { businessId: number; placeId: string } | undefined;
             if (!metadata?.placeId) {
-                toast.error('Nie można zakończyć weryfikacji - brak danych firmy');
+                showToast.error('Nie można zakończyć weryfikacji - brak danych firmy', 'business-verification-error');
                 return;
             }
             await completeBusinessVerificationStep(metadata.placeId);
         } catch (error) {
             console.error('Error completing verification:', error);
-            toast.error('Wystąpił błąd podczas kończenia weryfikacji');
+            showToast.error('Wystąpił błąd podczas kończenia weryfikacji', 'business-verification-error');
         }
     };
 

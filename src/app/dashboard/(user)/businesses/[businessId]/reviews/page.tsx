@@ -16,10 +16,10 @@ import dayjs from 'dayjs';
 import { Check, ExternalLink, Star, X, Clock, Info, ArrowLeft, AlertTriangle, AlignLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useMemo, useCallback } from 'react';
-import toast from 'react-hot-toast';
 import { useModalStore } from '@/contexts/ModalStoreContext';
 import { ReportReviewModal } from '@/components/modals/ReportReviewModal';
 import { PiEmptyFill } from 'react-icons/pi'
+import { showToast } from '@/lib/toast';
 
 const LoadingSkeleton = () => (
     <div className="space-y-6">
@@ -352,11 +352,11 @@ const BusinessReviewsPage = () => {
     const handleAcceptReview = useCallback(async (reviewId: number) => {
         try {
             await apiService.acceptPendingBusinessReview(businessId, reviewId);
-            toast.success("Recenzja została zaakceptowana");
+            showToast.success("Recenzja została zaakceptowana", "business-feedback-success");
             actions.invalidateAndRefetch();
         } catch (error: unknown) {
             if (isError(error)) {
-                toast.error(error.message || "Nie udało się zaakceptować recenzji");
+                showToast.error(error.message || "Nie udało się zaakceptować recenzji", "business-feedback-error");
             } else {
                 console.error("Unexpected error while accepting review:", error);
             }
@@ -370,20 +370,20 @@ const BusinessReviewsPage = () => {
                 const response = await apiService.reportBusinessReview(businessId, reviewId, data.reason, data.title, data.content);
 
                 if (response.success) {
-                    toast.success("Recenzja została zgłoszona do administratora");
+                    showToast.success("Recenzja została zgłoszona do administratora", "business-feedback-success");
                     closeModal();
                     actions.invalidateAndRefetch();
                     return;
                 }
 
                 if (response.error?.code == "BusinessReviewAlreadyUnderDispute") {
-                    toast.error("Recenzja jest już w trakcie rozpatrywania przez administratora");
+                    showToast.error("Recenzja jest już w trakcie rozpatrywania przez administratora", "business-feedback-error");
                     actions.invalidateAndRefetch();
                     closeModal();
                     return;
                 }
 
-                toast.error("Wystąpił błąd podczas zgłaszania recenzji");
+                showToast.error("Wystąpił błąd podczas zgłaszania recenzji", "business-feedback-error");
                 closeModal();
             }
         })

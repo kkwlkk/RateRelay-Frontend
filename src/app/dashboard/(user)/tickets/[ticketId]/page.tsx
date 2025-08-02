@@ -26,10 +26,10 @@ import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { GenericPageCenterLoader } from "@/components/GenericLoader";
 import dayjs from "@/utils/dayjsConfig";
-import { toast } from "react-hot-toast";
 import { getStatusColor, getStatusLabel, getTypeColor, getTypeLabel } from "@/lib/tickets";
 import { useModalStore } from "@/contexts/ModalStoreContext";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
+import { showToast } from "@/lib/toast";
 
 const formatDate = (date: Date) => {
     return dayjs.utc(date).local().format('MMM D, YYYY HH:mm');
@@ -80,10 +80,10 @@ export default function TicketDetailPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['ticket', ticketId] });
             setNewComment('');
-            toast.success('Komentarz został dodany');
+            showToast.success('Komentarz został dodany', 'ticket-comment-success');
         },
         onError: () => {
-            toast.error('Nie udało się dodać komentarza');
+            showToast.error('Nie udało się dodać komentarza', 'ticket-comment-error');
         }
     });
 
@@ -97,10 +97,10 @@ export default function TicketDetailPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['ticket', ticketId] });
             closeModal();
-            toast.success('Zgłoszenie zostało zamknięte');
+            showToast.success('Zgłoszenie zostało zamknięte', 'ticket-close-success');
         },
         onError: () => {
-            toast.error('Nie udało się zamknąć zgłoszenia');
+            showToast.error('Nie udało się zamknąć zgłoszenia', 'ticket-close-error');
         }
     });
 

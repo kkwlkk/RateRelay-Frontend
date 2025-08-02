@@ -7,9 +7,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { CompleteHeader } from '@/components/onboarding/complete/CompleteHeader';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import { FeatureCards } from '@/components/onboarding/complete/FeatureCards';
 import { Button } from '@/components/ui/button';
+import { showToast } from '@/lib/toast';
 
 export default function OnboardingCompletePage() {
     const { user } = useAuth();
@@ -23,12 +23,12 @@ export default function OnboardingCompletePage() {
             await queryClient.invalidateQueries({ queryKey: ['userProfile'] });
         },
         onSuccess: () => {
-            toast.success('Konfiguracja zakończona pomyślnie!');
+            showToast.success('Konfiguracja zakończona pomyślnie!', 'onboarding-success');
             router.push('/dashboard');
         },
         onError: (error: Error) => {
             console.error('Error completing onboarding:', error);
-            toast.error('Wystąpił błąd podczas kończenia konfiguracji');
+            showToast.error('Wystąpił błąd podczas kończenia konfiguracji', 'onboarding-error');
         },
     });
 

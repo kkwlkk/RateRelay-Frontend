@@ -11,8 +11,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useInterval } from "usehooks-ts";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import { queryClient } from "@/lib/react-query";
+import { showToast } from "@/lib/toast";
 
 export interface ReviewSessionTimerState {
     remainingTime: number;
@@ -53,7 +53,7 @@ const ExchangeFeedbackPage = () => {
 
             if (newRemainingTime === 0 && prev.remainingTime > 0 && !hasShownTimeoutToast) {
                 setHasShownTimeoutToast(true);
-                toast.error('Czas na zrealizowanie oceny został przekroczony');
+                showToast.error('Czas na zrealizowanie oceny został przekroczony', 'business-feedback-error');
                 refetch();
             }
 
@@ -89,15 +89,15 @@ const ExchangeFeedbackPage = () => {
             });
 
             if (response.success) {
-                toast.success('Dziękujemy za ocenę!');
+                showToast.success('Dziękujemy za ocenę!', 'business-feedback-success');
                 router.refresh();
                 refetch();
             } else {
-                toast.error(response.error?.message || 'Wystąpił błąd podczas wysyłania informacji zwrotnej');
+                showToast.error(response.error?.message || 'Wystąpił błąd podczas wysyłania informacji zwrotnej', 'business-feedback-error');
             }
         } catch (error: unknown) {
             console.error('Error submitting feedback:', error);
-            toast.error('Wystąpił błąd podczas wysyłania informacji zwrotnej');
+            showToast.error('Wystąpił błąd podczas wysyłania informacji zwrotnej', 'business-feedback-error');
         }
     };
 
@@ -105,10 +105,10 @@ const ExchangeFeedbackPage = () => {
         try {
             await getNextBusinessToReview(true);
             queryClient.invalidateQueries({ queryKey: ['businessQueue'] });
-            toast.success('Firma została pominięta');
+            showToast.success('Firma została pominięta', 'business-skip-success');
         } catch (error: unknown) {
             console.error('Error skipping business:', error);
-            toast.error('Wystąpił błąd podczas pomijania firmy');
+            showToast.error('Wystąpił błąd podczas pomijania firmy', 'business-skip-error');
         }
     }
 

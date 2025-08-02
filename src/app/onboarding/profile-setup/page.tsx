@@ -9,7 +9,7 @@ import { ProfileSetupHeader } from '../../../components/onboarding/profileSetup/
 import { ProfileSetupForm, ProfileSetupFormData } from '../../../components/onboarding/profileSetup/ProfileSetupForm';
 import { useMutation } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
-import toast from 'react-hot-toast';
+import { showToast } from '@/lib/toast';
 
 export default function ProfileSetupPage() {
   const { user } = useAuth();
@@ -36,12 +36,12 @@ export default function ProfileSetupPage() {
         await completeProfileSetupStep(variables.displayName.trim());
       } catch (error) {
         console.error('Error completing profile setup:', error);
-        toast.error('Nie udało się ukończyć konfiguracji profilu');
+        showToast.error('Nie udało się ukończyć konfiguracji profilu', 'profile-setup-error');
       }
     },
     onError: (error: Error) => {
       console.error('Profile update error:', error);
-      toast.error(error.message);
+      showToast.error(error.message, 'profile-update-error');
     },
   });
 
