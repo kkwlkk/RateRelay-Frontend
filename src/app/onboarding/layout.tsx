@@ -9,7 +9,7 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 import { getOnboardingStepPath } from '@/lib/onboarding';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { OnboardingUserDropdown } from '@/components/onboarding/OnboardingUserDropdown';
-import { GenericPageCenterLoader } from '@/components/GenericLoader';
+import { GenericCenterLoader } from '@/components/GenericLoader';
 import { hasFlag } from '@/utils/accountUtils';
 import { AccountFlags } from '@/enums/accountFlags';
 
@@ -67,24 +67,24 @@ export default function OnboardingLayout({
     }, [sessionStatus, isSessionResolved, isAuthenticated, user, isLoading, status, router]);
 
     if (!isSessionResolved || (isAuthenticated && isLoading)) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     if (!isAuthenticated) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     if (!user) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     if (user.hasCompletedOnboarding && hasFlag(user.flags, AccountFlags.HasSeenLastOnboardingStep)) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     return (
         <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">
-            <div className="w-full border-b border-zinc-200 dark:border-zinc-800 sticky top-0 bg-white dark:bg-zinc-900 z-10 shadow-sm">
+            <div className="w-full border-b border-zinc-200 dark:border-zinc-800 sticky top-0 bg-white dark:bg-zinc-900 z-[100] shadow-sm">
                 <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex-1 min-w-0">

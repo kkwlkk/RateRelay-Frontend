@@ -3,7 +3,7 @@
 import { ExchangeFeedbackContent } from "@/components/dashboard/ExchangeFeedback/ExchangeFeedbackContent";
 import { ExchangeFeedbackHeader } from "@/components/dashboard/ExchangeFeedback/ExchangeFeedbackHeader";
 import { NoBusinessFound } from "@/components/dashboard/ExchangeFeedback/NoBusinessFound";
-import { GenericPageCenterLoader } from "@/components/GenericLoader";
+import { GenericCenterLoader } from "@/components/GenericLoader";
 import { useAuth } from "@/contexts/AuthContext";
 import { apiService } from "@/services/api";
 import { FeedbackFormData } from "@/types/feedback";
@@ -113,7 +113,7 @@ const ExchangeFeedbackPage = () => {
     }
 
     if (isLoading) {
-        return <GenericPageCenterLoader />
+        return <GenericCenterLoader />
     }
 
     if (!business) {

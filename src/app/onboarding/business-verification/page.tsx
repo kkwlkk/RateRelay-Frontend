@@ -11,7 +11,7 @@ import { BusinessSearch } from '@/components/onboarding/businessVerification/Bus
 import { VerificationChallenge } from '@/components/onboarding/businessVerification/VerificationChallenge';
 import { InfoSections } from '@/components/onboarding/businessVerification/InfoSections';
 import { Building2, Shield, CheckCircle, Clock } from 'lucide-react';
-import { GenericPageCenterLoader } from '@/components/GenericLoader';
+import { GenericCenterLoader } from '@/components/GenericLoader';
 import { Button } from '@/components/ui/button';
 import { showToast } from '@/lib/toast';
 
@@ -156,7 +156,7 @@ export default function BusinessVerification() {
     if (isLoading) {
         return (
             <OnboardingRoute step={AccountOnboardingStep.BusinessVerification}>
-                <GenericPageCenterLoader />
+                <GenericCenterLoader />
             </OnboardingRoute>
         );
     }

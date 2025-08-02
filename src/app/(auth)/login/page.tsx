@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { LoginForm } from '@/components/login/loginForm';
 import { FeaturesCarousel } from '@/components/login/featuresCarousel';
 import { signOut } from 'next-auth/react';
-import { GenericPageCenterLoader } from '@/components/GenericLoader';
+import { GenericCenterLoader } from '@/components/GenericLoader';
 import { showToast } from '@/lib/toast';
 import { hasFlag } from '@/utils/accountUtils';
 import { AccountFlags } from '@/enums/accountFlags';
@@ -79,11 +79,11 @@ export default function LoginPage() {
     }, []);
 
     if (isLoading) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     if (isAuthenticated) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     return (

@@ -9,22 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-    Ticket,
-    User,
-    Calendar,
-    Clock,
-    ArrowLeft,
-    MessageSquare,
-    Send,
-    History,
-    Building,
-    Star,
-    X
-} from "lucide-react";
+import { Ticket, User, Calendar, Clock, ArrowLeft, MessageSquare, Send, History, Building, Star, X } from "lucide-react";
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { GenericPageCenterLoader } from "@/components/GenericLoader";
+import { GenericCenterLoader } from "@/components/GenericLoader";
 import dayjs from "@/utils/dayjsConfig";
 import { getStatusColor, getStatusLabel, getTypeColor, getTypeLabel } from "@/lib/tickets";
 import { useModalStore } from "@/contexts/ModalStoreContext";
@@ -113,11 +101,11 @@ export default function TicketDetailPage() {
     };
 
     if (isLoading) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     if (!isAuthenticated) {
-        return <GenericPageCenterLoader />;
+        return <GenericCenterLoader />;
     }
 
     if (error || !ticket) {

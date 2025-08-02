@@ -52,7 +52,7 @@ const OnboardingUserDropdown = ({ user, logout }: OnboardingUserDropdownProps) =
                         <ChevronDown className="h-4 w-4 text-zinc-500 dark:text-zinc-400 ml-1" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 p-2">
+                <DropdownMenuContent align="end" className="w-64 p-2 z-[105]">
                     <div className="flex items-center gap-3 px-2 py-3">
                         <Avatar className="h-10 w-10">
                             <AvatarFallback className="bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium">
