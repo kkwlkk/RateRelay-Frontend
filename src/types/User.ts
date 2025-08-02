@@ -7,6 +7,7 @@ type User = {
     displayName: string;
     email: string;
     pointBalance: number;
+    flags: number;
     permissions: number;
     hasCompletedOnboarding: boolean;
     onboardingStep: AccountOnboardingStep;

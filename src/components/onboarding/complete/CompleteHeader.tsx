@@ -13,11 +13,14 @@ export function CompleteHeader({ username }: CompleteHeaderProps) {
             
             <div className="space-y-3">
                 <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                    Konfiguracja zakończona!
+                    Wszystko gotowe!
                 </h1>
                 <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
-                    Witaj <span className="font-medium text-zinc-900 dark:text-zinc-100">{username}</span>! 
-                    Twoje konto jest gotowe do użycia.
+                    Cześć <span className="font-medium text-zinc-900 dark:text-zinc-100">{username}</span>! 
+                    Twoje konto zostało pomyślnie skonfigurowane.
+                </p>
+                <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+                    Poznaj możliwości naszej platformy zanim zaczniesz z niej korzystać.
                 </p>
             </div>
         </div>

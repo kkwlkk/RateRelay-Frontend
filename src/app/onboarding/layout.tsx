@@ -10,12 +10,13 @@ import { getOnboardingStepPath } from '@/lib/onboarding';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { OnboardingUserDropdown } from '@/components/onboarding/OnboardingUserDropdown';
 import { GenericPageCenterLoader } from '@/components/GenericLoader';
+import { hasFlag } from '@/utils/accountUtils';
+import { AccountFlags } from '@/enums/accountFlags';
 
 const steps = [
-    { id: AccountOnboardingStep.BusinessVerification.toString(), label: 'Weryfikacja firmy' },
-    { id: AccountOnboardingStep.Welcome.toString(), label: 'Witaj' },
-    { id: AccountOnboardingStep.ProfileSetup.toString(), label: 'Profil' },
-    { id: AccountOnboardingStep.Completed.toString(), label: 'Koniec' }
+    { id: AccountOnboardingStep.BusinessVerification.toString(), label: 'Zweryfikuj dane' },
+    { id: AccountOnboardingStep.Welcome.toString(), label: 'Poznaj platformę' },
+    { id: AccountOnboardingStep.Completed.toString(), label: 'Przejdź do aplikacji' }
 ];
 
 export default function OnboardingLayout({
@@ -45,7 +46,7 @@ export default function OnboardingLayout({
             return;
         }
 
-        if (user.hasCompletedOnboarding) {
+        if (user.hasCompletedOnboarding && hasFlag(user.flags, AccountFlags.HasSeenLastOnboardingStep)) {
             router.push('/dashboard');
             return;
         }
@@ -77,7 +78,7 @@ export default function OnboardingLayout({
         return <GenericPageCenterLoader />;
     }
 
-    if (user.hasCompletedOnboarding) {
+    if (user.hasCompletedOnboarding && hasFlag(user.flags, AccountFlags.HasSeenLastOnboardingStep)) {
         return <GenericPageCenterLoader />;
     }
 

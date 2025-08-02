@@ -11,6 +11,7 @@ declare module 'next-auth' {
         isNewUser?: boolean;
         user?: User;
         error?: string;
+        errorCode?: string;
     }
 }
 

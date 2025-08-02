@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { UserPermission } from "@/enums/permissions";
 import { apiService } from "@/services/api";
 import { AdminBusinessDetailDto } from "@/types/dtos/AdminBusinesses";
-import { hasPermission } from "@/utils/permissionUtils";
+import { hasPermission } from "@/utils/accountUtils";
 import {
     Building2,
     Star,

@@ -49,12 +49,13 @@ export const { handlers, auth } = NextAuth({
                     token.accessToken = response.data.accessToken;
                     token.refreshToken = response.data.refreshToken;
                     token.isNewUser = response.data.isNewUser;
+                    token.backendAuthSuccess = true;
                     
                 } catch (error) {
                     console.error("Error exchanging Google token:", error);
-                    token.accessToken = "";
-                    token.googleToken = account.id_token;
+                    token.backendAuthSuccess = false;
                     token.error = "BackendAuthError";
+                    return null;
                 }
             }
 
@@ -69,6 +70,14 @@ export const { handlers, auth } = NextAuth({
             return token;
         },
         async session({ session, token }) {
+            if (!token.backendAuthSuccess || token.error === "BackendAuthError") {
+                return {
+                    ...session,
+                    error: "Authentication failed",
+                    expires: getTokenExpiryIsoString(token.exp),
+                };
+            }
+
             return {
                 ...session,
                 accessToken: token.accessToken as string,
@@ -107,13 +116,14 @@ export const { handlers, auth } = NextAuth({
     },
     pages: {
         signIn: '/login',
+        error: '/login',
     },
     secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: "jwt",
-        maxAge: 30 * 24 * 60 * 60, // 30 days
+        maxAge: 30 * 24 * 60 * 60,
     },
     jwt: {
-        maxAge: 30 * 24 * 60 * 60, // 30 days
+        maxAge: 30 * 24 * 60 * 60,
     }
 });

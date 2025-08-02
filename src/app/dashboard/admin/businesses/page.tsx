@@ -9,7 +9,7 @@ import { UserPermission } from "@/enums/permissions";
 import { createPaginatedQueryFn, usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import { apiService } from "@/services/api";
 import { AdminBusinessListDto, AdminBusinessFilterDto } from "@/types/dtos/AdminBusinesses";
-import { hasPermission } from "@/utils/permissionUtils";
+import { hasPermission } from "@/utils/accountUtils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Building2, Star, Eye, TrendingUp, TrendingDown, MoreHorizontal, Mail, Calendar, Clock, Shield, Award, UserStar, Plus, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";

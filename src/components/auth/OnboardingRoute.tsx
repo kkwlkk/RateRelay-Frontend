@@ -7,6 +7,8 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 import { AccountOnboardingStep } from '@/types/dtos/Onboarding';
 import { getOnboardingStepPath } from '@/lib/onboarding';
 import { GenericCenterLoader } from '../GenericLoader';
+import { hasFlag } from '@/utils/accountUtils';
+import { AccountFlags } from '@/enums/accountFlags';
 
 type OnboardingRouteProps = {
     children: React.ReactNode;
@@ -30,7 +32,7 @@ export default function OnboardingRoute({ children, step }: OnboardingRouteProps
 
         if (!user) return;
 
-        if (user.hasCompletedOnboarding) {
+        if (user.hasCompletedOnboarding && hasFlag(user.flags, AccountFlags.HasSeenLastOnboardingStep)) {
             router.push('/dashboard');
             return;
         }
@@ -56,7 +58,7 @@ export default function OnboardingRoute({ children, step }: OnboardingRouteProps
         return <GenericCenterLoader />;
     }
 
-    if (user.hasCompletedOnboarding) {
+    if (user.hasCompletedOnboarding && hasFlag(user.flags, AccountFlags.HasSeenLastOnboardingStep)) {
         return <GenericCenterLoader />;
     }
 

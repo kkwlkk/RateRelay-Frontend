@@ -1,3 +1,4 @@
+import { AccountFlags } from "@/enums/accountFlags";
 import { UserPermission } from "@/enums/permissions";
 
 export const mapIntToPermissions = (permissionInt: number): UserPermission[] => {
@@ -42,4 +43,12 @@ export const hasPermission = (
             userPermsArray.includes(permission)
         );
     }
+};
+
+export const hasFlag = (
+    userFlags: number | undefined,
+    flag: AccountFlags
+): boolean => {
+    if (!userFlags) return false;
+    return (userFlags & flag) === flag;
 };

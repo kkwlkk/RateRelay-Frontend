@@ -7,7 +7,7 @@ import { AppSidebarContent } from './SidebarContent';
 import { AppSidebarFooter } from './SidebarFooter';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { hasPermission } from '@/utils/permissionUtils';
+import { hasPermission } from '@/utils/accountUtils';
 import { useModalStore } from '@/contexts/ModalStoreContext';
 import { HelpModal } from '@/components/modals/HelpModal';
 

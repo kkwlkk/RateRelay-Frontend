@@ -5,6 +5,8 @@ import { useAuth } from './AuthContext';
 import { useRouter } from 'next/navigation';
 import { getOnboardingStepPath } from '@/lib/onboarding';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { hasFlag } from '@/utils/accountUtils';
+import { AccountFlags } from '@/enums/accountFlags';
 
 type OnboardingStatus = {
     currentStep: AccountOnboardingStep;
@@ -62,7 +64,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         throw new Error(response.error?.message || 'Failed to fetch onboarding status');
     }, [isAuthenticated]);
 
-    const shouldFetchOnboarding = !!user?.id && !authLoading && isAuthenticated && !user.hasCompletedOnboarding;
+    const shouldFetchOnboarding = !!user?.id && !authLoading && isAuthenticated && (!user.hasCompletedOnboarding || !hasFlag(user.flags, AccountFlags.HasSeenLastOnboardingStep));
 
     const {
         data: status,

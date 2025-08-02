@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { User } from '@/types/User';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
-import { mapIntToPermissions } from '@/utils/permissionUtils';
+import { mapIntToPermissions } from '@/utils/accountUtils';
 
 type AuthContextType = {
     user: User | null;
@@ -35,6 +35,7 @@ export const useAuth = () => useContext(AuthContext);
 const PROTECTED_ROUTE_PATTERNS = [
     /^\/dashboard/,
     /^\/admin/,
+    /^\/onboarding/,
 ];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -46,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const queryClient = useQueryClient();
 
     const isProtectedRoute = PROTECTED_ROUTE_PATTERNS.some(pattern => pattern.test(pathname));
+    const hasBackendError = session?.error === 'BackendAuthError';
 
     const fetchAccountData = async (): Promise<User> => {
         if (!session?.accessToken) {
@@ -70,7 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } = useQuery({
         queryKey: ['userProfile', session?.accessToken],
         queryFn: fetchAccountData,
-        enabled: !!session?.accessToken && status === 'authenticated' && isProtectedRoute,
+        enabled: !!session?.accessToken && status === 'authenticated' && isProtectedRoute && !hasBackendError,
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
         retry: 1
@@ -93,11 +95,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [session]);
 
     useEffect(() => {
-        if (status === 'unauthenticated') {
+        if (status === 'unauthenticated' || hasBackendError) {
             setUser(null);
             setIsNewUser(false);
         }
-    }, [status]);
+    }, [status, hasBackendError]);
+
+    useEffect(() => {
+        if (hasBackendError) {
+            console.warn('Backend authentication failed, signing out');
+            signOut();
+        }
+    }, [hasBackendError]);
 
     useEffect(() => {
         if (
@@ -105,12 +114,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             session?.accessToken &&
             userProfileError &&
             !userProfileLoading &&
-            isProtectedRoute
+            isProtectedRoute &&
+            !hasBackendError
         ) {
             console.warn('Session valid but failed to fetch user profile, redirecting to login');
             signOut();
         }
-    }, [status, session?.accessToken, userProfileError, userProfileLoading, router, isProtectedRoute]);
+    }, [status, session?.accessToken, userProfileError, userProfileLoading, router, isProtectedRoute, hasBackendError]);
 
     const login = async () => {
         signIn('google', {
@@ -130,18 +140,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const isSessionLoading = status === 'loading';
-    const hasValidSession = status === 'authenticated' && !!session?.accessToken;
+    const hasValidSession = status === 'authenticated' && !!session?.accessToken && !hasBackendError;
     const isLoadingUserProfile = hasValidSession && userProfileLoading && isProtectedRoute;
 
     const isLoading = isSessionLoading || isLoadingUserProfile;
 
     const isAuthenticated = hasValidSession && !userProfileError && (!!user || userProfileLoading);
 
+    const contextError = hasBackendError ? 'Backend authentication failed' : session?.error;
+
     return (
         <AuthContext.Provider
             value={{
                 user,
-                error: session?.error,
+                error: contextError,
                 isLoading,
                 isAuthenticated,
                 isNewUser,
