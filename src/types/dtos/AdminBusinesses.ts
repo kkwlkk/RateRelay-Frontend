@@ -28,7 +28,7 @@ export type BoostSelectedBusinessesInputDto = {
 export type AdminBusinessListDto = {
     id: number;
     businessName: string;
-    ownerDisplayName: string;
+    ownerName: string;
     ownerEmail: string;
     currentReviews: number;
     pendingReviews: number;
@@ -80,7 +80,7 @@ export type AdminBusinessDetailDto = {
     cid: string;
     mapUrl: string;
     ownerAccountId: number;
-    ownerDisplayName: string;
+    ownerName: string;
     ownerEmail: string;
     ownerPointBalance: number;
     priority: number;
@@ -98,23 +98,11 @@ export type AdminBusinessDetailDto = {
     boostTargetReviews?: number;
 }
 
-export type BusinessBoostCandidateDto = {
-    id: number;
-    businessName: string;
-    ownerDisplayName: string;
-    currentReviews: number;
-    reviewsNeeded: number;
-    currentPriority: number;
-    isBoosted: boolean;
-    progressPercentage: number;
-    recommendationReason: string;
-}
-
 export type BusinessBoostHistoryDto = {
     oldPriority: number;
     newPriority: number;
     reason: string;
-    changedByDisplayName: string;
+    changedByName: string;
     changedAt: Date;
     wasBoosted: boolean;
 }

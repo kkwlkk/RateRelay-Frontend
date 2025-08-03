@@ -357,10 +357,10 @@ export default function TicketDetailPage() {
                                 <>
                                     <Separator className="bg-zinc-200 dark:bg-zinc-800" />
                                     <div className="bg-zinc-50/50 dark:bg-zinc-800/20 rounded-xl p-5 border border-zinc-200/50 dark:border-zinc-700/50">
-                                        <div className={`flex items-start gap-4 ${user && user.googleUsername !== ticket.reporterName && user.email !== ticket.reporterName ? 'flex-row-reverse' : ''}`}>
+                                        <div className={`flex items-start gap-4 ${user && user.username !== ticket.reporterName && user.email !== ticket.reporterName ? 'flex-row-reverse' : ''}`}>
                                             <Avatar className="w-10 h-10 border border-zinc-200 dark:border-zinc-700">
                                                 <AvatarFallback className="bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-600 text-zinc-700 dark:text-zinc-300 text-sm font-medium">
-                                                    {user ? getInitials(user.googleUsername || user.email) : 'U'}
+                                                    {user ? getInitials(user.username || user.email) : 'U'}
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="flex-1 space-y-3">
@@ -371,7 +371,7 @@ export default function TicketDetailPage() {
                                                     rows={3}
                                                     className="resize-none bg-white dark:bg-zinc-700/10 border-zinc-200 dark:border-zinc-700 focus:border-zinc-300 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-200 dark:focus:ring-zinc-600 transition-all duration-200"
                                                 />
-                                                <div className={`flex ${user && user.googleUsername !== ticket.reporterName && user.email !== ticket.reporterName ? 'justify-start' : 'justify-end'}`}>
+                                                <div className={`flex ${user && user.username !== ticket.reporterName && user.email !== ticket.reporterName ? 'justify-start' : 'justify-end'}`}>
                                                     <Button
                                                         onClick={handleAddComment}
                                                         disabled={!newComment.trim() || addCommentMutation.isPending}

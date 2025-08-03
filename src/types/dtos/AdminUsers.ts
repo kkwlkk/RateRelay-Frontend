@@ -4,8 +4,7 @@ export type AdminGetUsersFiltersDto = {
 
 export type AdminGetUsersDto = {
     id: number;
-    displayName: string;
-    googleUsername: string;
+    username: string;
     email: string;
     dateCreatedUtc: Date;
     isVerified: boolean;

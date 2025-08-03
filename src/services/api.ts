@@ -8,8 +8,8 @@ import { AuthResponseDto } from '@/types/dtos/Auth';
 import { GetBusinessesResponseDto } from '@/types/dtos/Business';
 import { AcceptPendingBusinessReviewResponseDto, GetBusinessReviewsResponseDto } from '@/types/dtos/BusinessReviews';
 import { BusinessVerificationChallengeResponseDto, BusinessVerificationResponseDto, BusinessVerificationStatusResponseDto } from '@/types/dtos/BusinessVerificaton';
-import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteProfileSetupRequestDto, CompleteProfileSetupResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
-import { GenerateReferralCodeResponseDto, LinkReferralCodeResponseDto, ReferralGoalsResponseDto, ReferralStatsResponseDto } from '@/types/dtos/Referrals';
+import { CompleteBusinessVerificationStepRequestDto, CompleteBusinessVerificationStepResponseDto, CompleteOnboardingStepResponseDto, CompleteWelcomeStepRequestDto, CompleteWelcomeStepResponseDto, GetOnboardingStatusResponseDto } from '@/types/dtos/Onboarding';
+import { GenerateReferralCodeResponseDto, ReferralGoalsResponseDto, ReferralStatsResponseDto } from '@/types/dtos/Referrals';
 import { GetNextBusinessForReviewRequestDto, GetNextBusinessForReviewResponseDto, GetTimeLeftForBusinessReviewResponseDto, SubmitBusinessReviewRequestDto, SubmitBusinessReviewResponseDto } from '@/types/dtos/ReviewableBusiness';
 import { CreateUserTicketDto, GetUserTicketDetailsDto, GetUserTicketsResponseDto, TicketCommentDto, TicketType } from '@/types/dtos/Tickets';
 import { getSession } from 'next-auth/react';
@@ -302,10 +302,6 @@ class ApiService {
         return this.request('/api/user/onboarding/welcome', 'POST', data);
     }
 
-    async completeProfileSetupStep(data: CompleteProfileSetupRequestDto): Promise<ApiResponse<CompleteProfileSetupResponseDto>> {
-        return this.request('/api/user/onboarding/profile-setup', 'POST', data);
-    }
-
     async completeBusinessVerificationStep(data: CompleteBusinessVerificationStepRequestDto): Promise<ApiResponse<CompleteBusinessVerificationStepResponseDto>> {
         return this.request('/api/user/onboarding/business-verification', 'POST', data);
     }
@@ -382,15 +378,6 @@ class ApiService {
     async generateReferralCode(): Promise<ApiResponse<GenerateReferralCodeResponseDto>> {
         return this.request('/api/user/referral/generate-code', 'POST');
     }
-
-    /**
-     * Links a referral code to the user.
-     */
-    async linkReferralCode(referralCode: string): Promise<ApiResponse<LinkReferralCodeResponseDto>> {
-        return this.request(`/api/user/referral/link`, 'POST', { referralCode });
-    }
-
-
 
     // Admin businesses
     async getBusinessesForAdmin(input: PagedRequest<AdminBusinessFilterDto>): Promise<PaginatedApiResponse<AdminBusinessListDto[]>> {

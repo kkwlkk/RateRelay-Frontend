@@ -150,13 +150,13 @@ export function AppSidebarFooter({
                                 >
                                     <Avatar className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800">
                                         <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700/50 transition-colors">
-                                            {user?.googleUsername?.charAt(0)?.toUpperCase() || 'U'}
+                                            {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                                         </AvatarFallback>
                                     </Avatar>
                                     {user && (
                                         <div className="flex flex-col items-start text-left ml-2 flex-1 min-w-0 max-w-28">
                                             <span className="text-sm font-medium truncate w-full">
-                                                {user.googleUsername}
+                                                {user.username}
                                             </span>
                                             <span className="text-xs text-zinc-500 dark:text-zinc-400 truncate w-full">
                                                 {user.email}
@@ -176,7 +176,7 @@ export function AppSidebarFooter({
                                 <div className="flex flex-col gap-2">
                                     <div className="flex flex-col px-2 py-1">
                                         <span className="text-sm font-medium text-zinc-900 dark:text-white">
-                                            {user?.googleUsername}
+                                            {user?.username}
                                         </span>
                                         <span className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
                                             {user?.email}
@@ -218,7 +218,7 @@ export function AppSidebarFooter({
                             >
                                 <Avatar className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800">
                                     <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700/50 transition-colors">
-                                        {user?.googleUsername?.charAt(0)?.toUpperCase() || 'U'}
+                                        {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                                     </AvatarFallback>
                                 </Avatar>
                             </Button>
@@ -234,7 +234,7 @@ export function AppSidebarFooter({
                             <div className="flex flex-col gap-2">
                                 <div className="flex flex-col px-2 py-1">
                                     <span className="text-sm font-medium text-zinc-900 dark:text-white">
-                                        {user?.googleUsername}
+                                        {user?.username}
                                     </span>
                                     <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                         {user?.email}

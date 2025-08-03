@@ -5,6 +5,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import { cn } from "@/lib/utils";
+import dayjs from "dayjs";
 
 interface UserSelectorProps {
     onUserSelect?: (user: AdminGetUsersDto | null) => void;
@@ -128,16 +129,20 @@ const UserSelector: React.FC<UserSelectorProps> = ({
     };
 
     const getUserDisplayText = (user: AdminGetUsersDto) => {
-        if (user.displayName) return user.displayName;
-        if (user.email) return user.email;
-        if (user.googleUsername) return user.googleUsername;
+        if (user.username) return user.username;
         return `User #${user.id}`;
     };
 
+    const formatDate = (date: Date) => {
+        return dayjs(date).format('DD.MM.YYYY');
+    }
+
     const getUserSecondaryText = (user: AdminGetUsersDto) => {
         const parts = [];
-        if (user.email && user.displayName) parts.push(user.email);
-        if (user.googleUsername && user.googleUsername !== user.displayName) parts.push(`@${user.googleUsername}`);
+        if (user.email) parts.push(user.email);
+        if (user.dateCreatedUtc) {
+            parts.push(formatDate(user.dateCreatedUtc));
+        }
         return parts.join(' • ');
     };
 

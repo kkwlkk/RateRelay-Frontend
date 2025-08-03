@@ -22,7 +22,6 @@ type OnboardingContextType = {
     isLoading: boolean;
     refreshStatus: () => Promise<void>;
     completeWelcomeStep: (acceptedTerms: boolean) => Promise<void>;
-    completeProfileSetupStep: (displayName: string) => Promise<void>;
     completeBusinessVerificationStep: (placeId: string) => Promise<void>;
     completeOnboarding: () => Promise<void>;
     isError?: boolean;
@@ -42,7 +41,6 @@ const OnboardingContext = createContext<OnboardingContextType>({
     isLoading: true,
     refreshStatus: async () => { },
     completeWelcomeStep: async () => { },
-    completeProfileSetupStep: async () => { },
     completeBusinessVerificationStep: async () => { },
     completeOnboarding: async () => { },
     currentStepUrl: '/onboarding/welcome',
@@ -102,20 +100,6 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         }
     });
 
-    const profileSetupMutation = useMutation({
-        mutationFn: (displayName: string) =>
-            apiService.completeProfileSetupStep({ displayName }),
-        onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['onboardingStatus'] });
-            if (data.success) {
-                router.push(getOnboardingStepPath(data.data.nextStep));
-            }
-        },
-        onError: (error) => {
-            console.error('Error completing profile setup step:', error);
-        }
-    });
-
     const businessVerificationMutation = useMutation({
         mutationFn: (data: CompleteBusinessVerificationStepRequestDto) =>
             apiService.completeBusinessVerificationStep(data),
@@ -151,10 +135,6 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         await welcomeMutation.mutateAsync(acceptedTerms);
     };
 
-    const completeProfileSetupStep = async (displayName: string) => {
-        await profileSetupMutation.mutateAsync(displayName);
-    };
-
     const completeBusinessVerificationStep = async (placeId: string) => {
         await businessVerificationMutation.mutateAsync({ placeId: placeId });
     };
@@ -171,7 +151,6 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                 isError,
                 refreshStatus: refresh,
                 completeWelcomeStep,
-                completeProfileSetupStep,
                 completeBusinessVerificationStep,
                 completeOnboarding,
                 currentStepUrl: status ? getOnboardingStepPath(status.currentStep) : '/onboarding/welcome',

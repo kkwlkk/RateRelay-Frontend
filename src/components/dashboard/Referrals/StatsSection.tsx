@@ -33,7 +33,7 @@ export const StatsSection = ({ stats, isLoading }: StatsSectionProps) => {
             <StatCard
                 title="Łączne polecenia"
                 value={stats?.totalReferrals || 0}
-                subtitle="wszystkich czasów"
+                subtitle="wszystkie twoje polecenia"
                 icon={Users}
                 color="blue"
             />
@@ -47,7 +47,7 @@ export const StatsSection = ({ stats, isLoading }: StatsSectionProps) => {
             <StatCard
                 title="Ukończone cele"
                 value={stats?.completedGoals || 0}
-                subtitle="osiągnięte"
+                subtitle="osiągnięte przez poleconych"
                 icon={Trophy}
                 color="purple"
             />

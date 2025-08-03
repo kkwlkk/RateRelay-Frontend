@@ -113,7 +113,7 @@ const DashboardMainPage = () => {
                             Witaj ponownie <Skeleton className="h-8 w-32 ml-2 inline-block" /> 👋
                         </>
                     ) : (
-                        <>Witaj ponownie {user.googleUsername}! 👋</>
+                        <>Witaj ponownie {user.username}! 👋</>
                     )}
                 </h1>
                 <p className="text-zinc-600 dark:text-zinc-400">

@@ -4,8 +4,7 @@ import { AccountOnboardingStep } from "./Onboarding";
 
 export type AccountDataResponseDto = {
     id: number;
-    googleUsername: string;
-    displayName: string;
+    username: string;
     email: string;
     permissions: number;
     pointBalance: number;

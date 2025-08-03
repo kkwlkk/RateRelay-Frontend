@@ -17,7 +17,7 @@ const DashboardLayoutContent = ({ children }: { children: React.ReactNode }) => 
                     <div className="flex flex-col flex-1 min-w-0">
                         <header className={cn(
                             "border-b border-zinc-200 dark:border-zinc-800",
-                            "sticky top-0 z-10 flex h-14 items-center gap-2",
+                            "sticky top-0 z-[100] flex h-14 items-center gap-2",
                             "bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xs px-4",
                             "text-zinc-900 dark:text-zinc-50 flex-shrink-0"
                         )}>

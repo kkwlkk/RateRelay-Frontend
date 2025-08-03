@@ -22,14 +22,6 @@ export type CompleteWelcomeStepResponseDto = {
     nextStep: AccountOnboardingStep;
 };
 
-export type CompleteProfileSetupRequestDto = {
-    displayName: string;
-};
-
-export type CompleteProfileSetupResponseDto = {
-    nextStep: AccountOnboardingStep;
-};
-
 export type CompleteBusinessVerificationStepRequestDto = {
     placeId: string;
 };

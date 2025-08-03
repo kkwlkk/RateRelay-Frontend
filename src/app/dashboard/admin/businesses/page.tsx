@@ -229,7 +229,7 @@ const AdminBusinessesManagementPage = () => {
                 return (
                     <div className="space-y-1">
                         <div className="font-medium text-zinc-900 dark:text-white">
-                            {business.ownerDisplayName}
+                            {business.ownerName}
                         </div>
                         <div className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
                             <Mail className="w-3 h-3 flex-shrink-0" />

@@ -269,9 +269,9 @@ const AdminBusinessDetailPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Nazwa wyświetlana</label>
+                                    <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Nazwa użytkownika</label>
                                     <div className="mt-1 text-lg font-medium text-zinc-900 dark:text-white">
-                                        {business.ownerDisplayName}
+                                        {business.ownerName}
                                     </div>
                                 </div>
                                 <div>
@@ -462,7 +462,7 @@ const AdminBusinessDetailPage = () => {
                                         {history.reason}
                                     </div>
                                     <div className="text-xs text-zinc-400 dark:text-zinc-500">
-                                        {history.changedByDisplayName} • {new Date(history.changedAt).toLocaleString('pl-PL')}
+                                        {history.changedByName} • {new Date(history.changedAt).toLocaleString('pl-PL')}
                                     </div>
                                 </div>
                                 <div className="text-right">

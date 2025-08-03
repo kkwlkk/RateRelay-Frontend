@@ -23,6 +23,7 @@ import { GetBusinessReviewsResponseDto } from '@/types/dtos/BusinessReviews';
 import { BusinessReviewStatus } from '@/types/BusinessReviewStatus';
 import { BusinessNotFound } from '@/components/BusinessNotFound';
 import { IconType } from '@/types/IconType';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const LoadingSkeleton = () => (
     <div className="space-y-6">
@@ -344,9 +345,23 @@ export default function BusinessManagementPage() {
                             {businessData.businessName}
                         </h1>
                         {isVerified ? (
-                            <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs" side="top">
+                                    Firma zweryfikowana
+                                </TooltipContent>
+                            </Tooltip>
                         ) : (
-                            <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs" side="top">
+                                    Firma niezweryfikowana
+                                </TooltipContent>
+                            </Tooltip>
                         )}
                     </div>
                     <div className="flex items-center gap-3">

@@ -15,11 +15,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 const userSettingsSchema = z.object({
-    displayName: z.string()
-        .min(2, 'Wyświetlana nazwa musi mieć co najmniej 2 znaki')
-        .max(50, 'Wyświetlana nazwa nie może przekraczać 50 znaków')
-        .trim(),
-    darkMode: z.boolean(),
 });
 
 type UserSettingsForm = z.infer<typeof userSettingsSchema>;
@@ -39,20 +34,13 @@ const UserSettingsPage = () => {
     });
 
     const {
-        register,
         handleSubmit,
-        watch,
         reset,
-        formState: { errors, isDirty, isSubmitting }
+        formState: { isDirty, isSubmitting }
     } = useForm<UserSettingsForm>({
         resolver: zodResolver(userSettingsSchema),
-        defaultValues: {
-            displayName: userProfile?.displayName,
-            darkMode: false,
-        },
+        defaultValues: {},
     });
-
-    const watchedValues = watch();
 
     const updateSettingsMutation = useMutation({
         mutationFn: async (updatedSettings: Partial<UserSettingsForm>) => {
@@ -60,22 +48,15 @@ const UserSettingsPage = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-            reset({
-                displayName: watchedValues.displayName,
-                darkMode: watchedValues.darkMode,
-            });
+            reset({});
         },
         onError: (error: unknown) => {
             console.error('Failed to update settings:', error);
         }
     });
 
-    const onSubmit = (data: UserSettingsForm) => {
+    const onSubmit = () => {
         const changedSettings: Partial<UserSettingsForm> = {};
-
-        if (data.displayName !== userProfile?.googleUsername) {
-            changedSettings.displayName = data.displayName;
-        }
 
         if (Object.keys(changedSettings).length > 0) {
             updateSettingsMutation.mutate(changedSettings);
@@ -161,7 +142,7 @@ const UserSettingsPage = () => {
                                             <Input
                                                 id="officialUsername"
                                                 type="text"
-                                                value={userProfile?.googleUsername || ''}
+                                                value={userProfile?.username || ''}
                                                 className="h-11 bg-gray-100 dark:bg-zinc-700/20 border-gray-200 dark:border-zinc-600 text-gray-600 dark:text-zinc-400 cursor-not-allowed"
                                                 disabled
                                             />
@@ -175,27 +156,6 @@ const UserSettingsPage = () => {
                                     </TooltipContent>
                                 </Tooltip>
 
-                                <div className="space-y-3">
-                                    <Label htmlFor="displayName" className="text-sm font-medium text-gray-700 dark:text-zinc-300">
-                                        Wyświetlana nazwa <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="displayName"
-                                        {...register('displayName')}
-                                        className={`h-11 bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 ${errors.displayName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
-                                        disabled={isLoading}
-                                        placeholder="Wprowadź swoją wyświetlaną nazwę"
-                                    />
-                                    {errors.displayName && (
-                                        <p className="text-red-600 dark:text-red-400 text-sm flex items-center gap-1">
-                                            <AlertCircle className="w-4 h-4" />
-                                            {errors.displayName.message}
-                                        </p>
-                                    )}
-                                    <p className="text-xs text-gray-500 dark:text-zinc-500">
-                                        Ta nazwa będzie widoczna dla innych użytkowników
-                                    </p>
-                                </div>
                             </div>
 
                             <Tooltip>

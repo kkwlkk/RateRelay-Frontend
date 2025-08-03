@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import { Share2, Copy, CheckCircle2, Gift, Plus, UserCheck, X, Link, MessageCircle, ExternalLink } from 'lucide-react';
-import { apiService } from "@/services/api";
+import { Share2, Copy, CheckCircle2, UserCheck, Link, MessageCircle, ExternalLink } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ApiError } from '@/types/exceptions';
 import { useOnClickOutside } from 'usehooks-ts';
 import { showToast } from '@/lib/toast';
 
@@ -16,10 +11,7 @@ interface ReferralCodeSectionProps {
 }
 
 export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }: ReferralCodeSectionProps) => {
-    const queryClient = useQueryClient();
     const [copied, setCopied] = useState<'code' | 'link' | 'message' | null>(null);
-    const [showLinkForm, setShowLinkForm] = useState(false);
-    const [referralCodeInput, setReferralCodeInput] = useState('');
     const [showShareOptions, setShowShareOptions] = useState(false);
 
     const generateReferralLink = () => {
@@ -63,44 +55,6 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
         }
     };
 
-    const linkReferralCodeMutation = useMutation({
-        mutationFn: async (code: string) => {
-            const response = await apiService.linkReferralCode(code.trim());
-
-            if (!response.success) {
-                throw ApiError.fromResponse(response);
-            }
-
-            return response.data;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['referralStats'] });
-            showToast.success('Kod polecający został dodany!', 'referral-code-added');
-            setShowLinkForm(false);
-            setReferralCodeInput('');
-        },
-        onError: (error: ApiError) => {
-            if (error.code === "ReferralCodeInvalid") {
-                showToast.error('Kod polecający jest nieprawidłowy', 'invalid-referral-code');
-                return;
-            }
-
-            if (error.code === "ReferralLinkFailed") {
-                showToast.error('Nie możesz użyć tego linku polecającego', 'invalid-referral-link');
-                return;
-            }
-
-            console.error('Error linking referral code:', error);
-            showToast.error('Wystąpił błąd podczas łączenia kodu polecającego', 'linking-error');
-        },
-    });
-
-    const handleLinkCode = async () => {
-        if (referralCodeInput.trim()) {
-            linkReferralCodeMutation.mutate(referralCodeInput);
-        }
-    };
-
     const shareOptionsRef = React.useRef<HTMLDivElement | null>(null) as React.RefObject<HTMLDivElement>;
     useOnClickOutside(shareOptionsRef, () => {
         if (showShareOptions) {
@@ -109,7 +63,7 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
     });
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
             <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl p-8 text-white relative">
                 <div className="relative z-10">
                     <div className="flex items-start justify-between mb-6">
@@ -154,7 +108,7 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
                                 </div>
                             </div>
 
-                            <div className="relative">
+                            <div className="relative" ref={shareOptionsRef}>
                                 <button
                                     onClick={() => setShowShareOptions(!showShareOptions)}
                                     className="cursor-pointer w-full flex items-center justify-center gap-3 bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/20 hover:from-white/15 hover:to-white/10 hover:border-white/30 transition-all duration-300 text-white font-medium"
@@ -169,7 +123,7 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
                                 </button>
 
                                 {showShareOptions && (
-                                    <div ref={shareOptionsRef} className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm rounded-xl border border-white/30 dark:border-white/20 shadow-xl overflow-hidden z-50">
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm rounded-xl border border-white/30 dark:border-white/20 shadow-xl overflow-hidden z-50">
                                         <div className="p-1">
                                             <button
                                                 onClick={() => handleCopy('link', generateReferralLink())}
@@ -228,97 +182,29 @@ export const ReferralCodeSection = ({ referralCode, referredByCode, isLoading }:
                 </div>
             </div>
 
-            <div className="relative flex flex-col justify-between bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-all duration-200">
-                {isLoading ? (
-                    <>
-                        <div className="flex items-start justify-between mb-6">
-                            <div className="flex-1">
-                                <Skeleton className="h-7 w-48 mb-2 bg-zinc-200 dark:bg-zinc-800" />
-                                <Skeleton className="h-4 w-64 bg-zinc-200 dark:bg-zinc-800" />
-                            </div>
-                            <Skeleton className="h-12 w-12 rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+            {referredByCode && (
+                <div className="relative flex flex-col justify-between bg-white dark:bg-zinc-900 rounded-2xl p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-all duration-200">
+                    <div className="flex items-start justify-between mb-6">
+                        <div>
+                            <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
+                                Użyty kod polecający
+                            </h3>
+                            <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
+                                Zostałeś polecony przez znajomego, wypełniaj dostępne cele i zdobywaj punkty!
+                            </p>
                         </div>
-                        <Skeleton className="h-14 w-full rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-                    </>
-                ) : referredByCode ? (
-                    <>
-                        <div className="flex items-start justify-between mb-6">
-                            <div>
-                                <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-                                    Użyty kod polecający
-                                </h3>
-                                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
-                                    Zostałeś polecony przez znajomego
-                                </p>
-                            </div>
-                            <div className="p-3 rounded-xl bg-green-100 dark:bg-green-900/20">
-                                <UserCheck className="h-6 w-6 text-green-600 dark:text-green-400" />
-                            </div>
+                        <div className="p-3 rounded-xl bg-green-100 dark:bg-green-900/20">
+                            <UserCheck className="h-6 w-6 text-green-600 dark:text-green-400" />
                         </div>
+                    </div>
 
-                        <div className="flex items-center gap-3 bg-zinc-100 dark:bg-zinc-800 rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
-                            <code className="flex-1 text-lg font-mono font-bold text-zinc-900 dark:text-zinc-100 tracking-wider text-center">
-                                {referredByCode}
-                            </code>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className="flex items-start justify-between mb-6">
-                            <div>
-                                <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-                                    Masz kod polecający?
-                                </h3>
-                                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
-                                    Wpisz kod polecający od znajomego, aby otrzymać bonus powitalny
-                                </p>
-                            </div>
-                            <div className="p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800">
-                                <Gift className="h-6 w-6 text-zinc-600 dark:text-zinc-400" />
-                            </div>
-                        </div>
-
-                        {!showLinkForm ? (
-                            <Button
-                                onClick={() => setShowLinkForm(true)}
-                                className="w-full h-fit bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 py-4 rounded-xl font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all duration-200"
-                            >
-                                Wprowadź kod polecający
-                            </Button>
-                        ) : (
-                            <div className="flex gap-2">
-                                <Input
-                                    type='text'
-                                    value={referralCodeInput}
-                                    onChange={(e) => setReferralCodeInput(e.target.value)}
-                                    placeholder="Wpisz kod polecający"
-                                    className="h-fit px-4 py-4 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-mono text-center"
-                                    onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
-                                            handleLinkCode();
-                                        }
-                                    }}
-                                />
-                                {referralCodeInput.length > 0 ? (
-                                    <Button
-                                        onClick={handleLinkCode}
-                                        disabled={!referralCodeInput.trim() || linkReferralCodeMutation.isPending}
-                                        className="h-auto bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 disabled:opacity-50"
-                                        icon={<Plus className="h-5 w-5" />}
-                                    />
-                                ) : (
-                                    <Button
-                                        onClick={() => setShowLinkForm(false)}
-                                        disabled={linkReferralCodeMutation.isPending}
-                                        className="h-auto bg-zinc-500 text-white py-3 rounded-xl font-semibold hover:bg-zinc-600 transition-all duration-200 disabled:opacity-50"
-                                        icon={<X className="h-5 w-5" />}
-                                    />
-                                )}
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+                    <div className="flex items-center gap-3 bg-zinc-100 dark:bg-zinc-800 rounded-xl p-4 border border-zinc-200 dark:border-zinc-700">
+                        <code className="flex-1 text-lg font-mono font-bold text-zinc-900 dark:text-zinc-100 tracking-wider text-center">
+                            {referredByCode}
+                        </code>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
