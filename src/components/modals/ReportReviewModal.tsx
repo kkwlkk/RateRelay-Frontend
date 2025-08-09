@@ -71,6 +71,8 @@ export const ReportReviewModal = ({
                 </p>
             </div>
 
+
+
             <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-zinc-300">
@@ -113,6 +115,7 @@ export const ReportReviewModal = ({
                         {...register("title")}
                         disabled={isLoading}
                         placeholder="Krótki tytuł zgłoszenia"
+                        className="mt-1"
                     />
                     {errors.title && (
                         <p className="text-sm text-red-500">{errors.title.message}</p>
@@ -128,7 +131,7 @@ export const ReportReviewModal = ({
                         disabled={isLoading}
                         placeholder="Opisz szczegółowo swój problem..."
                         rows={4}
-                        className="resize-none mt-1 max-w-full break-all h-32"
+                        className="resize-none max-w-full break-all h-32 mt-1"
                         maxLength={500}
                     />
                     <div className="flex justify-between items-center">

@@ -65,7 +65,7 @@ export const NewTicketModal = ({
                     Nowe zgłoszenie
                 </h2>
                 <p className="text-sm text-zinc-300/75">
-
+                    Pomóż nam zrozumieć problem. Opisz szczegóły zgłoszenia.
                 </p>
             </div>
 
@@ -111,6 +111,7 @@ export const NewTicketModal = ({
                         {...register("title")}
                         disabled={isLoading}
                         placeholder="Krótki tytuł zgłoszenia"
+                        className="mt-1"
                     />
                     {errors.title && (
                         <p className="text-sm text-red-500">{errors.title.message}</p>
@@ -126,7 +127,7 @@ export const NewTicketModal = ({
                         disabled={isLoading}
                         placeholder="Opisz szczegółowo swój problem..."
                         rows={4}
-                        className="resize-none mt-1 max-w-full break-all h-32"
+                        className="resize-none max-w-full break-all h-32 mt-1"
                         maxLength={500}
                     />
                     <div className="flex justify-between items-center">
