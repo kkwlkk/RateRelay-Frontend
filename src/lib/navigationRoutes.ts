@@ -1,7 +1,6 @@
-import { Building, ExternalLink, FileBox, Handshake, History, HomeIcon, MessageCircleQuestion, MessagesSquare } from 'lucide-react';
+import { Building, Handshake, History, HomeIcon, MessageCircleQuestion, MessagesSquare } from 'lucide-react';
 import { IconType } from '@/types/IconType';
 import { UserPermission } from '@/enums/permissions';
-import { getHangfireBaseUrl } from './hangfire';
 
 export type NavigationRoute = {
     path?: string;
@@ -83,13 +82,5 @@ export const dashboardRoutes: NavigationRoute[] = [
         label: 'Firmy',
         icon: Building,
         requiredPermission: UserPermission.ManageBusinessPriority
-    },
-    {
-        href: getHangfireBaseUrl(),
-        section: 'Administracja [Zarządzanie]',
-        label: 'Zadania w tle',
-        icon: FileBox,
-        labelIcon: ExternalLink,
-        requiredPermission: UserPermission.AccessHangfireDashboard
     }
 ]
